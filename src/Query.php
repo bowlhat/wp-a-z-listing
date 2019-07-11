@@ -525,17 +525,17 @@ class Query {
 							$sort = apply_filters(
 								'a_z_listing_item_sorting_comparator',
 								$default_sort,
-								$atitle,
-								$btitle
+								$a['title'],
+								$b['title']
 							);
 
 							if ( is_int( $sort ) ) {
-								if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-									do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
-								}
 								return $sort;
 							}
 
+							if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
+								do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+							}
 							return $default_sort;
 						}
 					);
