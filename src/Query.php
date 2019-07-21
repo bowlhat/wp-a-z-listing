@@ -525,8 +525,8 @@ class Query {
 							$sort = apply_filters(
 								'a_z_listing_item_sorting_comparator',
 								$default_sort,
-								$a['title'],
-								$b['title']
+								$atitle,
+								$btitle
 							);
 
 							if ( is_int( $sort ) ) {
