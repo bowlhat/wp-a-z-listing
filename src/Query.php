@@ -579,21 +579,35 @@ class Query {
 					usort(
 						$indexed_items[ $character ],
 						function ( $a, $b ) {
-							$default_sort = strcasecmp( $a['title'], $b['title'] );
+							$atitle = strtolower( $a['title'] );
+							$btitle = strtolower( $b['title'] );
+
+							$default_sort = strcmp( $atitle, $btitle );
+
+							/**
+							 * Compare two titles to determine sorting order.
+							 *
+							 * @since 3.1.0
+							 * @param int The previous order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+							 * @param string $a The first title. Converted to lower case.
+							 * @param string $b The second title. Converted to lower case.
+							 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+							 */
 							$sort = apply_filters(
 								'a_z_listing_item_sorting_comparator',
 								$default_sort,
-								$a['title'],
-								$b['title']
+								$atitle,
+								$btitle
 							);
-							if ( -1 === $sort || 0 === $sort || 1 === $sort ) {
+
+							if ( is_int( $sort ) ) {
 								if ( AZLISTINGLOG ) {
-									do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not -1, 0, or 1', $sort, $a['title'], $b['title'] );
+									do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
 								}
 								return $sort;
-							} else {
-								return $default_sort;
 							}
+
+							return $default_sort;
 						}
 					);
 				}
