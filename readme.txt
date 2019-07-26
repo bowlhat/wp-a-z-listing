@@ -465,6 +465,7 @@ If there is code already in your functions.php then add just the lines between `
 
 * Ensure paths are correct when loading PHP files.
 * Add hook to customise sorting of items within each letter.
+* Fix broken permalinks on hierarchical post-types, e.g. page.
 
 **NEW EXTENSIONS**
 
