@@ -5,6 +5,8 @@
  * @package  a-z-listing
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
 
 if ( ! defined( 'ABSPATH' ) ) {

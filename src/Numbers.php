@@ -5,6 +5,8 @@
  * @package  a-z-listing
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,7 +40,7 @@ class Numbers {
 	 * @param string $position Can be either "before" or "after" indicating where to place the numbers respective to the alphabet.
 	 * @param bool   $group Whether to group the numbers into a single heading or individually.
 	 */
-	public function __construct( $position = 'hide', $group = false ) {
+	public function __construct( string $position = 'hide', bool $group = false ) {
 		if ( 'before' === $position || 'after' === $position ) {
 			$this->position = $position;
 			$this->group    = a_z_listing_is_truthy( $group );
@@ -64,7 +66,7 @@ class Numbers {
 	 * @param string $alphabet The alphabet to add numbers into.
 	 * @return string The alphabet with numbers either prepended or appended
 	 */
-	public function add_to_alphabet( $alphabet ) {
+	public function add_to_alphabet( string $alphabet ): string {
 		if ( 'hide' === $this->position ) {
 			return $alphabet;
 		}
@@ -88,7 +90,7 @@ class Numbers {
 	 * @param string $letter The original title of the group.
 	 * @return string The new title for the group
 	 */
-	public function title( $letter ) {
+	public function title( string $letter ): string {
 		if ( '0' === $letter && true === $this->group ) {
 			return '0-9';
 		}
@@ -107,6 +109,6 @@ class Numbers {
  *
  * @return A_Z_Listing_Numbers
  */
-function add_a_z_numbers( $position = 'after', $group = false ) {
-	return new A_Z_Listing_Numbers( $position, $group );
+function add_a_z_numbers( string $position = 'after', bool $group = false ): Numbers {
+	return new Numbers( $position, $group );
 }

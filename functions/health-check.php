@@ -6,6 +6,8 @@
  * @since 2.3.0
  */
 
+declare(strict_types=1);
+
 /**
  * Add A-Z Listing Health Checks
  *

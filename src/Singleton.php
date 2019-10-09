@@ -5,6 +5,8 @@
  * @package a-z-listing
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * A_Z_Listing_Singleton
  */
-abstract class Singleton {
+abstract class Singleton implements Extension {
 	/**
 	 * Instances
 	 *
@@ -27,7 +29,7 @@ abstract class Singleton {
 	 *
 	 * @return Extension extension object.
 	 */
-	final public static function instance() {
+	final public static function instance(): Extension {
 		$class = get_called_class();
 		if ( ! isset( self::$_instances[ $class ] ) ) {
 			self::$_instances[ $class ] = new $class();
@@ -41,9 +43,9 @@ abstract class Singleton {
 	 * @param string $file   the plugin file.
 	 * @param string $plugin the plugin details.
 	 *
-	 * @return Singleton
+	 * @return Extension extension object.
 	 */
-	public function activate( $file = '', $plugin = '' ) {
+	public function activate( String $file = '', String $plugin = '' ): Extension {
 		return $this;
 	}
 

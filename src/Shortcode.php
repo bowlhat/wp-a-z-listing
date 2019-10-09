@@ -5,6 +5,8 @@
  * @package a-z-listing
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Shortcode handler.
  */
-class Shortcode extends Singleton {
+class Shortcode extends Singleton implements Extension {
 	/**
 	 * Bind the shortcode to the handler.
 	 */
@@ -33,7 +35,7 @@ class Shortcode extends Singleton {
 	 * @param  array $attributes Provided by WordPress core. Contains the shortcode attributes.
 	 * @return string The A-Z Listing HTML.
 	 */
-	function handle( $attributes ) {
+	function handle( Array $attributes ) {
 		/**
 		 * Run extensions.
 		 */
@@ -125,7 +127,7 @@ class Shortcode extends Singleton {
 							'intval',
 							array_map( 'trim', $terms )
 						),
-						function( $value ) {
+						function( int $value ): bool {
 							return 0 < $value;
 						}
 					)
@@ -174,7 +176,7 @@ class Shortcode extends Singleton {
 							'intval',
 							array_map( 'trim', $exclude_posts )
 						),
-						function( $value ) {
+						function( int $value ): bool {
 							return 0 < $value;
 						}
 					)
