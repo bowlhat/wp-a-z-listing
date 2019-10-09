@@ -24,41 +24,41 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: functions/health-check.php:19
+#: functions/health-check.php:21
 msgid "A to Z Listing plugin"
 msgstr ""
 
-#: functions/health-check.php:35
+#: functions/health-check.php:37
 msgid "A-Z Listing: PHP mbstring module is enabled"
 msgstr ""
 
-#: functions/health-check.php:38
+#: functions/health-check.php:40
 msgid "Compatibility"
 msgstr ""
 
-#: functions/health-check.php:43
+#: functions/health-check.php:45
 msgid ""
 "The mbstring PHP module improves support for non-latin languages in the A-Z "
 "Listing plugin."
 msgstr ""
 
-#: functions/health-check.php:51
+#: functions/health-check.php:53
 msgid "A-Z Listing: PHP mbstring module is not enabled"
 msgstr ""
 
-#: functions/health-check.php:55
+#: functions/health-check.php:57
 msgid ""
 "The mbstring PHP module is not enabled on your server. This module improves "
 "support for non-latin languages in the A-Z Listing plugin."
 msgstr ""
 
-#: functions/health-check.php:57
+#: functions/health-check.php:59
 msgid ""
 "Contact your web host to request that the mbstring PHP module is enabled "
 "for your site."
 msgstr ""
 
-#: src/Query.php:355
+#: src/Query.php:357
 #. translators: List the aphabet of your language in the order that your
 #. language prefers. list as groups of identical meanings but different
 #. characters together, e.g. in English we group A with a because they are both
@@ -76,7 +76,7 @@ msgid ""
 "OÓÒÖÔoóòöô,Pp,Qq,Rr,Ssß,Tt,UÚÙÜÛuúùüû,Vv,Ww,Xx,Yy,Zz"
 msgstr ""
 
-#: src/Query.php:357
+#: src/Query.php:359
 #. translators: This should be a single character to denote "all entries that
 #. didn't fit under one of the alphabet character groups defined". This is used
 #. in English to categorise posts whose title begins with a numeric (0 through
@@ -93,90 +93,90 @@ msgstr ""
 msgid "There are no posts included in this index."
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:26
+#: widgets/class-a-z-listing-widget.php:28
 msgid "A-Z Site Map"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:29
+#: widgets/class-a-z-listing-widget.php:31
 msgid "Alphabetised links to the A-Z site map"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:119
-#: widgets/class-a-z-listing-widget.php:124
+#: widgets/class-a-z-listing-widget.php:121
+#: widgets/class-a-z-listing-widget.php:126
 msgid "Widget Title"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:128
+#: widgets/class-a-z-listing-widget.php:130
 msgid ""
 "Leave the title field blank, above, to use the title from the page set in "
 "the next field"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:135
+#: widgets/class-a-z-listing-widget.php:137
 msgid "Sitemap A-Z page"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:147
+#: widgets/class-a-z-listing-widget.php:149
 msgid ""
 "Type some or all of the title of the page you want links to point at. "
 "Ensure this input field is not selected when you save the settings."
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:148
-#: widgets/class-a-z-listing-widget.php:208
+#: widgets/class-a-z-listing-widget.php:150
+#: widgets/class-a-z-listing-widget.php:210
 msgid ""
 "Matching posts will be shown as you type. Click on the correct post from "
 "the matches to update the setting."
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:155
+#: widgets/class-a-z-listing-widget.php:157
 msgid "Display posts or terms?"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:162
+#: widgets/class-a-z-listing-widget.php:164
 msgid "Posts"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:166
+#: widgets/class-a-z-listing-widget.php:168
 msgid "Taxonomy terms"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:175
+#: widgets/class-a-z-listing-widget.php:177
 msgid "Post-type to display"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:194
+#: widgets/class-a-z-listing-widget.php:196
 msgid "Show only children of this post (ID)"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:207
+#: widgets/class-a-z-listing-widget.php:209
 msgid ""
 "Type some or all of the title of the post to limit the listing to only the "
 "children of that post. Ensure this input field is not selected when you "
 "save the settings."
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:212
+#: widgets/class-a-z-listing-widget.php:214
 msgid "Include grand-children?"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:224
+#: widgets/class-a-z-listing-widget.php:226
 msgid "Taxonomy to display"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:243
+#: widgets/class-a-z-listing-widget.php:245
 msgid "Parent term to display children of"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:255
+#: widgets/class-a-z-listing-widget.php:257
 msgid "Terms to include (IDs)"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:267
+#: widgets/class-a-z-listing-widget.php:269
 msgid "Terms to exclude (IDs)"
 msgstr ""
 
-#: widgets/class-a-z-listing-widget.php:279
+#: widgets/class-a-z-listing-widget.php:281
 msgid "Hide empty terms"
 msgstr ""
 
