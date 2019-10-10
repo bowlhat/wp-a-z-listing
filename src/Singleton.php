@@ -45,7 +45,7 @@ abstract class Singleton implements Extension {
 	 *
 	 * @return Extension extension object.
 	 */
-	public function activate( String $file = '', String $plugin = '' ): Extension {
+	public function activate( string $file = '', array $plugin = [] ): Extension {
 		return $this;
 	}
 
