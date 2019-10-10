@@ -13,10 +13,10 @@ declare(strict_types=1);
  *
  * @since 2.3.0
  *
- * @param array $tests The health checks.
- * @return array The health checks.
+ * @param array<string,mixed> $tests The health checks.
+ * @return array<string,mixed> The health checks.
  */
-function a_z_listing_add_health_check( $tests ) {
+function a_z_listing_add_health_check( array $tests ): array {
 	$tests['direct']['a_z_listing_mbstring'] = array(
 		'label' => __( 'A to Z Listing plugin', 'a-z-listing' ),
 		'test'  => 'a_z_listing_mbstring_health_check',
@@ -30,9 +30,9 @@ add_filter( 'site_status_tests', 'a_z_listing_add_health_check' );
  *
  * @since 2.3.0
  *
- * @return array The health check results.
+ * @return array<string,mixed> The health check results.
  */
-function a_z_listing_mbstring_health_check() {
+function a_z_listing_mbstring_health_check(): array {
 	$result = array(
 		'label'       => __( 'A-Z Listing: PHP mbstring module is enabled', 'a-z-listing' ),
 		'status'      => 'good',
@@ -67,10 +67,10 @@ function a_z_listing_mbstring_health_check() {
  *
  * @since 2.3.0
  *
- * @param array $modules An associated array of module properties used during testing.
- * @return array The `$modules` array with `mbstring` added.
+ * @param array<string,mixed> $modules An associated array of module properties used during testing.
+ * @return array<string,mixed> The `$modules` array with `mbstring` added.
  */
-function a_z_listing_php_modules_health_check( $modules ) {
+function a_z_listing_php_modules_health_check( array $modules ): array {
 	$modules['mbstring']['extension'] = 'mbstring';
 	if ( ! isset( $modules['mbstring']['required'] ) ) {
 		$modules['mbstring']['required'] = false;

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -31,7 +31,7 @@ class Grouping {
 	 * The populated headings for the listing
 	 *
 	 * @since 2.0.0
-	 * @var array
+	 * @var array<string,array>
 	 */
 	private $headings;
 
@@ -45,8 +45,8 @@ class Grouping {
 		$this->grouping = $grouping;
 
 		if ( 1 < $grouping ) {
-			add_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
-			add_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
+			\add_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
+			\add_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
 		}
 	}
 
@@ -54,10 +54,11 @@ class Grouping {
 	 * Remove the filters grouping the alphabet letters
 	 *
 	 * @since 2.0.0
+	 * @return void
 	 */
 	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
-		remove_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
+		\remove_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
+		\remove_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
 	}
 
 	/**
@@ -69,23 +70,30 @@ class Grouping {
 	 */
 	public function alphabet_filter( string $alphabet ): string {
 		$headings = array();
-		$letters  = explode( ',', $alphabet );
-		$letters  = array_map( 'trim', $letters );
+		$letters  = \explode( ',', $alphabet );
+		$letters  = \array_map( 'trim', $letters );
 
 		$i = 0;
 		$j = 0;
 
 		$grouping = $this->grouping;
 
-		$groups = array_reduce(
+		$groups = \array_reduce(
 			$letters,
+			/**
+			 * Closure to reduce the groups array and populate the headings array
+			 *
+			 * @param array<int,string> $carry
+			 * @param string $letter
+			 * @return array<int,string>
+			 */
 			function( array $carry, string $letter ) use ( $grouping, &$headings, &$i, &$j ) {
-				if ( ! isset( $carry[ $j ] ) ) {
-					$carry[ $j ] = $letter;
-				} else {
+				if ( isset( $carry[ $j ] ) ) {
 					$carry[ $j ] = $carry[ $j ] . $letter;
+				} else {
+					$carry[ $j ] = $letter;
 				}
-				$headings[ $j ][] = \A_Z_Listing\maybe_mb_substr( $letter, 0, 1 );
+				$headings[ $j ][] = Strings::maybe_mb_substr( $letter, 0, 1 );
 
 				if ( $i + 1 === $grouping ) {
 					$i = 0;
@@ -98,15 +106,22 @@ class Grouping {
 			}
 		);
 
-		$this->headings = array_reduce(
+		$this->headings = \array_reduce(
 			$headings,
+			/**
+			 * Closure to reduce the headings array
+			 *
+			 * @param array<string,string> $carry
+			 * @param string $heading
+			 * @return array<string,string>
+			 */
 			function( array $carry, string $heading ): array {
-				$carry[ maybe_mb_substr( $heading[0], 0, 1 ) ] = $heading;
+				$carry[ Strings::maybe_mb_substr( $heading[0], 0, 1 ) ] = $heading;
 				return $carry;
 			}
 		);
 
-		return join( ',', $groups );
+		return \join( ',', $groups );
 	}
 
 	/**
@@ -117,9 +132,9 @@ class Grouping {
 	 * @return string The new title for the group.
 	 */
 	public function heading( string $title ): string {
-		if ( isset( $this->headings[ $title ] ) && is_array( $this->headings[ $title ] ) ) {
+		if ( isset( $this->headings[ $title ] ) && \is_array( $this->headings[ $title ] ) ) {
 			$first = $this->headings[ $title ][0];
-			$last  = $this->headings[ $title ][ count( $this->headings[ $title ] ) - 1 ];
+			$last  = $this->headings[ $title ][ \count( $this->headings[ $title ] ) - 1 ];
 			return $first . '-' . $last;
 		}
 

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -20,30 +20,33 @@ abstract class Singleton implements Extension {
 	/**
 	 * Instances
 	 *
-	 * @var array
+	 * @since 4.0.0
+	 * @var array<string,Extension>
 	 */
-	private static $_instances = array();
+	private static $_instances = [];
 
 	/**
 	 * Singleton
 	 *
-	 * @return Extension extension object.
+	 * @since 4.0.0
+	 * @see Extension::instance
+	 * @suppress PhanPluginUnknownArrayMethodParamType
 	 */
 	final public static function instance(): Extension {
-		$class = get_called_class();
+		$class = \get_called_class();
 		if ( ! isset( self::$_instances[ $class ] ) ) {
 			self::$_instances[ $class ] = new $class();
 		}
 		return self::$_instances[ $class ];
 	}
 
+	// phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamTag
 	/**
 	 * Activate
 	 *
-	 * @param string $file   the plugin file.
-	 * @param string $plugin the plugin details.
-	 *
-	 * @return Extension extension object.
+	 * @since 4.0.0
+	 * @see Extension::activate
+	 * @suppress PhanPluginUnknownArrayMethodParamType,PhanPluginUnknownArrayMethodParamType
 	 */
 	public function activate( string $file = '', array $plugin = [] ): Extension {
 		return $this;
@@ -51,6 +54,10 @@ abstract class Singleton implements Extension {
 
 	/**
 	 * Initialize
+	 *
+	 * @since 4.0.0
+	 * @see Extension::initialize
+	 * @suppress PhanPluginUnknownArrayMethodParamType
 	 */
 	abstract public function initialize();
 }

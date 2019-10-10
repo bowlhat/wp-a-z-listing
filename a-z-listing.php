@@ -26,6 +26,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 /**
  * Initialize the plugin.
+ *
+ * @return void
  */
 function a_z_listing_init() {
 	\A_Z_Listing\Shortcode::instance()->activate( __FILE__, array() )->initialize();
@@ -34,6 +36,8 @@ function a_z_listing_init() {
 
 /**
  * Load all the plugin code.
+ *
+ * @return void
  */
 function a_z_listing_plugins_loaded() {
 	require __DIR__ . '/functions/i18n.php';

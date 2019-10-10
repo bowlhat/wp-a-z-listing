@@ -21,38 +21,50 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * Register the widget's meta information
 	 *
 	 * @since 0.1
+	 * @param string              $id_base         Optional Base ID for the widget, lowercase and unique. If left empty,
+	 *                                             a portion of the widget's class name will be used Has to be unique.
+	 * @param string              $name            Name for the widget displayed on the configuration page.
+	 * @param array<string,mixed> $widget_options  Optional. Widget options. See wp_register_sidebar_widget() for information
+	 *                                             on accepted arguments. Default empty array.
+	 * @param array<string,mixed> $control_options Optional. Widget control options. See wp_register_widget_control() for
+	 *                                             information on accepted arguments. Default empty array.
 	 */
-	public function __construct() {
+	public function __construct( $id_base = '', $name = '', $widget_options = [], $control_options = [] ) {
+		$widget_options['classname']   = $widget_options['classname'] ?? 'a-z-listing-widget';
+		$widget_options['description'] = $widget_options['description'] ?? __(
+			'Alphabetised links to the A-Z site map',
+			'a-z-listing'
+		);
+
 		parent::__construct(
-			'bh_az_widget',
-			__( 'A-Z Site Map', 'a-z-listing' ),
-			array(
-				'classname'   => 'a-z-listing-widget',
-				'description' => __( 'Alphabetised links to the A-Z site map', 'a-z-listing' ),
-			)
+			$id_base ?? 'bh_az_widget',
+			$name ?? __( 'A-Z Site Map', 'a-z-listing' ),
+			$widget_options,
+			$control_options
 		);
 
 		add_action( 'admin_enqueue_scripts', 'a_z_listing_enqueue_widget_admin_script' );
-
-		if ( is_active_widget( false, false, $this->id_base, true ) ) {
-			a_z_listing_do_enqueue();
-		}
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_if_active' ) );
 	}
 
 	/**
-	 * Deprecated constructor
+	 * Enqueue scripts and stylesheets if the widget is active on the page
 	 *
-	 * @since 0.1
+	 * @since 4.0.0
+	 * @return void
 	 */
-	public function A_Z_Widget() {
-		$this->__construct();
+	public function enqueue_if_active() {
+		if ( false !== is_active_widget( false, false, $this->id_base, true ) ) {
+			a_z_listing_do_enqueue();
+		}
 	}
 
 	/**
 	 * Print-out the configuration form for the widget
 	 *
 	 * @since 0.1
-	 * @param  array $instance Widget instance as provided by WordPress core.
+	 * @param  array<string,mixed> $instance Widget instance as provided by WordPress core.
+	 * @return string
 	 */
 	public function form( $instance ) {
 		$args = array(
@@ -62,7 +74,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 		$public_post_types = get_post_types( $args, 'objects' );
 		$public_taxonomies = get_taxonomies( $args, 'objects' );
 
-		$widget_title      = isset( $instance['title'] ) ? $instance['title'] : '';
+		$widget_title      = $instance['title'] ?? '';
 		$widget_title_id   = $this->get_field_id( 'title' );
 		$widget_title_name = $this->get_field_name( 'title' );
 
@@ -73,42 +85,42 @@ class A_Z_Listing_Widget extends WP_Widget {
 		$target_post            = isset( $instance['post'] ) ? intval( $instance['post'] ) : ( isset( $instance['page'] ) ? intval( $instance['page'] ) : 0 );
 		$target_post_id         = $this->get_field_id( 'post' );
 		$target_post_name       = $this->get_field_name( 'post' );
-		$target_post_title      = isset( $instance['target_post'] ) ? $instance['target_post'] : ( 0 < $target_post ) ? get_the_title( $target_post ) : '';
+		$target_post_title      = $instance['target_post'] ?? ( ( 0 < $target_post ) ? get_the_title( $target_post ) : '' );
 		$target_post_title_id   = $this->get_field_id( 'target_post_title' );
 		$target_post_title_name = $this->get_field_name( 'target_post_title' );
 
-		$listing_post_type      = isset( $instance['post_type'] ) ? $instance['post_type'] : 'page';
+		$listing_post_type      = $instance['post_type'] ?? 'page';
 		$listing_post_type_id   = $this->get_field_id( 'post_type' );
 		$listing_post_type_name = $this->get_field_name( 'post_type' );
 
-		$listing_parent_post            = isset( $instance['parent_post'] ) ? $instance['parent_post'] : '';
+		$listing_parent_post            = $instance['parent_post'] ?? '';
 		$listing_parent_post_id         = $this->get_field_id( 'parent_post' );
 		$listing_parent_post_name       = $this->get_field_name( 'parent_post' );
-		$listing_parent_post_title      = isset( $instance['parent_post_title'] ) ? $instance['parent_post_title'] : ( 0 < $listing_parent_post ) ? get_the_title( $listing_parent_post ) : '';
+		$listing_parent_post_title      = $instance['parent_post_title'] ?? ( ( 0 < $listing_parent_post ) ? get_the_title( $listing_parent_post ) : '' );
 		$listing_parent_post_title_id   = $this->get_field_id( 'parent_post_title' );
 		$listing_parent_post_title_name = $this->get_field_name( 'parent_post_title' );
 
-		$listing_all_children      = isset( $instance['all_children'] ) ? $instance['all_children'] : 'true';
+		$listing_all_children      = $instance['all_children'] ?? 'true';
 		$listing_all_children_id   = $this->get_field_id( 'all_children' );
 		$listing_all_children_name = $this->get_field_name( 'all_children' );
 
-		$listing_taxonomy      = isset( $instance['taxonomy'] ) ? $instance['taxonomy'] : 'page';
+		$listing_taxonomy      = $instance['taxonomy'] ?? 'page';
 		$listing_taxonomy_id   = $this->get_field_id( 'taxonomy' );
 		$listing_taxonomy_name = $this->get_field_name( 'taxonomy' );
 
-		$listing_parent_term      = isset( $instance['parent_term'] ) ? $instance['parent_term'] : '';
+		$listing_parent_term      = $instance['parent_term'] ?? '';
 		$listing_parent_term_id   = $this->get_field_id( 'parent_term' );
 		$listing_parent_term_name = $this->get_field_name( 'parent_term' );
 
-		$listing_terms_include      = isset( $instance['terms'] ) ? $instance['terms'] : '';
+		$listing_terms_include      = $instance['terms'] ?? '';
 		$listing_terms_include_id   = $this->get_field_id( 'terms' );
 		$listing_terms_include_name = $this->get_field_name( 'terms' );
 
-		$listing_terms_exclude      = isset( $instance['terms_exclude'] ) ? $instance['terms_exclude'] : '';
+		$listing_terms_exclude      = $instance['terms_exclude'] ?? '';
 		$listing_terms_exclude_id   = $this->get_field_id( 'terms_exclude' );
 		$listing_terms_exclude_name = $this->get_field_name( 'terms_exclude' );
 
-		$listing_hide_empty_terms      = isset( $instance['hide_empty_terms'] ) ? $instance['hide_empty_terms'] : '';
+		$listing_hide_empty_terms      = $instance['hide_empty_terms'] ?? '';
 		$listing_hide_empty_terms_id   = $this->get_field_id( 'hide_empty_terms' );
 		$listing_hide_empty_terms_name = $this->get_field_name( 'hide_empty_terms' );
 		?>
@@ -287,15 +299,16 @@ class A_Z_Listing_Widget extends WP_Widget {
 			</div>
 		</div>
 		<?php
+		return '';
 	}
 
 	/**
 	 * Called by WordPress core. Sanitises changes to the Widget's configuration
 	 *
 	 * @since 0.1
-	 * @param  array $new_instance the new configuration values.
-	 * @param  array $old_instance the previous configuration values.
-	 * @return array               sanitised version of the new configuration values to be saved
+	 * @param  array<string,mixed> $new_instance the new configuration values.
+	 * @param  array<string,mixed> $old_instance the previous configuration values.
+	 * @return array<string,mixed> sanitised version of the new configuration values to be saved
 	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
@@ -327,10 +340,11 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * Print the user-visible widget to the page
 	 *
 	 * @since 0.1
-	 * @param  array $args     General widget configuration. Often shared between all widgets on the site.
-	 * @param  array $instance Configuration of this Widget. Unique to this invocation.
+	 * @param  array<string,mixed> $args     General widget configuration. Often shared between all widgets on the site.
+	 * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
+	 * @return void
 	 */
-	public function widget( array $args, array $instance ) {
+	public function widget( $args, $instance ) {
 		the_section_a_z_widget( $args, $instance );
 	}
 }
@@ -342,10 +356,11 @@ class A_Z_Listing_Widget extends WP_Widget {
  * @since 0.8.0 deprecated.
  * @see A_Z_Widget::the_section_a_z_widget()
  * @deprecated use the_section_a_z_widget()
- * @param  array $args     General widget configuration. Often shared between all widgets on the site.
- * @param  array $instance Configuration of this Widget. Unique to this invocation.
+ * @param  array<string,mixed> $args     General widget configuration. Often shared between all widgets on the site.
+ * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
+ * @return void
  */
-function the_section_az_widget( $args, $instance ) {
+function the_section_az_widget( array $args, array $instance ) {
 	_deprecated_function( __FUNCTION__, '0.8.0', 'the_section_a_z_widget' );
 	the_section_a_z_widget( $args, $instance );
 }
@@ -354,8 +369,9 @@ function the_section_az_widget( $args, $instance ) {
  * Print the user-visible widget to the page implentation
  *
  * @since 0.8.0
- * @param  array $args     General widget configuration. Often shared between all widgets on the site.
- * @param  array $instance Configuration of this Widget. Unique to this invocation.
+ * @param  array<string,mixed> $args     General widget configuration. Often shared between all widgets on the site.
+ * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
+ * @return void
  */
 function the_section_a_z_widget( array $args, array $instance ) {
 	echo get_the_section_a_z_widget( $args, $instance ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -368,13 +384,11 @@ function the_section_a_z_widget( array $args, array $instance ) {
  * @since 0.8.0 deprecated.
  * @see A_Z_Widget::get_the_section_a_z_widget()
  * @deprecated use get_the_section_a_z_widget()
- *
- * @param  array $args General widget configuration. Often shared between all widgets on the site.
- * @param  array $instance Configuration of this Widget. Unique to this invocation.
- *
- * @return string
+ * @param  array<string,mixed> $args General widget configuration. Often shared between all widgets on the site.
+ * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
+ * @return string The complete A-Z Widget HTML ready for echoing to the page.
  */
-function get_the_section_az_widget( $args, $instance ) {
+function get_the_section_az_widget( array $args, array $instance ): string {
 	_deprecated_function( __FUNCTION__, '0.8.0', 'get_the_section_a_z_widget' );
 	return get_the_section_a_z_widget( $args, $instance );
 }
@@ -383,8 +397,8 @@ function get_the_section_az_widget( $args, $instance ) {
  * Get the user-visible widget html
  *
  * @since 0.8.0
- * @param  array $args     General widget configuration. Often shared between all widgets on the site.
- * @param  array $instance Configuration of this Widget. Unique to this invocation.
+ * @param  array<string,mixed> $args     General widget configuration. Often shared between all widgets on the site.
+ * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
  * @return  string The complete A-Z Widget HTML ready for echoing to the page.
  */
 function get_the_section_a_z_widget( array $args, array $instance ): string {
@@ -435,23 +449,23 @@ function get_the_section_a_z_widget( array $args, array $instance ): string {
 
 	$ret .= do_shortcode(
 		"[a-z-listing
-			alphabet=''
-			display='{$instance['type']}'
-			exclude-posts=''
-			exclude-terms='{$instance['exclude_terms']}'
-			get-all-children='{$instance['all_children']}'
-			group-numbers=''
-			grouping=''
-			hide-empty-terms='{$hide_empty_terms}'
-			numbers='hide'
-			parent-post='{$instance['parent_post']}'
-			parent-term='{$instance['parent_term']}'
-			post-type='{$instance['post_type']}'
-			return='letters'
-			target='{$target_url}'
-			taxonomy='{$instance['taxonomy']}'
-			terms='{$instance['terms']}'
-		]"
+            alphabet=''
+            display='{$instance['type']}'
+            exclude-posts=''
+            exclude-terms='{$instance['exclude_terms']}'
+            get-all-children='{$instance['all_children']}'
+            group-numbers=''
+            grouping=''
+            hide-empty-terms='{$hide_empty_terms}'
+            numbers='hide'
+            parent-post='{$instance['parent_post']}'
+            parent-term='{$instance['parent_term']}'
+            post-type='{$instance['post_type']}'
+            return='letters'
+            target='{$target_url}'
+            taxonomy='{$instance['taxonomy']}'
+            terms='{$instance['terms']}'
+        ]"
 	);
 
 	$ret .= $args['after_widget'];
@@ -465,7 +479,7 @@ function get_the_section_a_z_widget( array $args, array $instance ): string {
  * @since 2.1.0
  * @param string $post_title the title to search for.
  * @param string $post_type the post type to search within.
- * @return array the post IDs that are found.
+ * @return array<int,object> the post IDs that are found.
  */
 function a_z_listing_get_posts_by_title( string $post_title, string $post_type = '' ): array {
 	global $wpdb;
@@ -476,7 +490,7 @@ function a_z_listing_get_posts_by_title( string $post_title, string $post_type =
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
-				WHERE `post_title` LIKE %s AND `post_type` = %s AND `post_status` = 'publish'",
+                WHERE `post_title` LIKE %s AND `post_type` = %s AND `post_status` = 'publish'",
 				$post_title,
 				$post_type
 			)
@@ -485,7 +499,7 @@ function a_z_listing_get_posts_by_title( string $post_title, string $post_type =
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
-				WHERE `post_title` LIKE %s AND `post_status` = 'publish'",
+                WHERE `post_title` LIKE %s AND `post_status` = 'publish'",
 				$post_title
 			)
 		);
@@ -496,6 +510,7 @@ function a_z_listing_get_posts_by_title( string $post_title, string $post_type =
  * Ajax responder for A_Z_Listing_Widget configuration
  *
  * @since 2.0.0
+ * @return void
  */
 function a_z_listing_autocomplete_post_titles() {
 	$post_title = stripslashes( $_POST['post_title']['term'] );
@@ -503,12 +518,12 @@ function a_z_listing_autocomplete_post_titles() {
 
 	$results = a_z_listing_get_posts_by_title( $post_title, $post_type );
 
-	$titles = array();
+	$titles = [];
 	foreach ( $results as $result ) {
-		$titles[] = array(
+		$titles[] = [
 			'value' => intval( $result->ID ),
 			'label' => addslashes( $result->post_title ),
-		);
+		];
 	}
 
 	echo json_encode( $titles );
@@ -522,6 +537,7 @@ add_action( 'wp_ajax_get_a_z_listing_autocomplete_post_titles', 'a_z_listing_aut
  * Register the A_Z_Widget widget
  *
  * @since 2.0.0
+ * @return void
  */
 function a_z_listing_widget() {
 	register_widget( 'A_Z_Listing_Widget' );
@@ -532,6 +548,7 @@ add_action( 'widgets_init', 'a_z_listing_widget' );
  * Enqueue the jquery-ui autocomplete script
  *
  * @since 2.0.0
+ * @return void
  */
 function a_z_listing_autocomplete_script() {
 	wp_enqueue_script( 'jquery-ui-autocomplete' );

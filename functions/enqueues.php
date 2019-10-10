@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * functions to the `wp_enqueue_scripts` action
  *
  * @since 2.0.0 Renamed from a_z_listing_add_styling. Added jQuery-UI Tabs support.
+ * @return void
  */
 function a_z_listing_do_enqueue() {
 	wp_register_style(
@@ -75,7 +76,7 @@ function a_z_listing_do_enqueue() {
 	 */
 	$add_styles = apply_filters( 'a-z-listing-add-styling', $add_styles );
 
-	if ( AZLISTINGLOG ) {
+	if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
 		do_action( 'log', 'A-Z Listing: Add Styles', $add_styles );
 	}
 	if ( true === $add_styles && ! has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' ) ) {
@@ -100,7 +101,7 @@ function a_z_listing_do_enqueue() {
 	 */
 	$tabify = apply_filters( 'a-z-listing-tabify', $tabify );
 
-	if ( AZLISTINGLOG ) {
+	if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
 		do_action( 'log', 'A-Z Listing: Tabify', $tabify );
 	}
 	if ( true === $tabify && ! has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' ) ) {

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -43,9 +43,9 @@ class Numbers {
 	public function __construct( string $position = 'hide', bool $group = false ) {
 		if ( 'before' === $position || 'after' === $position ) {
 			$this->position = $position;
-			$this->group    = a_z_listing_is_truthy( $group );
-			add_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
-			add_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
+			$this->group    = \a_z_listing_is_truthy( $group );
+			\add_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+			\add_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 		}
 	}
 
@@ -53,10 +53,11 @@ class Numbers {
 	 * Remove the numbers filters we added previously
 	 *
 	 * @since 2.0.0
+	 * @return void
 	 */
 	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
-		remove_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
+		\remove_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+		\remove_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 	}
 
 	/**
@@ -78,9 +79,10 @@ class Numbers {
 		}
 
 		if ( 'before' === $this->position ) {
-			return join( ',', array( $numbers, $alphabet ) );
+			return \join( ',', array( $numbers, $alphabet ) );
+		} else {
+			return \join( ',', array( $alphabet, $numbers ) );
 		}
-		return join( ',', array( $alphabet, $numbers ) );
 	}
 
 	/**
@@ -106,8 +108,7 @@ class Numbers {
  *
  * @param string $position set to before to place the numbers first. Any other value will place them last.
  * @param bool   $group    group the numbers in a single collection rather than individually.
- *
- * @return A_Z_Listing_Numbers
+ * @return Numbers the numbers extension instance object
  */
 function add_a_z_numbers( string $position = 'after', bool $group = false ): Numbers {
 	return new Numbers( $position, $group );

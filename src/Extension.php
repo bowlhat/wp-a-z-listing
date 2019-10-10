@@ -1,7 +1,7 @@
 <?php
 /**
- * Extension Interface
- * 
+ * A-Z Listing Extension interface
+ *
  * @package a-z-listing
  */
 
@@ -9,8 +9,33 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
+/**
+ * A-Z Listing Extension interface
+ */
 interface Extension {
-    public static function instance(): Extension;
-    public function activate( String $file = '', String $plugin = '' ): Extension;
-    public function initialize();
+	/**
+	 * Singleton
+	 *
+	 * @since 4.0.0
+	 * @return Extension extension object.
+	 */
+	public static function instance(): Extension;
+
+	/**
+	 * Activate
+	 *
+	 * @since 4.0.0
+	 * @param string              $file   the plugin file.
+	 * @param array<string,mixed> $plugin the plugin details.
+	 * @return Extension extension object.
+	 */
+	public function activate( string $file = '', array $plugin = [] ): Extension;
+
+	/**
+	 * Initialize
+	 *
+	 * @since 4.0.0
+	 * @return void
+	 */
+	public function initialize();
 }
