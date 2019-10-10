@@ -4,7 +4,7 @@
   "main": "Gruntfile.js",
   "author": "Daniel Llewellyn",
   "scripts": {
-    "build": "grunt"
+    "build": "./node_modules/.bin/grunt"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
