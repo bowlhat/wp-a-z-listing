@@ -36,23 +36,9 @@ class Query {
 	/**
 	 * All available characters in a single string for translation support
 	 *
-	 * @var array
+	 * @var \A_Z_Listing\Alphabet
 	 */
 	private $alphabet;
-
-	/**
-	 * The index label to use for posts which are not matched by any known letter, from the $alphabet, such as numerics
-	 *
-	 * @var string
-	 */
-	private $unknown_letters;
-
-	/**
-	 * All available characters which may be used as an index
-	 *
-	 * @var array
-	 */
-	private $alphabet_chars;
 
 	/**
 	 * All items returned by the query
@@ -110,13 +96,12 @@ class Query {
 	 * @since 1.9.2 Instantiate the \WP_Query object here instead of in `A_Z_Listing::construct_query()`
 	 * @since 2.0.0 add $type and $use_cache parameters
 	 * @param null|\WP_Query|array|string $query     A \WP_Query-compatible query definition or a taxonomy name.
-	 * @param null|string                 $type      Specify the listing type; either 'posts' or 'terms'.
-	 * @param boolean                     $use_cache Cache the Listing via WordPress transients.
+	 * @param string                      $type      Specify the listing type; either 'posts' or 'terms'.
+	 * @param bool                     $use_cache Cache the Listing via WordPress transients.
 	 */
-	public function __construct( $query = null, $type = 'posts', $use_cache = true ) {
+	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true ) {
 		global $post;
-		$this->get_alphabet();
-		$this->alphabet_chars = array_values( array_unique( $this->alphabet ) );
+		$this->alphabet = new \A_Z_Listing\Alphabet();
 
 		if ( is_string( $query ) && ! empty( $query ) ) {
 			$type = 'terms';
@@ -290,7 +275,7 @@ class Query {
 	 * @param \WP_Query $query The \WP_Query object.
 	 * @return string The new fields in SQL format.
 	 */
-	public function wp_query_fields( $fields, $query ) {
+	public function wp_query_fields( string $fields, \WP_Query $query ): string {
 		global $wpdb;
 		return "{$wpdb->posts}.ID, {$wpdb->posts}.post_title, {$wpdb->posts}.post_type, {$wpdb->posts}.post_name, {$wpdb->posts}.post_parent, {$wpdb->posts}.post_date";
 	}
@@ -301,10 +286,10 @@ class Query {
 	 * @since 2.0.0
 	 * @param array   $query     the query.
 	 * @param string  $type      the type of query.
-	 * @param boolean $use_cache whether to check the cache.
+	 * @param bool    $use_cache whether to check the cache.
 	 * @return bool whether we found a cached query
 	 */
-	private function check_cache( $query, $type, $use_cache ) {
+	private function check_cache( array $query, string $type, bool $use_cache ): bool {
 		if ( $use_cache ) {
 			/**
 			 * Get the cached data
@@ -316,98 +301,15 @@ class Query {
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
 			$cached = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $type );
-			if ( count( $cached ) > 0 ) {
+			if ( ! empty( $cached ) ) {
 				$this->matched_item_indices = $cached;
 				return true;
+			} else {
+				return false;
 			}
+		} else {
+			return false;
 		}
-		return false;
-	}
-
-	/**
-	 * Split a multibyte string into an array. (see https://php.net/manual/en/function.mb-split.php#121330)
-	 *
-	 * @since 1.0.0
-	 * @param string $string multi-byte string.
-	 * @return array individual multi-byte characters from the string
-	 */
-	public static function mb_string_to_array( $string ) {
-		if ( extension_loaded( 'mbstring' ) ) {
-			return array_map(
-				function ( $i ) use ( $string ) {
-					return mb_substr( $string, $i, 1 );
-				},
-				range( 0, mb_strlen( $string ) - 1 )
-			);
-		}
-		return explode( '', $string );
-	}
-
-	/**
-	 * Build a translated alphabet
-	 *
-	 * @since 0.1
-	 */
-	protected function get_alphabet() {
-		if ( ! empty( $this->alphabet ) ) {
-			return;
-		}
-
-		/* translators: List the aphabet of your language in the order that your language prefers. list as groups of identical meanings but different characters together, e.g. in English we group A with a because they are both the same letter but different character-code. Each character group should be followed by a comma separating it from the next group. Any amount of characters per group are acceptible, and there is no requirement for all the groups to contain the same amount of characters as all the others. Be careful with the character you place first in each group as that will be used as the identifier for the group which gets displayed on the page, e.g. in English a group definition of "Aa" will indicate that we display all the posts in the group, i.e. whose titles begin with either "A" or "a", listed under a heading of "A" (the first character in the definition). */
-		$alphabet = __( 'AÁÀÄÂaáàäâ,Bb,CÇcç,Dd,EÉÈËÊeéèëê,Ff,Gg,Hh,IÍÌÏÎiíìïî,Jj,Kk,Ll,Mm,Nn,OÓÒÖÔoóòöô,Pp,Qq,Rr,Ssß,Tt,UÚÙÜÛuúùüû,Vv,Ww,Xx,Yy,Zz', 'a-z-listing' );
-		/* translators: This should be a single character to denote "all entries that didn't fit under one of the alphabet character groups defined". This is used in English to categorise posts whose title begins with a numeric (0 through to 9), or some other character that is not a standard English alphabet letter. */
-		$others = __( '#', 'a-z-listing' );
-
-		/**
-		 * Filters the alphabet. The string should contain groups of similar or identical characters separated by commas. The first character in each group is the one used for the group title.
-		 *
-		 * @param string $alphabet The $alphabet
-		 */
-		$alphabet = apply_filters( 'a_z_listing_alphabet', $alphabet );
-		/**
-		 * Filters the alphabet. The string should contain groups of similar or identical characters separated by commas. The first character in each group is the one used for the group title.
-		 *
-		 * @since 1.7.1
-		 * @param string $alphabet The $alphabet.
-		 */
-		$alphabet = apply_filters( 'a-z-listing-alphabet', $alphabet );
-
-		/**
-		 * Specifies the character used for all non-alphabetic titles, such as numeric titles in the default setup for English. Defaults to '#' unless overridden by a language pack.
-		 *
-		 * @param string $non_alpha_char The character for non-alphabetic post titles.
-		 */
-		$others = apply_filters( 'a_z_listing_non_alpha_char', $others );
-		/**
-		 * Specifies the character used for all non-alphabetic titles, such as numeric titles in the default setup for English. Defaults to '#' unless overridden by a language pack.
-		 *
-		 * @since 1.7.1
-		 * @param string $non_alpha_char The character for non-alphabetic post titles.
-		 */
-		$others = apply_filters( 'a-z-listing-non-alpha-char', $others );
-
-		$alphabet_groups = explode( ',', $alphabet );
-		$letters         = array_reduce(
-			$alphabet_groups,
-			function( $return, $group ) {
-				$group                 = \A_Z_Listing\Query::mb_string_to_array( $group );
-				$group_index_character = $group[0];
-				$group                 = array_reduce(
-					$group,
-					function( $group, $character ) use ( $group_index_character ) {
-						$group[ $character ] = $group_index_character;
-						return $group;
-					}
-				);
-				if ( ! is_array( $return ) ) {
-					return $group;
-				}
-				return array_merge( $return, $group );
-			}
-		);
-
-		$this->alphabet        = $letters;
-		$this->unknown_letters = $others;
 	}
 
 	/**
@@ -540,28 +442,24 @@ class Query {
 	 * @param array $items The items to index.
 	 * @return array The index letters
 	 */
-	protected function get_all_indices( $items = null ) {
+	protected function get_all_indices( array $items = [] ): array {
 		$indexed_items = array();
 
-		if ( ! $items ) {
+		if ( ! is_array( $items ) || empty( $items ) ) {
 			$items = $this->items;
 		}
 
-		if ( is_array( $items ) && count( $items ) > 0 ) {
+		if ( is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				$item_indices = apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
 
-				if ( count( $item_indices ) < 1 ) {
+				if ( empty( $item_indices ) ) {
 					continue;
 				}
 
 				foreach ( $item_indices as $index => $index_entries ) {
-					if ( count( $index_entries ) > 0 ) {
-						if ( in_array( $index, array_keys( $this->alphabet ), true ) ) {
-							$index = $this->alphabet[ $index ];
-						} else {
-							$index = $this->unknown_letters;
-						}
+					if ( ! empty( $index_entries ) ) {
+						$index = $this->alphabet->get_letter( $index );
 
 						if ( ! isset( $indexed_items[ $index ] ) || ! is_array( $indexed_items[ $index ] ) ) {
 							$indexed_items[ $index ] = array();
@@ -571,49 +469,47 @@ class Query {
 				}
 			}
 
-			if ( array_key_exists( $this->unknown_letters, $indexed_items ) && ! empty( $indexed_items[ $this->unknown_letters ] ) ) {
-				$this->alphabet_chars[]                   = $this->unknown_letters;
-				$this->alphabet[ $this->unknown_letters ] = $this->unknown_letters;
-			}
-
-			foreach ( $this->alphabet_chars as $character ) {
-				if ( ! empty( $indexed_items[ $character ] ) ) {
-					usort(
-						$indexed_items[ $character ],
-						function ( $a, $b ) {
-							$atitle = strtolower( $a['title'] );
-							$btitle = strtolower( $b['title'] );
-
-							$default_sort = strcmp( $atitle, $btitle );
-
-							/**
-							 * Compare two titles to determine sorting order.
-							 *
-							 * @since 3.1.0
-							 * @param int The previous order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
-							 * @param string $a The first title. Converted to lower case.
-							 * @param string $b The second title. Converted to lower case.
-							 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
-							 */
-							$sort = apply_filters(
-								'a_z_listing_item_sorting_comparator',
-								$default_sort,
-								$atitle,
-								$btitle
-							);
-
-							if ( is_int( $sort ) ) {
-								if ( AZLISTINGLOG ) {
-									do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+			$this->alphabet->loop(
+				array_key_exists( $this->alphabet->unknown(), $indexed_items ),
+				function( string $character ) use ( $indexed_items ) {
+					if ( ! empty( $indexed_items[ $character ] ) ) {
+						usort(
+							$indexed_items[ $character ],
+							function ( $a, $b ) {
+								$atitle = strtolower( $a['title'] );
+								$btitle = strtolower( $b['title'] );
+	
+								$default_sort = strcmp( $atitle, $btitle );
+	
+								/**
+								 * Compare two titles to determine sorting order.
+								 *
+								 * @since 3.1.0
+								 * @param int The previous order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+								 * @param string $a The first title. Converted to lower case.
+								 * @param string $b The second title. Converted to lower case.
+								 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+								 */
+								$sort = apply_filters(
+									'a_z_listing_item_sorting_comparator',
+									$default_sort,
+									$atitle,
+									$btitle
+								);
+	
+								if ( is_int( $sort ) ) {
+									if ( AZLISTINGLOG ) {
+										do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+									}
+									return $sort;
 								}
-								return $sort;
+	
+								return $default_sort;
 							}
-
-							return $default_sort;
-						}
-					);
+						);
+					}
 				}
-			}
+			);
 		}
 
 		return $indexed_items;
@@ -626,7 +522,7 @@ class Query {
 	 * @param string $target The page to point links toward.
 	 * @param string $style CSS classes to apply to the output.
 	 */
-	public function the_letters( $target = '', $style = null ) {
+	public function the_letters( string $target = '', string $style = null ) {
 		echo $this->get_the_letters( $target, $style ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
@@ -634,6 +530,7 @@ class Query {
 	 * Print the letter links HTML
 	 *
 	 * @since 0.1
+	 * @since 1.0.0 deprecated.
 	 * @see A_Z_Listing::get_the_letters()
 	 * @deprecated use A_Z_Listing::get_the_letters().
 	 * @param string $target The page to point links toward.
@@ -653,7 +550,7 @@ class Query {
 	 * @param string $style CSS classes to apply to the output.
 	 * @return string The letter links HTML
 	 */
-	public function get_the_letters( $target = '', $style = null ) {
+	public function get_the_letters( string $target = '', string $style = null ): string {
 		$classes = array( 'az-links' );
 		if ( null !== $style ) {
 			if ( is_array( $style ) ) {
@@ -665,45 +562,52 @@ class Query {
 		}
 		$classes = array_unique( $classes );
 
-		$ret   = '<ul class="' . esc_attr( implode( ' ', $classes ) ) . '">';
-		$count = count( $this->alphabet_chars );
-		$i     = 0;
-		foreach ( $this->alphabet_chars as $letter ) {
-			$i++;
-			$id = $letter;
-			if ( $this->unknown_letters === $id ) {
-				$id = '_';
-			}
+		$that     = $this;
+		$alphabet = $this->alphabet;
+		$indices  = $this->matched_item_indices;
+		$i        = 0;
+		$ret      = '<ul class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
-			$classes = array();
-			if ( 1 === $i ) {
-				array_push( $classes, 'first' );
-			} elseif ( $count === $i ) {
-				array_push( $classes, 'last' );
+		$this->alphabet->loop(
+			array_key_exists( $this->alphabet->unknown(), $this->matched_item_indices ),
+			function( string $character, $key, int $count ) use ( $that, $alphabet, $indices, $i, $ret ) {
+				$i++;
+				$id = $character;
+				if ( $alphabet->unknown_letter() === $id ) {
+					$id = '_';
+				}
+	
+				$classes = [];
+				if ( 1 === $i ) {
+					$classes[] = 'first';
+				} elseif ( $count === $i ) {
+					$classes[] = 'last';
+				}
+	
+				if ( 0 === $i % 2 ) {
+					$classes[] = 'even';
+				} else {
+					$classes[] = 'odd';
+				}
+	
+				if ( ! empty( $indices[ $character ] ) ) {
+					$classes[] = 'has-posts';
+				} else {
+					$classes[] = 'no-posts';
+				}
+	
+				$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
+				if ( ! empty( $indices[ $character ] ) ) {
+					$ret .= '<a href="' . esc_url( $target . '#letter-' . $id ) . '">';
+				}
+				$ret .= '<span>' . esc_html( $that->get_the_letter_title( $character ) ) . '</span>';
+				if ( ! empty( $indices[ $character ] ) ) {
+					$ret .= '</a>';
+				}
+				$ret .= '</li>';
 			}
+		);
 
-			if ( 0 === $i % 2 ) {
-				array_push( $classes, 'even' );
-			} else {
-				array_push( $classes, 'odd' );
-			}
-
-			if ( ! empty( $this->matched_item_indices[ $letter ] ) ) {
-				array_push( $classes, 'has-posts' );
-			} else {
-				array_push( $classes, 'no-posts' );
-			}
-
-			$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
-			if ( ! empty( $this->matched_item_indices[ $letter ] ) ) {
-				$ret .= '<a href="' . esc_url( $target . '#letter-' . $id ) . '">';
-			}
-			$ret .= '<span>' . esc_html( $this->get_the_letter_title( $letter ) ) . '</span>';
-			if ( ! empty( $this->matched_item_indices[ $letter ] ) ) {
-				$ret .= '</a>';
-			}
-			$ret .= '</li>';
-		}
 		$ret .= '</ul>';
 		return $ret;
 	}
@@ -755,7 +659,7 @@ class Query {
 	 * @since 0.7
 	 * @return string The index list HTML.
 	 */
-	public function get_the_listing() {
+	public function get_the_listing(): string {
 		ob_start();
 		$this->the_listing();
 		$r = ob_get_clean();
@@ -781,14 +685,15 @@ class Query {
 	 * @since 1.0.0
 	 * @return bool True if we have more letters to iterate, otherwise false
 	 */
-	public function have_letters() {
-		return ( count( $this->alphabet_chars ) > $this->current_letter_index );
+	public function have_letters(): bool {
+		return ( $this->num_letters > $this->current_letter_index );
 	}
 
 	/**
 	 * Used by theme templates. Returns true when we still have posts to iterate.
 	 *
 	 * @since 0.7
+	 * @since 1.0.0 deprecated.
 	 * @see A_Z_Listing::have_items()
 	 * @deprecated use A_Z_Listing::have_items()
 	 */
@@ -806,8 +711,9 @@ class Query {
 	 * @since 1.0.0
 	 * @return bool True if there are posts left to iterate within the current letter, otherwise false.
 	 */
-	public function have_items() {
-		return ( is_array( $this->current_letter_items ) && count( $this->current_letter_items ) > $this->current_item_index );
+	public function have_items(): bool {
+		return is_array( $this->current_letter_items ) &&
+			$this->get_the_letter_count() > $this->current_item_index;
 	}
 
 	/**
@@ -818,8 +724,9 @@ class Query {
 	public function the_letter() {
 		$this->current_item_index   = 0;
 		$this->current_letter_items = array();
-		if ( isset( $this->matched_item_indices[ $this->alphabet_chars[ $this->current_letter_index ] ] ) ) {
-			$this->current_letter_items = $this->matched_item_indices[ $this->alphabet_chars[ $this->current_letter_index ] ];
+		$letter = $this->alphabet->chars[ $this->current_letter_index ];
+		if ( isset( $this->matched_item_indices[ $letter ] ) ) {
+			$this->current_letter_items = $this->matched_item_indices[ $letter ];
 		}
 		$this->current_letter_index += 1;
 	}
@@ -828,6 +735,7 @@ class Query {
 	 * Advance the Post loop within the Letter Loop onto the next post
 	 *
 	 * @since 0.7
+	 * @since 1.0.0 deprecated.
 	 * @see A_Z_Listing::the_item()
 	 * @deprecated use A_Z_Listing::the_item()
 	 */
@@ -853,7 +761,7 @@ class Query {
 	 * @param string $force Set this to 'I understand the issues!' to acknowledge that this function will cause slowness on large sites.
 	 * @return array|\WP_Error|\WP_Post|\WP_Term
 	 */
-	public function get_the_item_object( $force = '' ) {
+	public function get_the_item_object( string $force = '' ) {
 		global $post;
 		if ( 'I understand the issues!' === $force ) {
 			$current_item = $this->current_item['item'];
@@ -880,8 +788,9 @@ class Query {
 				return get_term( $current_item );
 			}
 			return $current_item;
+		} else {
+			return new \WP_Error( 'understanding', 'You must tell the plugin "I understand the issues!" when calling get_the_item_object().' );
 		}
-		return new \WP_Error( 'understanding', 'You must tell the plugin "I understand the issues!" when calling get_the_item_object().' );
 	}
 
 	/**
@@ -892,7 +801,7 @@ class Query {
 	 * @param bool   $single Whether to return a single value.
 	 * @return mixed|\WP_Error Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
-	function get_item_meta( $key = '', $single = false ) {
+	function get_item_meta( string $key = '', bool $single = false ) {
 		if ( is_string( $this->current_item['item'] ) ) {
 			$item = explode( ':', $this->current_item['item'], 2 );
 
@@ -902,14 +811,13 @@ class Query {
 			if ( 'post' === $item[0] ) {
 				return get_post_meta( $item[1], $key, $single );
 			}
-		}
-		if ( $this->current_item['item'] instanceof \WP_Term ) {
+		} elseif ( $this->current_item['item'] instanceof \WP_Term ) {
 			return get_term_meta( $this->current_item['item']->term_id, $key, $single );
-		}
-		if ( $this->current_item['item'] instanceof \WP_Post ) {
+		} elseif ( $this->current_item['item'] instanceof \WP_Post ) {
 			return get_post_meta( $this->current_item['item']->ID, $key, $single );
+		} else {
+			return new \WP_Error( 'no-type', 'Unknown item type.' );
 		}
-		return new \WP_Error( 'no-type', 'Unknown item type.' );
 	}
 
 	/**
@@ -927,7 +835,7 @@ class Query {
 	 * @since 2.2.0
 	 * @return int The number of posts
 	 */
-	function get_the_item_post_count() {
+	function get_the_item_post_count(): int {
 		if ( is_string( $this->current_item['item'] ) ) {
 			$item = explode( ':', $this->current_item['item'], 2 );
 			$term = null;
@@ -954,13 +862,14 @@ class Query {
 	 * @return int The number of letters
 	 */
 	public function num_letters() {
-		return count( $this->alphabet_chars );
+		return $this->alphabet->count( array_key_exists( $this->alphabet->unknown(), $this->matched_item_indices ) );;
 	}
 
 	/**
 	 * Retrieve the number of posts within the current letter
 	 *
 	 * @since 0.7
+	 * @since 1.0.0 deprecated.
 	 * @see A_Z_Listing::get_the_letter_count()
 	 * @deprecated use A_Z_Listing::get_the_letter_count()
 	 */
@@ -973,6 +882,7 @@ class Query {
 	 * Retrieve the number of posts within the current letter
 	 *
 	 * @since 0.7
+	 * @since 1.0.0 deprecated.
 	 * @see A_Z_Listing::get_the_letter_count()
 	 * @deprecated use A_Z_Listing::get_the_letter_count()
 	 */
@@ -996,7 +906,7 @@ class Query {
 	 * @since 1.0.0
 	 * @return int The number of posts
 	 */
-	public function get_the_letter_count() {
+	public function get_the_letter_count(): int {
 		return count( $this->current_letter_items );
 	}
 
@@ -1015,7 +925,7 @@ class Query {
 	 * @since 0.7
 	 * @return string The letter ID
 	 */
-	public function get_the_letter_id() {
+	public function get_the_letter_id(): string {
 		$id = $this->alphabet[ $this->alphabet_chars[ $this->current_letter_index - 1 ] ];
 		if ( $this->unknown_letters === $id ) {
 			$id = '_';
@@ -1038,7 +948,7 @@ class Query {
 	 * @since 2.4.0
 	 * @return int The item ID.
 	 */
-	public function get_the_item_id() {
+	public function get_the_item_id(): int {
 		$current_item = $this->current_item['item'];
 		if ( is_string( $current_item ) ) {
 			$item = explode( ':', $current_item, 2 );
@@ -1046,14 +956,13 @@ class Query {
 			if ( isset( $item[1] ) ) {
 				return $item[1];
 			}
-		}
-		if ( $current_item instanceof \WP_Post ) {
+		} elseif ( $current_item instanceof \WP_Post ) {
 			return $current_item->ID;
-		}
-		if ( $current_item instanceof \WP_Term ) {
+		} elseif ( $current_item instanceof \WP_Term ) {
 			return $current_item->term_id;
+		} else {
+			return $current_item;
 		}
-		return $current_item;
 	}
 
 	/**
@@ -1066,11 +975,9 @@ class Query {
 		$current_item = $this->current_item['item'];
 		if ( $current_item instanceof \WP_Post ) {
 			return 'post';
-		}
-		if ( $current_item instanceof \WP_Term ) {
+		} elseif ( $current_item instanceof \WP_Term ) {
 			return 'term';
-		}
-		if ( is_string( $current_item ) ) {
+		} elseif ( is_string( $current_item ) ) {
 			$item = explode( ':', $current_item, 2 );
 			if ( isset( $item[0] ) && in_array( $item[0], array( 'post', 'term' ), true ) ) {
 				return $item[0];
@@ -1079,6 +986,7 @@ class Query {
 		if ( in_array( $this->type, array( 'terms', 'posts' ), true ) ) {
 			return 'terms' === $this->type ? 'term' : 'post';
 		}
+
 		return new \WP_Error( 'no-type', 'Unknown item type.' );
 	}
 
@@ -1088,7 +996,7 @@ class Query {
 	 * @since 0.7
 	 * @param string $index The index for which to print the title.
 	 */
-	public function the_letter_title( $index = '' ) {
+	public function the_letter_title( string $index = '' ) {
 		echo esc_html( $this->get_the_letter_title( $index ) );
 	}
 
@@ -1100,7 +1008,7 @@ class Query {
 	 * @param string $index The index for which to return the title.
 	 * @return string The letter title
 	 */
-	public function get_the_letter_title( $index = '' ) {
+	public function get_the_letter_title( string $index = '' ): string {
 		if ( '' !== $index ) {
 			if ( isset( $this->alphabet[ $index ] ) ) {
 				$letter = $this->alphabet[ $index ];
@@ -1108,7 +1016,7 @@ class Query {
 				$letter = $index;
 			}
 		} else {
-			$letter = $this->alphabet[ $this->alphabet_chars[ $this->current_letter_index - 1 ] ];
+			$letter = $this->alphabet[ $this->alphabet->chars[ $this->current_letter_index - 1 ] ];
 		}
 
 		/**
@@ -1145,7 +1053,7 @@ class Query {
 	 * @since 1.0.0
 	 * @return string The post title
 	 */
-	public function get_the_title() {
+	public function get_the_title(): string {
 		$title = $this->current_item['title'];
 		if ( is_string( $this->current_item['item'] ) ) {
 			$item = explode( ':', $this->current_item['item'], 2 );
@@ -1187,7 +1095,7 @@ class Query {
 	 * @since 1.0.0
 	 * @return string The permalink
 	 */
-	public function get_the_permalink() {
+	public function get_the_permalink(): string {
 		return $this->current_item['link'];
 	}
 }
@@ -1196,9 +1104,9 @@ class Query {
  * Load and execute a theme template
  *
  * @since 2.1.0
- * @param A_Z_Query $a_z_query The Query object.
+ * @param \A_Z_Listing\Query $a_z_query The Query object.
  * @param string    $template_file The path of the template to execute.
  */
-function _do_template( $a_z_query, $template_file ) {
+function _do_template( \A_Z_Listing\Query $a_z_query, string $template_file ) {
 	require $template_file;
 }

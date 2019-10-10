@@ -36,23 +36,6 @@ class Grouping {
 	private $headings;
 
 	/**
-	 * Perform a multibyte substring operation if mbstring is loaded, else use substr.
-	 *
-	 * @since 2.1.0
-	 * @param string $string The string to extract the substring from.
-	 * @param int    $start Start the substring at this character number (starts at zero).
-	 * @param int    $length Number of characters to include in the substring.
-	 * 
-	 * @return string Substring of $string starting at $start with length $length characters.
-	 */
-	public static function maybe_mb_substr( string $string, int $start, int $length ): string {
-		if ( extension_loaded( 'mbstring' ) ) {
-			return mb_substr( $string, $start, $length, 'UTF-8' );
-		}
-		return substr( $string, $start, $length );
-	}
-
-	/**
 	 * Add filters to group the alphabet letters
 	 *
 	 * @since 2.0.0
@@ -102,7 +85,7 @@ class Grouping {
 				} else {
 					$carry[ $j ] = $carry[ $j ] . $letter;
 				}
-				$headings[ $j ][] = \A_Z_Listing\Grouping::maybe_mb_substr( $letter, 0, 1 );
+				$headings[ $j ][] = \A_Z_Listing\maybe_mb_substr( $letter, 0, 1 );
 
 				if ( $i + 1 === $grouping ) {
 					$i = 0;
@@ -117,8 +100,8 @@ class Grouping {
 
 		$this->headings = array_reduce(
 			$headings,
-			function( array $carry, string $heading ) {
-				$carry[ mb_substr( $heading[0], 0, 1 ) ] = $heading;
+			function( array $carry, string $heading ): array {
+				$carry[ maybe_mb_substr( $heading[0], 0, 1 ) ] = $heading;
 				return $carry;
 			}
 		);

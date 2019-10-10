@@ -68,7 +68,7 @@ class Shortcode extends Singleton implements Extension {
 			$override = $attributes['alphabet'];
 			add_filter(
 				'a-z-listing-alphabet',
-				function( $alphabet ) use ( $override ) {
+				function( string $alphabet ) use ( $override ) {
 					return $override;
 				}
 			);

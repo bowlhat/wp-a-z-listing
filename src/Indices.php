@@ -25,20 +25,6 @@ class Indices extends Singleton implements Extension {
 	}
 
 	/**
-	 * Get the first letter of a title for use as the Index letter
-	 *
-	 * @since 2.1.0
-	 * @param string $title The title of the item to extract the index letter from.
-	 * @return string The index letter extracted from $title.
-	 */
-	public static function get_index_letter( string $title ): string {
-		if ( extension_loaded( 'mbstring' ) ) {
-			return mb_substr( $title, 0, 1, 'UTF-8' );
-		}
-		return substr( $title, 0, 1 );
-	}
-
-	/**
 	 * Find and return the index letter for a post
 	 *
 	 * @since 2.0.0
@@ -84,7 +70,7 @@ class Indices extends Singleton implements Extension {
 			$item->post_title = $title;
 		}
 
-		$index = self::get_index_letter( $title );
+		$index = \A_Z_Listing\maybe_mb_substr( $title, 0, 1 );
 
 		/**
 		 * Modify the indice(s) to group this item under

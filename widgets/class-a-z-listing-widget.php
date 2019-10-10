@@ -53,9 +53,8 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 *
 	 * @since 0.1
 	 * @param  array $instance Widget instance as provided by WordPress core.
-	 * @return void
 	 */
-	public function form( $instance ) {
+	public function form( array $instance ) {
 		$args = array(
 			'public' => true,
 		);
@@ -298,7 +297,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array $old_instance the previous configuration values.
 	 * @return array               sanitised version of the new configuration values to be saved
 	 */
-	public function update( $new_instance, $old_instance ) {
+	public function update( array $new_instance, array $old_instance ): array {
 		$instance = $old_instance;
 
 		$instance['title']             = strip_tags( $new_instance['title'] );
@@ -331,7 +330,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array $args     General widget configuration. Often shared between all widgets on the site.
 	 * @param  array $instance Configuration of this Widget. Unique to this invocation.
 	 */
-	public function widget( $args, $instance ) {
+	public function widget( array $args, array $instance ) {
 		the_section_a_z_widget( $args, $instance );
 	}
 }
@@ -340,6 +339,7 @@ class A_Z_Listing_Widget extends WP_Widget {
  * Print the user-visible widget to the page implentation
  *
  * @since 0.1
+ * @since 0.8.0 deprecated.
  * @see A_Z_Widget::the_section_a_z_widget()
  * @deprecated use the_section_a_z_widget()
  * @param  array $args     General widget configuration. Often shared between all widgets on the site.
@@ -357,7 +357,7 @@ function the_section_az_widget( $args, $instance ) {
  * @param  array $args     General widget configuration. Often shared between all widgets on the site.
  * @param  array $instance Configuration of this Widget. Unique to this invocation.
  */
-function the_section_a_z_widget( $args, $instance ) {
+function the_section_a_z_widget( array $args, array $instance ) {
 	echo get_the_section_a_z_widget( $args, $instance ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
@@ -365,6 +365,7 @@ function the_section_a_z_widget( $args, $instance ) {
  * Deprecated print the user-visible widget to the page implementation.
  *
  * @since 0.1
+ * @since 0.8.0 deprecated.
  * @see A_Z_Widget::get_the_section_a_z_widget()
  * @deprecated use get_the_section_a_z_widget()
  *
@@ -386,7 +387,7 @@ function get_the_section_az_widget( $args, $instance ) {
  * @param  array $instance Configuration of this Widget. Unique to this invocation.
  * @return  string The complete A-Z Widget HTML ready for echoing to the page.
  */
-function get_the_section_a_z_widget( $args, $instance ) {
+function get_the_section_a_z_widget( array $args, array $instance ): string {
 	do_action( 'log', 'A-Z Listing: Running widget' );
 
 	$instance = wp_parse_args(
@@ -466,7 +467,7 @@ function get_the_section_a_z_widget( $args, $instance ) {
  * @param string $post_type the post type to search within.
  * @return array the post IDs that are found.
  */
-function a_z_listing_get_posts_by_title( $post_title, $post_type = '' ) {
+function a_z_listing_get_posts_by_title( string $post_title, string $post_type = '' ): array {
 	global $wpdb;
 
 	$post_title = '%' . $wpdb->esc_like( $post_title ) . '%';
