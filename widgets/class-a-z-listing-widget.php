@@ -66,7 +66,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array<string,mixed> $instance Widget instance as provided by WordPress core.
 	 * @return string
 	 */
-	public function form( $instance ) {
+	public function form( array $instance ) {
 		$args = array(
 			'public' => true,
 		);
@@ -310,7 +310,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array<string,mixed> $old_instance the previous configuration values.
 	 * @return array<string,mixed> sanitised version of the new configuration values to be saved
 	 */
-	public function update( $new_instance, $old_instance ) {
+	public function update( array $new_instance, array $old_instance ): array {
 		$instance = $old_instance;
 
 		$instance['title']             = strip_tags( $new_instance['title'] );
@@ -344,7 +344,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
 	 * @return void
 	 */
-	public function widget( $args, $instance ) {
+	public function widget( array $args, array $instance ) {
 		the_section_a_z_widget( $args, $instance );
 	}
 }

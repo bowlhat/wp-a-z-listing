@@ -621,19 +621,16 @@ class Query {
 				} elseif ( $count === $i ) {
 					$classes[] = 'last';
 				}
-
 				if ( 0 === $i % 2 ) {
 					$classes[] = 'even';
 				} else {
 					$classes[] = 'odd';
 				}
-
 				if ( ! empty( $indices[ $character ] ) ) {
 					$classes[] = 'has-posts';
 				} else {
 					$classes[] = 'no-posts';
 				}
-
 				$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 				if ( ! empty( $indices[ $character ] ) ) {
 					$ret .= '<a href="' . esc_url( $target . '#letter-' . $id ) . '">';
@@ -862,6 +859,8 @@ class Query {
 			return get_term_meta( $this->current_item['item']->term_id, $key, $single );
 		} elseif ( $this->current_item['item'] instanceof \WP_Post ) {
 			return get_post_meta( $this->current_item['item']->ID, $key, $single );
+		} else {
+			return new \WP_Error( 'no-type', 'Unknown item type.' );
 		}
 
 		return new WP_Error( 'no-type', 'Unknown item type.' );
