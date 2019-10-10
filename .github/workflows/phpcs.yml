@@ -37,6 +37,9 @@ jobs:
         subversion \
         default-mysql-client
 
+        echo "Install yarn"
+        curl -sS -L https://yarnpkg.com/install.sh | bash
+
         echo "Install composer"
         curl -sS -L https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
