@@ -344,7 +344,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
 	 * @return void
 	 */
-	public function widget( array $args, array $instance ) {
+	public function widget( $args, $instance ) {
 		the_section_a_z_widget( $args, $instance );
 	}
 }
@@ -518,12 +518,12 @@ function a_z_listing_autocomplete_post_titles() {
 
 	$results = a_z_listing_get_posts_by_title( $post_title, $post_type );
 
-	$titles = array();
+	$titles = [];
 	foreach ( $results as $result ) {
-		$titles[] = array(
+		$titles[] = [
 			'value' => intval( $result->ID ),
 			'label' => addslashes( $result->post_title ),
-		);
+		];
 	}
 
 	echo json_encode( $titles );

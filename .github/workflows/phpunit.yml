@@ -258,8 +258,6 @@ jobs:
 
     - uses: actions/checkout@v2
 
-    - uses: actions/checkout@v1
-
     - name: Download build files
       uses: actions/download-artifact@v2
 

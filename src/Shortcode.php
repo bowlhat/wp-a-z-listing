@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -23,7 +23,7 @@ class Shortcode extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		add_shortcode( 'a-z-listing', array( $this, 'handle' ) );
+		\add_shortcode( 'a-z-listing', array( $this, 'handle' ) );
 	}
 
 	/**
@@ -42,9 +42,9 @@ class Shortcode extends Singleton implements Extension {
 		/**
 		 * Run extensions.
 		 */
-		do_action( '_a_z_listing_shortcode_start', $attributes );
+		\do_action( '_a_z_listing_shortcode_start', $attributes );
 
-		$attributes = shortcode_atts(
+		$attributes = \shortcode_atts(
 			array(
 				'alphabet'         => '',
 				'display'          => 'posts',
@@ -70,7 +70,7 @@ class Shortcode extends Singleton implements Extension {
 
 		if ( ! empty( $attributes['alphabet'] ) ) {
 			$override = $attributes['alphabet'];
-			add_filter(
+			\add_filter(
 				'a-z-listing-alphabet',
 				/**
 				 * Closure to override the alphabet with one defined in the shortcode
@@ -85,7 +85,7 @@ class Shortcode extends Singleton implements Extension {
 
 		$grouping      = $attributes['grouping'];
 		$group_numbers = false;
-		if ( ! empty( $attributes['group-numbers'] ) && a_z_listing_is_truthy( $attributes['group-numbers'] ) ) {
+		if ( ! empty( $attributes['group-numbers'] ) && \a_z_listing_is_truthy( $attributes['group-numbers'] ) ) {
 			$group_numbers = true;
 		}
 
@@ -93,7 +93,7 @@ class Shortcode extends Singleton implements Extension {
 			$group_numbers = true;
 			$grouping      = 0;
 		} else {
-			$grouping = intval( $grouping );
+			$grouping = \intval( $grouping );
 			if ( 1 < $grouping && empty( $attributes['group-numbers'] ) ) {
 				$group_numbers = true;
 			}
@@ -105,13 +105,13 @@ class Shortcode extends Singleton implements Extension {
 		if ( 'terms' === $attributes['display'] && ! empty( $attributes['taxonomy'] ) ) {
 			$taxonomy = ! empty( $attributes['taxonomy'] ) ? $attributes['taxonomy'] : 'category';
 			if ( isset( $attributes['hide-empty'] ) && ! empty( $attributes['hide-empty'] ) ) {
-				$hide_empty = a_z_listing_is_truthy( $attributes['hide-empty'] );
+				$hide_empty = \a_z_listing_is_truthy( $attributes['hide-empty'] );
 			} else {
-				$hide_empty = a_z_listing_is_truthy( $attributes['hide-empty-terms'] );
+				$hide_empty = \a_z_listing_is_truthy( $attributes['hide-empty-terms'] );
 			}
 
-			$taxonomies = explode( ',', $taxonomy );
-			$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
+			$taxonomies = \explode( ',', $taxonomy );
+			$taxonomies = \array_unique( \array_filter( \array_map( 'trim', $taxonomies ) ) );
 
 			$query = array(
 				'taxonomy'   => $taxonomies,
@@ -156,7 +156,7 @@ class Shortcode extends Singleton implements Extension {
 				);
 				$terms = array_unique( $terms );
 
-				$query = wp_parse_args(
+				$query = \wp_parse_args(
 					$query,
 					array( $terms_process => $terms )
 				);
@@ -212,17 +212,17 @@ class Shortcode extends Singleton implements Extension {
 				$exclude_posts = array_unique( $exclude_posts );
 
 				if ( ! empty( $exclude_posts ) ) {
-					$query = wp_parse_args( $query, array( 'post__not_in' => $exclude_posts ) );
+					$query = \wp_parse_args( $query, array( 'post__not_in' => $exclude_posts ) );
 				}
 			}
 
 			if ( ! empty( $attributes['parent-post'] ) ) {
-				if ( a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
+				if ( \a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
 					$child_query = array( 'child_of' => $attributes['parent-post'] );
 				} else {
 					$child_query = array( 'post_parent' => $attributes['parent-post'] );
 				}
-				$query = wp_parse_args( $query, $child_query );
+				$query = \wp_parse_args( $query, $child_query );
 			}
 
 			$taxonomy  = $attributes['taxonomy'] ?? 'category';
@@ -263,8 +263,8 @@ class Shortcode extends Singleton implements Extension {
 
 		$target = '';
 		if ( ! empty( $attributes['target'] ) ) {
-			if ( intval( $attributes['target'] ) > 0 ) {
-				$target = get_permalink( $attributes['target'] );
+			if ( \intval( $attributes['target'] ) > 0 ) {
+				$target = \get_permalink( $attributes['target'] );
 			} else {
 				$target = $attributes['target'];
 			}
@@ -279,7 +279,7 @@ class Shortcode extends Singleton implements Extension {
 		$grouping_obj->teardown();
 		$numbers_obj->teardown();
 
-		do_action( '_a_z_listing_shortcode_end', $attributes );
+		\do_action( '_a_z_listing_shortcode_end', $attributes );
 
 		return $ret;
 	}

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -43,9 +43,9 @@ class Numbers {
 	public function __construct( string $position = 'hide', bool $group = false ) {
 		if ( 'before' === $position || 'after' === $position ) {
 			$this->position = $position;
-			$this->group    = a_z_listing_is_truthy( $group );
-			add_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
-			add_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
+			$this->group    = \a_z_listing_is_truthy( $group );
+			\add_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+			\add_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 		}
 	}
 
@@ -56,8 +56,8 @@ class Numbers {
 	 * @return void
 	 */
 	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
-		remove_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
+		\remove_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+		\remove_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 	}
 
 	/**

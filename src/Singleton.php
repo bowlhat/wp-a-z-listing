@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -23,7 +23,7 @@ abstract class Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array<string,Extension>
 	 */
-	private static $_instances = array();
+	private static $_instances = [];
 
 	/**
 	 * Singleton
@@ -33,7 +33,7 @@ abstract class Singleton implements Extension {
 	 * @suppress PhanPluginUnknownArrayMethodParamType
 	 */
 	final public static function instance(): Extension {
-		$class = get_called_class();
+		$class = \get_called_class();
 		if ( ! isset( self::$_instances[ $class ] ) ) {
 			self::$_instances[ $class ] = new $class();
 		}
