@@ -6,7 +6,6 @@
 .drone.jsonnet
 .drone.yml
 .DS_Store
-._.*
 .editorconfig
 .git/
 .gitattributes
@@ -51,7 +50,6 @@ phpcs.xml.dist
 phpunit.xml
 phpunit.xml.dist
 phpunit-multisite.xml
-phive.xml
 tools/
 README.md
 scoper.inc.php
