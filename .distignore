@@ -1,8 +1,12 @@
 # A set of files you probably don't want in your WordPress.org distribution
+.azure-pipelines
+.azure-pipelines.yml
 .distignore
 .DS_Store
+.drone.*
 .editorconfig
 .git
+.github
 .gitignore
 .gitattributes
 .gitlab-ci.yml
@@ -12,13 +16,15 @@
 .wordpress-org/
 .idea
 .jshintrc
+.phan
 .travis.yml
 .vs
 .vscode
+.wordpress-org
+*.msbuildproj
 *.sql
 *.tar.gz
 *.zip
-assets
 behat.yml
 bin
 circle.yml
@@ -26,17 +32,25 @@ composer.json
 composer.lock
 composer.phar
 docker-compose.yml
+Dockunit.json
 Gruntfile.js
 multisite.xml
 multisite.xml.dist
 node_modules
+obj
 package-lock.json
 package.json
 phpcs.xml
 phpcs.xml.dist
+<<<<<<< HEAD
 phpunit*.xml
 phpunit*.xml.dist
 Dockunit.json
+=======
+phpunit.xml
+phpunit.xml.dist
+phpunit-multisite.xml
+>>>>>>> Add WordPress.org workflows
 README.md
 tests
 Thumbs.db
