@@ -45,8 +45,8 @@ class Grouping {
 		$this->grouping = $grouping;
 
 		if ( 1 < $grouping ) {
-			\add_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
-			\add_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
+			\add_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
+			\add_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
 		}
 	}
 
@@ -57,8 +57,8 @@ class Grouping {
 	 * @return void
 	 */
 	public function teardown() {
-		\remove_filter( 'a-z-listing-alphabet', array( $this, 'alphabet_filter' ), 2 );
-		\remove_filter( 'the-a-z-letter-title', array( $this, 'heading' ), 5 );
+		\remove_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
+		\remove_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Grouping {
 	 * @return string the new grouped alphabet.
 	 */
 	public function alphabet_filter( string $alphabet ): string {
-		$headings = array();
+		$headings = [];
 		$letters  = \explode( ',', $alphabet );
 		$letters  = \array_map( 'trim', $letters );
 

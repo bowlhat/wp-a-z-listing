@@ -73,7 +73,7 @@ class Query {
 	 *
 	 * @var array<int,mixed>
 	 */
-	private $current_letter_items = array();
+	private $current_letter_items = [];
 
 	/**
 	 * The current letter array-index in $matched_item_indices. internal use only
@@ -114,9 +114,7 @@ class Query {
 
 			$this->type = 'terms';
 
-			$defaults = array(
-				'hide_empty' => false,
-			);
+			$defaults = [ 'hide_empty' => false ];
 
 			if ( \is_array( $query ) ) {
 				$query = \wp_parse_args( $query, $defaults );
@@ -125,9 +123,7 @@ class Query {
 				$taxonomies = \array_unique( \array_filter( \array_map( 'trim', $taxonomies ) ) );
 
 				$query = \wp_parse_args(
-					array(
-						'taxonomy' => (array) $taxonomies,
-					),
+					[ 'taxonomy' => (array) $taxonomies ],
 					$defaults
 				);
 			}
@@ -175,7 +171,7 @@ class Query {
 			$this->type = 'posts';
 
 			if ( empty( $query ) ) {
-				$query = array();
+				$query = [];
 			}
 
 			/**
@@ -218,11 +214,11 @@ class Query {
 
 				$query = \wp_parse_args(
 					$query,
-					array(
+					[
 						'post_type'   => 'page',
 						'numberposts' => -1,
 						'nopaging'    => true,
-					)
+					]
 				);
 			}
 
@@ -234,7 +230,8 @@ class Query {
 				$items       = $query->posts;
 				$this->query = $query;
 			} else {
-				\add_filter( 'posts_fields', array( __CLASS__, 'wp_query_fields' ), 10, 2 );
+				// \add_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10, 2 );
+				\add_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 				if ( isset( $query['child_of'] ) ) {
 					$items       = \get_pages( $query );
 					$this->query = $query;
@@ -243,7 +240,8 @@ class Query {
 					$items       = $wq->posts;
 					$this->query = $wq;
 				}
-				\remove_filter( 'posts_fields', array( __CLASS__, 'wp_query_fields' ), 10 );
+				// \remove_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10 );
+				\remove_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 			}
 
 			if ( \defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
@@ -273,12 +271,23 @@ class Query {
 	 * @since 3.0.0 Introduced.
 	 * @since 4.0.0 Converted to static function.
 	 * @param string    $fields The current fields in SQL format.
-	 * @param \WP_Query $query The \WP_Query object.
+	 * @param \WP_Query $query  The \WP_Query instance.
 	 * @return string The new fields in SQL format.
 	 */
 	public static function wp_query_fields( string $fields, \WP_Query $query ): string {
 		global $wpdb;
 		return "{$wpdb->posts}.ID, {$wpdb->posts}.post_title, {$wpdb->posts}.post_type, {$wpdb->posts}.post_name, {$wpdb->posts}.post_parent, {$wpdb->posts}.post_date";
+	}
+
+	/**
+	 * Tell WP_Query to split the query.
+	 *
+	 * @since 4.0.0
+	 * @param bool      $split_the_query Whether or not to split the query.
+	 * @param \WP_Query $query           The \WP_Query instance.
+	 */
+	public static function split_the_query( bool $split_the_query, \WP_Query $query ): bool {
+		return true;
 	}
 
 	/**
@@ -343,11 +352,7 @@ class Query {
 	protected static function get_section( $page = 0 ) {
 		global $post;
 
-		$pages = \get_pages(
-			array(
-				'parent' => 0,
-			)
-		);
+		$pages = \get_pages( [ 'parent' => 0 ] );
 
 		$sections = \array_map(
 			function( \WP_Post $item ): string {
@@ -361,7 +366,7 @@ class Query {
 		 * @deprecated Use a_z_listing_sections
 		 * @see a_z_listing_sections
 		 */
-		$sections = \apply_filters_deprecated( 'az_sections', array( $sections ), '1.0.0', 'a_z_listing_sections' );
+		$sections = \apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
@@ -445,7 +450,7 @@ class Query {
 	 * @return array<string,mixed> The index letters
 	 */
 	protected function get_all_indices( array $items = [] ): array {
-		$indexed_items = array();
+		$indexed_items = [];
 
 		if ( ! \is_array( $items ) || empty( $items ) ) {
 			$items = $this->items;
@@ -453,7 +458,7 @@ class Query {
 
 		if ( \is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
-				$item_indices = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
+				$item_indices = \apply_filters( '_a-z-listing-extract-item-indices', [], $item, $this->type );
 
 				if ( empty( $item_indices ) ) {
 					continue;
@@ -558,7 +563,7 @@ class Query {
 	 * @return string The letter links HTML
 	 */
 	public function get_the_letters( string $target = '', $style = '' ): string {
-		$classes = array( 'az-links' );
+		$classes = [ 'az-links' ];
 		if ( \is_array( $style ) ) {
 			$classes = \array_merge( $classes, $style );
 		} elseif ( \is_string( $style ) ) {
@@ -646,10 +651,10 @@ class Query {
 			}
 		}
 
-		$templates = array(
+		$templates = [
 			'a-z-listing-' . $section . '.php',
 			'a-z-listing.php',
-		);
+		];
 
 		if ( $post ) {
 			\array_unshift(
@@ -740,7 +745,7 @@ class Query {
 	 */
 	public function the_letter() {
 		$this->current_item_offset  = 0;
-		$this->current_letter_items = array();
+		$this->current_letter_items = [];
 		$key                        = $this->alphabet->get_key_for_offset( $this->current_letter_offset );
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
 			$this->current_letter_items = $this->matched_item_indices[ $key ];

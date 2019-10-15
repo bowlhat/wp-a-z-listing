@@ -23,7 +23,7 @@ class Indices extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		\add_filter( '_a-z-listing-extract-item-indices', array( $this, 'get_item_indices' ), 1, 3 );
+		\add_filter( '_a-z-listing-extract-item-indices', [ $this, 'get_item_indices' ], 1, 3 );
 	}
 
 	/**
@@ -31,12 +31,12 @@ class Indices extends Singleton implements Extension {
 	 *
 	 * @since 2.0.0
 	 * @param array<string,mixed>   $indices Previously discovered indices.
-	 * @param int|\WP_Post|\WP_Term $item ID of the item whose index letters we want to find.
-	 * @param string                $type Type of listing - terms or posts.
+	 * @param int|\WP_Post|\WP_Term $item    ID of the item whose index letters we want to find.
+	 * @param string                $type    Type of listing - terms or posts.
 	 * @return array<string,mixed> The post's index letters (usually matching the first character of the post title)
 	 */
 	public static function get_item_indices( array $indices, $item, string $type ): array {
-		if ( 'terms' === $type ) {
+		if ( 'terms' === $type || $item instanceof \WP_Term ) {
 			if ( ! $item instanceof \WP_Term ) {
 				$item = \get_term( $item );
 			}
@@ -99,7 +99,7 @@ class Indices extends Singleton implements Extension {
 		 * @param \WP_Post|\WP_Term $item The item
 		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
-		$index_letters = \apply_filters( 'a-z-listing-item-index-letter', array( $index ), $item, $type );
+		$index_letters = \apply_filters( 'a-z-listing-item-index-letter', [ $index ], $item, $type );
 
 		/**
 		 * Modify the indice(s) to group this item under
@@ -111,23 +111,25 @@ class Indices extends Singleton implements Extension {
 		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
 		$index_letters = \apply_filters( 'a_z_listing_item_index_letter', $index_letters, $item, $type );
+		$index_letters = \array_unique( \array_filter( $index_letters ) );
 
 		foreach ( $index_letters as $letter ) {
-			$indices[ $letter ][] = array(
+			$indices[ $letter ][] = [
 				'title' => $title,
-				'item'  => ( 'terms' === $type ) ? "term:{$item_id}" : "post:{$item_id}",
+				'item'  => ( $item instanceof \WP_Term ) ? "term:{$item_id}" : "post:{$item_id}",
 				'link'  => $permalink,
-			);
+			];
 		}
 
-		if ( 'terms' === $type ) {
+		$filter_params = [ $indices, $item ];
+		if ( $item instanceof \WP_Term ) {
 			/**
 			 * Modify the indice(s) to group this term under
 			 *
 			 * @deprecated Use a_z_listing_item_index_letter and/or a_z_listing_item_title
 			 * @see a_z_listing_item_index_letter, a_z_listing_item_title
 			 */
-			$indices = \apply_filters_deprecated( 'a_z_listing_term_indices', array( $indices, $item ), '1.0.0', 'a_z_listing_item_index_letter' );
+			$indices = \apply_filters_deprecated( 'a_z_listing_term_indices', $filter_params, '1.0.0', 'a_z_listing_item_index_letter' );
 		} else {
 			/**
 			 * Modify the indice(s) to group this post under
@@ -135,8 +137,10 @@ class Indices extends Singleton implements Extension {
 			 * @deprecated Use a_z_listing_item_index_letter and/or a_z_listing_item_title
 			 * @see a_z_listing_item_index_letter, a_z_listing_item_title
 			 */
-			$indices = \apply_filters_deprecated( 'a_z_listing_post_indices', array( $indices, $item ), '1.5.0', 'a_z_listing_item_index_letter' );
+			$indices = \apply_filters_deprecated( 'a_z_listing_post_indices', $filter_params, '1.5.0', 'a_z_listing_item_index_letter' );
 		} // End if.
+
+		$filter_params = [ $indices, $item, $type ];
 
 		/**
 		 * Modify the indice(s) to group this item under
@@ -149,7 +153,7 @@ class Indices extends Singleton implements Extension {
 		 * @param int|\WP_Post|\WP_Term $item The item
 		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
-		$indices = \apply_filters_deprecated( 'a_z_listing_item_indices', array( $indices, $item, $type ), '2.1.0', 'a_z_listing_item_index_letter' );
+		$indices = \apply_filters_deprecated( 'a_z_listing_item_indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
 
 		/**
 		 * Modify the indice(s) to group this item under
@@ -163,7 +167,7 @@ class Indices extends Singleton implements Extension {
 		 * @param \WP_Post|\WP_Term $item The item
 		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
-		$indices = \apply_filters_deprecated( 'a-z-listing-item-indices', array( $indices, $item, $type ), '2.1.0', 'a_z_listing_item_index_letter' );
+		$indices = \apply_filters_deprecated( 'a-z-listing-item-indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
 
 		if ( \defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
 			\do_action( 'log', 'Item indices', $indices );

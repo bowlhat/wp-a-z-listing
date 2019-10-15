@@ -23,7 +23,7 @@ class Shortcode extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		\add_shortcode( 'a-z-listing', array( $this, 'handle' ) );
+		\add_shortcode( 'a-z-listing', [ $this, 'handle' ] );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Shortcode extends Singleton implements Extension {
 		\do_action( '_a_z_listing_shortcode_start', $attributes );
 
 		$attributes = \shortcode_atts(
-			array(
+			[
 				'alphabet'         => '',
 				'display'          => 'posts',
 				'exclude-posts'    => '',
@@ -62,7 +62,7 @@ class Shortcode extends Singleton implements Extension {
 				'target'           => '',
 				'taxonomy'         => '',
 				'terms'            => '',
-			),
+			],
 			$attributes,
 			'a-z-listing'
 		);
@@ -112,10 +112,10 @@ class Shortcode extends Singleton implements Extension {
 			$taxonomies = \explode( ',', $taxonomy );
 			$taxonomies = \array_unique( \array_filter( \array_map( 'trim', $taxonomies ) ) );
 
-			$query = array(
+			$query = [
 				'taxonomy'   => $taxonomies,
 				'hide_empty' => $hide_empty,
-			);
+			];
 
 			$terms_string  = '';
 			$terms_process = 'include';
@@ -143,9 +143,7 @@ class Shortcode extends Singleton implements Extension {
 
 				$query = \wp_parse_args(
 					$query,
-					array(
-						$terms_process => $terms,
-					)
+					[ $terms_process => $terms ]
 				);
 			}
 
@@ -160,9 +158,7 @@ class Shortcode extends Singleton implements Extension {
 				if ( 0 < $parent_id ) {
 					$query = \wp_parse_args(
 						$query,
-						array(
-							$parent_selector => $parent_id,
-						)
+						[ $parent_selector => $parent_id ]
 					);
 				}
 			}
@@ -172,9 +168,7 @@ class Shortcode extends Singleton implements Extension {
 			$post_type = \explode( ',', $attributes['post-type'] );
 			$post_type = \array_unique( \array_filter( \array_map( 'trim', $post_type ) ) );
 
-			$query = array(
-				'post_type' => $post_type,
-			);
+			$query = [ 'post_type' => $post_type ];
 
 			if ( ! empty( $attributes['exclude-posts'] ) ) {
 				$exclude_posts = \explode( ',', $attributes['exclude-posts'] );
@@ -191,42 +185,42 @@ class Shortcode extends Singleton implements Extension {
 				);
 
 				if ( ! empty( $exclude_posts ) ) {
-					$query = \wp_parse_args( $query, array( 'post__not_in' => $exclude_posts ) );
+					$query = \wp_parse_args( $query, [ 'post__not_in' => $exclude_posts ] );
 				}
 			}
 
 			if ( ! empty( $attributes['parent-post'] ) ) {
 				if ( \a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
-					$child_query = array( 'child_of' => $attributes['parent-post'] );
+					$child_query = [ 'child_of' => $attributes['parent-post'] ];
 				} else {
-					$child_query = array( 'post_parent' => $attributes['parent-post'] );
+					$child_query = [ 'post_parent' => $attributes['parent-post'] ];
 				}
 				$query = \wp_parse_args( $query, $child_query );
 			}
 
 			$taxonomy  = $attributes['taxonomy'] ?? 'category';
-			$tax_query = array();
+			$tax_query = [];
 			if ( ! empty( $attributes['terms'] ) ) {
 				$terms = \explode( ',', $attributes['terms'] );
 				$terms = \array_unique( \array_filter( \array_map( 'trim', $terms ) ) );
 
-				$tax_query[] = array(
+				$tax_query[] = [
 					'taxonomy' => $taxonomy,
 					'field'    => 'slug',
 					'terms'    => $terms,
 					'operator' => 'IN',
-				);
+				];
 			}
 			if ( ! empty( $attributes['exclude-terms'] ) ) {
 				$ex_terms = \explode( ',', $attributes['exclude-terms'] );
 				$ex_terms = \array_unique( \array_filter( \array_map( 'trim', $ex_terms ) ) );
 
-				$tax_query[] = array(
+				$tax_query[] = [
 					'taxonomy' => $taxonomy,
 					'field'    => 'slug',
 					'terms'    => $ex_terms,
 					'operator' => 'NOT IN',
-				);
+				];
 			}
 
 			if ( ! empty( $tax_query ) ) {
