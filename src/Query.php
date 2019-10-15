@@ -212,14 +212,7 @@ class Query {
 					}
 				}
 
-				$query = \wp_parse_args(
-					$query,
-					[
-						'post_type'   => 'page',
-						'numberposts' => -1,
-						'nopaging'    => true,
-					]
-				);
+				$query = \wp_parse_args( $query, [ 'post_type' => 'page' ] );
 			}
 
 			if ( $this->check_cache( (array) $query, $type, $use_cache ) ) {
@@ -227,21 +220,22 @@ class Query {
 			}
 
 			if ( $query instanceof \WP_Query ) {
-				$items       = $query->posts;
 				$this->query = $query;
+				// $items       = $query->posts;
 			} else {
+				// \add_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 				// \add_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10, 2 );
-				\add_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 				if ( isset( $query['child_of'] ) ) {
 					$items       = \get_pages( $query );
 					$this->query = $query;
 				} else {
+					// $query       = \wp_parse_args( $query, [ 'numberposts'  => -1, 'nopaging' => true ] );
 					$wq          = new \WP_Query( $query );
-					$items       = $wq->posts;
 					$this->query = $wq;
+					$items       = $wq->posts;
 				}
 				// \remove_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10 );
-				\remove_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
+				// \remove_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 			}
 
 			if ( \defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
@@ -443,6 +437,30 @@ class Query {
 	}
 
 	/**
+	 * Extract an item's indices
+	 * 
+	 * @param \WP_Post|\WP_Term $item The item.
+	 * @return array<string,mixed> The indices. This is an associative array of `[ 'index-char' => $item_array ]`.
+	 */
+	protected function get_all_indices_for_item( $item ) {
+		$indexed_items = [];
+		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', [], $item, $this->type );
+
+		if ( ! empty( $item_indices ) ) {
+			foreach ( $item_indices as $key => $entries ) {
+				if ( ! empty( $entries ) ) {
+					if ( ! isset( $indexed_items[ $key ] ) || ! \is_array( $indexed_items[ $key ] ) ) {
+						$indexed_items[ $key ] = [];
+					}
+					$indexed_items[ $key ] = \array_merge_recursive( $indexed_items[ $key ], $entries );
+				}
+			}
+		}
+
+		return $indexed_items;
+	}
+
+	/**
 	 * Sort the letters to be used as indices and return as an Array
 	 *
 	 * @since 0.1
@@ -450,6 +468,7 @@ class Query {
 	 * @return array<string,mixed> The index letters
 	 */
 	protected function get_all_indices( array $items = [] ): array {
+		global $post;
 		$indexed_items = [];
 
 		if ( ! \is_array( $items ) || empty( $items ) ) {
@@ -458,70 +477,78 @@ class Query {
 
 		if ( \is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
-				$item_indices = \apply_filters( '_a-z-listing-extract-item-indices', [], $item, $this->type );
-
-				if ( empty( $item_indices ) ) {
-					continue;
-				}
-
-				foreach ( $item_indices as $key => $entries ) {
-					if ( ! empty( $entries ) ) {
-						if ( ! isset( $indexed_items[ $key ] ) || ! \is_array( $indexed_items[ $key ] ) ) {
-							$indexed_items[ $key ] = [];
-						}
-						$indexed_items[ $key ] = \array_merge_recursive( $indexed_items[ $key ], $entries );
-					}
+				foreach( $this->get_all_indices_for_item( $item ) as $key => $value ) {
+					$indexed_items[ $key ] = $value;
 				}
 			}
+		} else if ( $this->query instanceof \WP_Query ) {
+			$offset         = 0;
+			$posts_per_page = $this->query->posts_per_page;
+			$found_posts    = $this->query->found_posts;
+			while ( $offset < $found_posts ) {
+				$this->query->the_post();
 
-			$this->alphabet->loop(
-				function( string $character ) use ( $indexed_items ) {
-					if ( ! empty( $indexed_items[ $character ] ) ) {
-						\usort(
-							$indexed_items[ $character ],
-							/**
-							 * Closure to sort the indexed items based on their titles
-							 *
-							 * @param array<string,string> $a
-							 * @param array<string,string> $b
-							 */
-							function ( array $a, array $b ): int {
-								$atitle = \strtolower( $a['title'] );
-								$btitle = \strtolower( $b['title'] );
+				foreach( $this->get_all_indices_for_item( $post ) as $key => $value ) {
+					$indexed_items[ $key ] = $value;
+				}
 
-								$default_sort = \strcmp( $atitle, $btitle );
-
-								/**
-								 * Compare two titles to determine sorting order.
-								 *
-								 * @since 3.1.0
-								 * @param int The previous order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
-								 * @param string $a The first title. Converted to lower case.
-								 * @param string $b The second title. Converted to lower case.
-								 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
-								 */
-								$sort = \apply_filters(
-									'a_z_listing_item_sorting_comparator',
-									$default_sort,
-									$atitle,
-									$btitle
-								);
-
-								if ( \is_int( $sort ) ) {
-									if ( \defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-										\do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
-									}
-									return $sort;
-								}
-
-								return $default_sort;
-							}
-						);
-					}
-				},
-				\array_key_exists( $this->alphabet->get_unknown_letter(), $indexed_items )
-			);
+				$offset++;
+				if ( 0 === $offset % $posts_per_page ) {
+					$q           = $this->query->query;
+					$q['offset'] = $offset * $posts_per_page;
+					$this->query = new \WP_Query( $q );
+				}
+			}
+			wp_reset_postdata();
 		}
+
+		$this->alphabet->loop(
+			function( string $character ) use ( $indexed_items ) {
+				if ( ! empty( $indexed_items[ $character ] ) ) {
+					\usort(
+						$indexed_items[ $character ],
+						/**
+						 * Closure to sort the indexed items based on their titles
+						 *
+						 * @param array<string,string> $a
+						 * @param array<string,string> $b
+						 */
+						function ( array $a, array $b ): int {
+							$atitle = \strtolower( $a['title'] );
+							$btitle = \strtolower( $b['title'] );
+
+							$default_sort = \strcmp( $atitle, $btitle );
+
+							/**
+							 * Compare two titles to determine sorting order.
+							 *
+							 * @since 3.1.0
+							 * @param int The previous order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+							 * @param string $a The first title. Converted to lower case.
+							 * @param string $b The second title. Converted to lower case.
+							 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
+							 */
+							$sort = \apply_filters(
+								'a_z_listing_item_sorting_comparator',
+								$default_sort,
+								$atitle,
+								$btitle
+							);
+
+							if ( \is_int( $sort ) ) {
+								if ( \defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
+									\do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+								}
+								return $sort;
+							}
+
+							return $default_sort;
+						}
+					);
+				}
+			},
+			\array_key_exists( $this->alphabet->get_unknown_letter(), $indexed_items )
+		);
 
 		return $indexed_items;
 	}
