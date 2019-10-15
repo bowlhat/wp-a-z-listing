@@ -686,6 +686,10 @@ class Query {
 		if ( $post ) {
 			\array_unshift(
 				$templates,
+				'a-z-listing-' . $post->post_type . '.php'
+			);
+			array_unshift(
+				$templates,
 				'a-z-listing-' . $post->post_name . '.php'
 			);
 		}

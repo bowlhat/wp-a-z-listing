@@ -53,7 +53,7 @@ To specify a post-type to display instead of `page` then use, e.g. `post`:
 
 To filter the posts by a term from a taxonomy:
 
-    [a-z-listing display="posts" taxonomy="category" terms="my-term-slug"]
+    [a-z-listing display="posts" post-type="post" taxonomy="category" terms="my-term-slug"]
 
 To display pages that are direct children of the page with ID `24`:
 
