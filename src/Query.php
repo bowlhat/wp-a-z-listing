@@ -438,7 +438,7 @@ class Query {
 
 	/**
 	 * Extract an item's indices
-	 * 
+	 *
 	 * @param \WP_Post|\WP_Term $item The item.
 	 * @return array<string,mixed> The indices. This is an associative array of `[ 'index-char' => $item_array ]`.
 	 */
@@ -477,18 +477,18 @@ class Query {
 
 		if ( \is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
-				foreach( $this->get_all_indices_for_item( $item ) as $key => $value ) {
+				foreach ( $this->get_all_indices_for_item( $item ) as $key => $value ) {
 					$indexed_items[ $key ] = $value;
 				}
 			}
-		} else if ( $this->query instanceof \WP_Query ) {
+		} elseif ( $this->query instanceof \WP_Query ) {
 			$offset         = 0;
 			$posts_per_page = $this->query->posts_per_page;
 			$found_posts    = $this->query->found_posts;
 			while ( $offset < $found_posts ) {
 				$this->query->the_post();
 
-				foreach( $this->get_all_indices_for_item( $post ) as $key => $value ) {
+				foreach ( $this->get_all_indices_for_item( $post ) as $key => $value ) {
 					$indexed_items[ $key ] = $value;
 				}
 
