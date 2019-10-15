@@ -221,12 +221,13 @@ class Query {
 
 			if ( $query instanceof \WP_Query ) {
 				$this->query = $query;
+				// $items       = $query->posts;
 			} else {
 				if ( isset( $query['child_of'] ) ) {
 					$items       = \get_pages( $query );
 					$this->query = $query;
 				} else {
-					$wq          = new WP_Query( $query );
+					$wq          = new \WP_Query( $query );
 					$this->query = $wq;
 					$items       = $wq->posts;
 				}
@@ -438,7 +439,7 @@ class Query {
 	 */
 	protected function get_all_indices_for_item( $item ) {
 		$indexed_items = array();
-		$item_indices  = apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
+		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
 
 		if ( ! empty( $item_indices ) ) {
 			foreach ( $item_indices as $key => $entries ) {
@@ -490,7 +491,7 @@ class Query {
 				if ( 0 === $offset % $posts_per_page ) {
 					$q           = $this->query->query;
 					$q['offset'] = $offset * $posts_per_page;
-					$this->query = new WP_Query( $q );
+					$this->query = new \WP_Query( $q );
 				}
 			}
 			wp_reset_postdata();
@@ -522,7 +523,7 @@ class Query {
 							 * @param string $b The second title. Converted to lower case.
 							 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
 							 */
-							$sort = apply_filters(
+							$sort = \apply_filters(
 								'a_z_listing_item_sorting_comparator',
 								$default_sort,
 								$atitle,
@@ -534,7 +535,7 @@ class Query {
 							}
 
 							if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-								do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+								\do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
 							}
 							return $default_sort;
 						}
