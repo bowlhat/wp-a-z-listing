@@ -22,13 +22,13 @@ function a_z_listing_do_enqueue() {
 	wp_register_style(
 		'a-z-listing',
 		plugins_url( 'css/a-z-listing-default.css', dirname( __FILE__ ) ),
-		array( 'dashicons' )
+		[ 'dashicons' ]
 	);
 
 	wp_register_style(
 		'a-z-listing-admin',
 		plugins_url( 'css/a-z-listing-customize.css', dirname( __FILE__ ) ),
-		array()
+		[]
 	);
 
 	wp_register_script(

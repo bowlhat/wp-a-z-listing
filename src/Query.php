@@ -73,7 +73,7 @@ class Query {
 	 *
 	 * @var array<int,mixed>
 	 */
-	private $current_letter_items = array();
+	private $current_letter_items = [];
 
 	/**
 	 * The current letter array-index in $matched_item_indices. internal use only
@@ -103,7 +103,7 @@ class Query {
 		global $post;
 		$this->alphabet = new Alphabet();
 
-		if ( \is_string( $query ) && ! empty( $query ) ) {
+		if ( is_string( $query ) && ! empty( $query ) ) {
 			$type = 'terms';
 		}
 
@@ -116,16 +116,14 @@ class Query {
 
 			$defaults = array( 'hide_empty' => false );
 
-			if ( \is_array( $query ) ) {
+			if ( is_array( $query ) ) {
 				$query = \wp_parse_args( $query, $defaults );
-			} elseif ( \is_string( $query ) ) {
-				$taxonomies = \explode( ',', $query );
-				$taxonomies = \array_unique( \array_filter( \array_map( 'trim', $taxonomies ) ) );
+			} elseif ( is_string( $query ) ) {
+				$taxonomies = explode( ',', $query );
+				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
 
 				$query = \wp_parse_args(
-					array(
-						'taxonomy' => (array) $taxonomies,
-					),
+					[ 'taxonomy' => (array) $taxonomies ],
 					$defaults
 				);
 			}
@@ -173,7 +171,7 @@ class Query {
 			$this->type = 'posts';
 
 			if ( empty( $query ) ) {
-				$query = array();
+				$query = [];
 			}
 
 			/**
@@ -198,8 +196,8 @@ class Query {
 				$query = (array) $query;
 
 				if ( isset( $query['post_type'] ) ) {
-					if ( \is_array( $query['post_type'] ) && \count( $query['post_type'] ) === 1 ) {
-						$query['post_type'] = \array_shift( $query['post_type'] );
+					if ( is_array( $query['post_type'] ) && count( $query['post_type'] ) === 1 ) {
+						$query['post_type'] = array_shift( $query['post_type'] );
 					}
 				}
 
@@ -356,7 +354,7 @@ class Query {
 		 * @deprecated Use a_z_listing_sections
 		 * @see a_z_listing_sections
 		 */
-		$sections = \apply_filters_deprecated( 'az_sections', array( $sections ), '1.0.0', 'a_z_listing_sections' );
+		$sections = \apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
@@ -672,10 +670,10 @@ class Query {
 			}
 		}
 
-		$templates = array(
+		$templates = [
 			'a-z-listing-' . $section . '.php',
 			'a-z-listing.php',
-		);
+		];
 
 		if ( $post ) {
 			array_unshift(
@@ -770,7 +768,7 @@ class Query {
 	 */
 	public function the_letter() {
 		$this->current_item_offset  = 0;
-		$this->current_letter_items = array();
+		$this->current_letter_items = [];
 		$key                        = $this->alphabet->get_key_for_offset( $this->current_letter_offset );
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
 			$this->current_letter_items = $this->matched_item_indices[ $key ];
