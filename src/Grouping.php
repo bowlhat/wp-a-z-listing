@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! \defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -45,8 +45,8 @@ class Grouping {
 		$this->grouping = $grouping;
 
 		if ( 1 < $grouping ) {
-			\add_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
-			\add_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
+			add_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
+			add_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
 		}
 	}
 
@@ -57,8 +57,8 @@ class Grouping {
 	 * @return void
 	 */
 	public function teardown() {
-		\remove_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
-		\remove_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
+		remove_filter( 'a-z-listing-alphabet', [ $this, 'alphabet_filter' ], 2 );
+		remove_filter( 'the-a-z-letter-title', [ $this, 'heading' ], 5 );
 	}
 
 	/**
@@ -70,15 +70,15 @@ class Grouping {
 	 */
 	public function alphabet_filter( string $alphabet ): string {
 		$headings = [];
-		$letters  = \explode( ',', $alphabet );
-		$letters  = \array_map( 'trim', $letters );
+		$letters  = explode( ',', $alphabet );
+		$letters  = array_map( 'trim', $letters );
 
 		$i = 0;
 		$j = 0;
 
 		$grouping = $this->grouping;
 
-		$groups = \array_reduce(
+		$groups = array_reduce(
 			$letters,
 			/**
 			 * Closure to reduce the groups array and populate the headings array
@@ -106,7 +106,7 @@ class Grouping {
 			}
 		);
 
-		$this->headings = \array_reduce(
+		$this->headings = array_reduce(
 			$headings,
 			/**
 			 * Closure to reduce the headings array
@@ -121,7 +121,7 @@ class Grouping {
 			}
 		);
 
-		return \join( ',', $groups );
+		return join( ',', $groups );
 	}
 
 	/**
@@ -132,9 +132,9 @@ class Grouping {
 	 * @return string The new title for the group.
 	 */
 	public function heading( string $title ): string {
-		if ( isset( $this->headings[ $title ] ) && \is_array( $this->headings[ $title ] ) ) {
+		if ( isset( $this->headings[ $title ] ) && is_array( $this->headings[ $title ] ) ) {
 			$first = $this->headings[ $title ][0];
-			$last  = $this->headings[ $title ][ \count( $this->headings[ $title ] ) - 1 ];
+			$last  = $this->headings[ $title ][ count( $this->headings[ $title ] ) - 1 ];
 			return $first . '-' . $last;
 		}
 

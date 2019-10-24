@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! \defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -60,9 +60,9 @@ class Alphabet {
 	 */
 	public function __construct() {
 		/* translators: List the aphabet of your language in the order that your language prefers. list as groups of identical meanings but different characters together, e.g. in English we group A with a because they are both the same letter but different character-code. Each character group should be followed by a comma separating it from the next group. Any amount of characters per group are acceptible, and there is no requirement for all the groups to contain the same amount of characters as all the others. Be careful with the character you place first in each group as that will be used as the identifier for the group which gets displayed on the page, e.g. in English a group definition of "Aa" will indicate that we display all the posts in the group, i.e. whose titles begin with either "A" or "a", listed under a heading of "A" (the first character in the definition). */
-		$alphabet = \__( 'AÁÀÄÂaáàäâ,Bb,CÇcç,Dd,EÉÈËÊeéèëê,Ff,Gg,Hh,IÍÌÏÎiíìïî,Jj,Kk,Ll,Mm,Nn,OÓÒÖÔoóòöô,Pp,Qq,Rr,Ssß,Tt,UÚÙÜÛuúùüû,Vv,Ww,Xx,Yy,Zz', 'a-z-listing' );
+		$alphabet = __( 'AÁÀÄÂaáàäâ,Bb,CÇcç,Dd,EÉÈËÊeéèëê,Ff,Gg,Hh,IÍÌÏÎiíìïî,Jj,Kk,Ll,Mm,Nn,OÓÒÖÔoóòöô,Pp,Qq,Rr,Ssß,Tt,UÚÙÜÛuúùüû,Vv,Ww,Xx,Yy,Zz', 'a-z-listing' );
 		/* translators: This should be a single character to denote "all entries that didn't fit under one of the alphabet character groups defined". This is used in English to categorise posts whose title begins with a numeric (0 through to 9), or some other character that is not a standard English alphabet letter. */
-		$others = \__( '#', 'a-z-listing' );
+		$others = __( '#', 'a-z-listing' );
 
 		/**
 		 * Filters the alphabet. The string should contain groups of similar or
@@ -72,7 +72,7 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $alphabet The $alphabet
 		 */
-		$alphabet = \apply_filters( 'a_z_listing_alphabet', $alphabet );
+		$alphabet = apply_filters( 'a_z_listing_alphabet', $alphabet );
 		/**
 		 * Filters the alphabet. The string should contain groups of similar or
 		 * identical characters separated by commas. The first character in each
@@ -81,7 +81,7 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $alphabet The $alphabet.
 		 */
-		$alphabet = \apply_filters( 'a-z-listing-alphabet', $alphabet );
+		$alphabet = apply_filters( 'a-z-listing-alphabet', $alphabet );
 
 		/**
 		 * Specifies the character used for all non-alphabetic titles, such as
@@ -91,7 +91,7 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $non_alpha_char The character for non-alphabetic post titles.
 		 */
-		$others = \apply_filters( 'a_z_listing_non_alpha_char', $others );
+		$others = apply_filters( 'a_z_listing_non_alpha_char', $others );
 		/**
 		 * Specifies the character used for all non-alphabetic titles, such as numeric
 		 * titles in the default setup for English. Defaults to '#' unless overridden
@@ -100,10 +100,10 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $non_alpha_char The character for non-alphabetic post titles.
 		 */
-		$others = \apply_filters( 'a-z-listing-non-alpha-char', $others );
+		$others = apply_filters( 'a-z-listing-non-alpha-char', $others );
 
-		$alphabet_groups = \explode( ',', $alphabet );
-		$letters         = \array_reduce(
+		$alphabet_groups = explode( ',', $alphabet );
+		$letters         = array_reduce(
 			$alphabet_groups,
 			/**
 			 * Closure to extract the alphabet groups
@@ -115,7 +115,7 @@ class Alphabet {
 			function( array $carry, string $group_as_string ): array {
 				$group_as_array        = Strings::mb_string_to_array( $group_as_string );
 				$group_index_character = $group_as_array[0];
-				$group_as_array        = \array_reduce(
+				$group_as_array        = array_reduce(
 					$group_as_array,
 					/**
 					 * Closure to extract the letters from each alphabet group
@@ -129,15 +129,15 @@ class Alphabet {
 						return $group_carry;
 					}
 				);
-				if ( ! \is_array( $carry ) ) {
+				if ( ! is_array( $carry ) ) {
 					return $group_as_array;
 				}
-				return \array_merge( $carry, $group_as_array );
+				return array_merge( $carry, $group_as_array );
 			}
 		);
 
 		$this->unknown_letter = $others;
-		$this->alphabet_keys  = \array_values( \array_unique( $letters ) );
+		$this->alphabet_keys  = array_values( array_unique( $letters ) );
 		$this->keyed_alphabet = $letters;
 	}
 
@@ -149,7 +149,7 @@ class Alphabet {
 	 * @return string The letter.
 	 */
 	public function get_letter_for_key( string $key ): string {
-		if ( \in_array( $key, \array_keys( $this->keyed_alphabet ), true ) ) {
+		if ( in_array( $key, array_keys( $this->keyed_alphabet ), true ) ) {
 			return $this->keyed_alphabet[ $key ];
 		} else {
 			return $this->unknown_letter;
@@ -187,7 +187,7 @@ class Alphabet {
 	public function chars( bool $include_unknown = false ): array {
 		$letters = $this->alphabet_keys;
 		if ( $include_unknown ) {
-			\array_push( $letters, $this->unknown_letter );
+			array_push( $letters, $this->unknown_letter );
 		}
 		return $letters;
 	}
@@ -200,7 +200,7 @@ class Alphabet {
 	 * @return int The number of letters in the alphabet.
 	 */
 	public function count( bool $include_unknown = false ): int {
-		return \count( $this->chars( $include_unknown ) );
+		return count( $this->chars( $include_unknown ) );
 	}
 
 	/**
@@ -213,6 +213,6 @@ class Alphabet {
 	 */
 	public function loop( callable $callback, bool $include_unknown = false ) {
 		$alphabet = $this->chars( $include_unknown );
-		\array_walk( $alphabet, $callback, $this->count( $include_unknown ) );
+		array_walk( $alphabet, $callback, $this->count( $include_unknown ) );
 	}
 }

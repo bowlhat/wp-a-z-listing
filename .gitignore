@@ -4,6 +4,7 @@
 *.tar.gz
 *.zip
 vendor/
+vendor-bin/*/vendor/
 composer.phar
 node_modules/
 phpcs.xml
@@ -13,3 +14,4 @@ wp-cli.local.yml
 obj
 bin/Debug
 bin/Release
+build/
