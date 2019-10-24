@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
-if ( ! \defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -122,7 +122,7 @@ class Query {
 				$taxonomies = explode( ',', $query );
 				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
 
-				$query = \wp_parse_args(
+				$query = wp_parse_args(
 					[ 'taxonomy' => (array) $taxonomies ],
 					$defaults
 				);
@@ -136,7 +136,7 @@ class Query {
 			 * @param array|Object|\WP_Query  $query  The query object
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$query = \apply_filters( 'a_z_listing_query', $query, 'terms' );
+			$query = apply_filters( 'a_z_listing_query', $query, 'terms' );
 
 			/**
 			 * Modify or replace the query
@@ -146,7 +146,7 @@ class Query {
 			 * @param array|Object|\WP_Query  $query  The query object
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$query = \apply_filters( 'a-z-listing-query', $query, 'terms' );
+			$query = apply_filters( 'a-z-listing-query', $query, 'terms' );
 
 			if ( ! is_array( $query ) ) {
 				$query = (array) $query;
@@ -157,7 +157,7 @@ class Query {
 				return;
 			}
 
-			$items       = \get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
+			$items       = get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
 			$this->query = $query;
 
 			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
@@ -181,7 +181,7 @@ class Query {
 			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
 			 * @param array|Object|\WP_Query $query The query object
 			 */
-			$query = \apply_filters( 'a_z_listing_query', $query );
+			$query = apply_filters( 'a_z_listing_query', $query );
 
 			/**
 			 * Modify or replace the query
@@ -190,7 +190,7 @@ class Query {
 			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
 			 * @param array|Object|\WP_Query $query The query object
 			 */
-			$query = \apply_filters( 'a-z-listing-query', $query );
+			$query = apply_filters( 'a-z-listing-query', $query );
 
 			if ( ! $query instanceof \WP_Query ) {
 				$query = (array) $query;
@@ -224,7 +224,7 @@ class Query {
 				// $items       = $query->posts;
 			} else {
 				if ( isset( $query['child_of'] ) ) {
-					$items       = \get_pages( $query );
+					$items       = get_pages( $query );
 					$this->query = $query;
 				} else {
 					$wq          = new \WP_Query( $query );
@@ -245,12 +245,12 @@ class Query {
 		 * @param string $type  The query type - terms or posts.
 		 * @param array  $query The query as an array.
 		 */
-		$items = \apply_filters( 'a-z-listing-filter-items', $items, $type, (array) $query );
+		$items = apply_filters( 'a-z-listing-filter-items', $items, $type, (array) $query );
 
 		$this->matched_item_indices = $this->get_all_indices( $items );
 
 		if ( $use_cache ) {
-			\do_action( 'a_z_listing_save_cache', $query, $type, $this->matched_item_indices );
+			do_action( 'a_z_listing_save_cache', $query, $type, $this->matched_item_indices );
 		}
 	}
 
@@ -299,7 +299,7 @@ class Query {
 			 * @param array  $query  The query.
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$cached = \apply_filters( 'a_z_listing_get_cached_query', [], (array) $query, $type );
+			$cached = apply_filters( 'a_z_listing_get_cached_query', [], (array) $query, $type );
 			if ( ! empty( $cached ) ) {
 				$this->matched_item_indices = $cached;
 				return true;
@@ -323,7 +323,7 @@ class Query {
 			return null;
 		}
 		if ( ! $page instanceof \WP_Post ) {
-			$page = \get_post( $page );
+			$page = get_post( $page );
 		}
 		if ( empty( $page->post_parent ) ) {
 			return $page;
@@ -355,23 +355,23 @@ class Query {
 		 * @deprecated Use a_z_listing_sections
 		 * @see a_z_listing_sections
 		 */
-		$sections = \apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
+		$sections = apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
 		 * @param array $sections The sections for the site.
 		 */
-		$sections = \apply_filters( 'a_z_listing_sections', $sections );
+		$sections = apply_filters( 'a_z_listing_sections', $sections );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
 		 * @since 1.7.1
 		 * @param array $sections The sections for the site.
 		 */
-		$sections = \apply_filters( 'a-z-listing-sections', $sections );
+		$sections = apply_filters( 'a-z-listing-sections', $sections );
 
 		if ( ! $page instanceof \WP_Post ) {
-			$page = \get_post( $page );
+			$page = get_post( $page );
 		}
 		if ( ! $page instanceof \WP_Post ) {
 			$page = $post;
@@ -395,7 +395,7 @@ class Query {
 			\do_action( 'log', 'A-Z Listing: Section selection', $section_name, $sections );
 		}
 
-		if ( null !== $section_name && ! \in_array( $section_name, $sections, true ) ) {
+		if ( null !== $section_name && ! in_array( $section_name, $sections, true ) ) {
 			$section_name   = null;
 			$section_object = null;
 		}
@@ -466,11 +466,11 @@ class Query {
 		global $post;
 		$indexed_items = array();
 
-		if ( ! \is_array( $items ) || empty( $items ) ) {
+		if ( ! is_array( $items ) || empty( $items ) ) {
 			$items = $this->items;
 		}
 
-		if ( \is_array( $items ) && ! empty( $items ) ) {
+		if ( is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				foreach ( $this->get_all_indices_for_item( $item ) as $key => $value ) {
 					$indexed_items[ $key ] = $value;
@@ -491,7 +491,7 @@ class Query {
 				if ( 0 === $offset % $posts_per_page ) {
 					$q           = $this->query->query;
 					$q['offset'] = $offset * $posts_per_page;
-					$this->query = new \WP_Query( $q );
+					$this->query = new WP_Query( $q );
 				}
 			}
 			wp_reset_postdata();
@@ -523,7 +523,7 @@ class Query {
 							 * @param string $b The second title. Converted to lower case.
 							 * @return int The new order preference: -1 if $a is less than $b. 1 if $a is greater than $b. 0 if they are identical.
 							 */
-							$sort = \apply_filters(
+							$sort = apply_filters(
 								'a_z_listing_item_sorting_comparator',
 								$default_sort,
 								$atitle,
@@ -572,7 +572,7 @@ class Query {
 	 * @return string The letter links HTML
 	 */
 	public function get_letter_display( string $target = '', $style = '' ): string {
-		\_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letters' );
+		_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letters' );
 		return $this->get_the_letters( $target, $style );
 	}
 
@@ -598,7 +598,7 @@ class Query {
 		$alphabet = $this->alphabet;
 		$indices  = $this->matched_item_indices;
 		$i        = 0;
-		$ret      = '<ul class="' . \esc_attr( \implode( ' ', $classes ) ) . '">';
+		$ret      = '<ul class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
 		$this->alphabet->loop(
 			/**
@@ -633,17 +633,17 @@ class Query {
 					$classes[] = 'no-posts';
 				}
 
-				$ret .= '<li class="' . \esc_attr( \implode( ' ', $classes ) ) . '">';
+				$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 				if ( ! empty( $indices[ $character ] ) ) {
-					$ret .= '<a href="' . \esc_url( $target . '#letter-' . $id ) . '">';
+					$ret .= '<a href="' . esc_url( $target . '#letter-' . $id ) . '">';
 				}
-				$ret .= '<span>' . \esc_html( $that->get_the_letter_title( $character ) ) . '</span>';
+				$ret .= '<span>' . esc_html( $that->get_the_letter_title( $character ) ) . '</span>';
 				if ( ! empty( $indices[ $character ] ) ) {
 					$ret .= '</a>';
 				}
 				$ret .= '</li>';
 			},
-			\array_key_exists( $this->alphabet->get_unknown_letter(), $this->matched_item_indices )
+			array_key_exists( $this->alphabet->get_unknown_letter(), $this->matched_item_indices )
 		);
 
 		$ret .= '</ul>';
@@ -691,11 +691,11 @@ class Query {
 			);
 		}
 
-		$template = \locate_template( $templates );
+		$template = locate_template( $templates );
 		if ( ! empty( $template ) ) {
-			\A_Z_Listing\_do_template( $this, $template );
+			_do_template( $this, $template );
 		} else {
-			\A_Z_Listing\_do_template( $this, \plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
+			_do_template( $this, plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
 		}
 		wp_reset_postdata();
 	}
@@ -723,7 +723,7 @@ class Query {
 	 * @return bool True if we have more letters to iterate, otherwise false
 	 */
 	public function have_a_z_letters(): bool {
-		\_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::have_letters' );
+		_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::have_letters' );
 		return $this->have_letters();
 	}
 
@@ -747,7 +747,7 @@ class Query {
 	 * @return bool True if there are posts left to iterate within the current letter, otherwise false.
 	 */
 	public function have_a_z_posts(): bool {
-		\_deprecated_function( __METHOD__, '1.0.0', 'have_items' );
+		_deprecated_function( __METHOD__, '1.0.0', 'have_items' );
 		return $this->have_items();
 	}
 
@@ -791,7 +791,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_a_z_post() {
-		\_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::the_item' );
+		_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::the_item' );
 		$this->the_item();
 	}
 
@@ -817,8 +817,8 @@ class Query {
 		global $post;
 		if ( 'I understand the issues!' === $force ) {
 			$current_item = $this->current_item['item'];
-			if ( \is_string( $current_item ) ) {
-				$item = \explode( ':', $current_item, 2 );
+			if ( is_string( $current_item ) ) {
+				$item = explode( ':', $current_item, 2 );
 
 				if ( isset( $item[1] ) ) {
 					if ( 'term' === $item[0] ) {
@@ -832,16 +832,16 @@ class Query {
 				}
 			} elseif ( $current_item instanceof \WP_Post ) {
 				$post = $current_item;
-				\setup_postdata( $post );
+				setup_postdata( $post );
 				return $post;
 			} elseif ( $current_item instanceof \WP_Term ) {
-				return \get_term( $current_item );
+				return get_term( $current_item );
 			} else {
 				return $current_item;
 			}
 		}
 
-		return new \WP_Error( 'understanding', 'You must tell the plugin "I understand the issues!" when calling get_the_item_object().' );
+		return new WP_Error( 'understanding', 'You must tell the plugin "I understand the issues!" when calling get_the_item_object().' );
 	}
 
 	/**
@@ -853,8 +853,8 @@ class Query {
 	 * @return mixed|\WP_Error Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	function get_item_meta( string $key = '', bool $single = false ) {
-		if ( \is_string( $this->current_item['item'] ) ) {
-			$item = \explode( ':', $this->current_item['item'], 2 );
+		if ( is_string( $this->current_item['item'] ) ) {
+			$item = explode( ':', $this->current_item['item'], 2 );
 
 			if ( 'term' === $item[0] ) {
 				return \get_term_meta( intval( $item[1] ), $key, $single );
@@ -862,12 +862,12 @@ class Query {
 				return \get_post_meta( intval( $item[1] ), $key, $single );
 			}
 		} elseif ( $this->current_item['item'] instanceof \WP_Term ) {
-			return \get_term_meta( $this->current_item['item']->term_id, $key, $single );
+			return get_term_meta( $this->current_item['item']->term_id, $key, $single );
 		} elseif ( $this->current_item['item'] instanceof \WP_Post ) {
-			return \get_post_meta( $this->current_item['item']->ID, $key, $single );
+			return get_post_meta( $this->current_item['item']->ID, $key, $single );
 		}
 
-		return new \WP_Error( 'no-type', 'Unknown item type.' );
+		return new WP_Error( 'no-type', 'Unknown item type.' );
 	}
 
 	/**
@@ -897,7 +897,7 @@ class Query {
 				}
 			}
 		} elseif ( $this->current_item['item'] instanceof \WP_Term ) {
-			$term = \get_term( $this->current_item['item'] );
+			$term = get_term( $this->current_item['item'] );
 			if ( ! empty( $term ) ) {
 				return $term->count;
 			}
@@ -925,7 +925,7 @@ class Query {
 	 * @return int The number of posts.
 	 */
 	public function num_a_z_posts(): int {
-		\_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letter_items_count' );
+		_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letter_items_count' );
 		return $this->get_the_letter_items_count();
 	}
 
@@ -939,7 +939,7 @@ class Query {
 	 * @return int The number of posts.
 	 */
 	public function num_a_z_items(): int {
-		\_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letter_items_count' );
+		_deprecated_function( __METHOD__, '1.0.0', 'A_Z_Listing::get_the_letter_items_count' );
 		return $this->get_the_letter_items_count();
 	}
 
@@ -950,7 +950,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_letter_items_count() {
-		echo \esc_html( \strval( $this->get_the_letter_items_count() ) );
+		echo esc_html( strval( $this->get_the_letter_items_count() ) );
 	}
 
 	/**
@@ -970,7 +970,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_letter_id() {
-		echo \esc_attr( $this->get_the_letter_id() );
+		echo esc_attr( $this->get_the_letter_id() );
 	}
 
 	/**
@@ -995,7 +995,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_item_id() {
-		echo \esc_attr( $this->get_the_item_id() );
+		echo esc_attr( $this->get_the_item_id() );
 	}
 
 	/**
@@ -1006,8 +1006,8 @@ class Query {
 	 */
 	public function get_the_item_id(): int {
 		$current_item = $this->current_item['item'];
-		if ( \is_string( $current_item ) ) {
-			$item = \explode( ':', $current_item, 2 );
+		if ( is_string( $current_item ) ) {
+			$item = explode( ':', $current_item, 2 );
 
 			return intval( $item[1] ?? -1 );
 		} elseif ( $current_item instanceof \WP_Post ) {
@@ -1052,7 +1052,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_letter_title( string $index = '' ) {
-		echo \esc_html( $this->get_the_letter_title( $index ) );
+		echo esc_html( $this->get_the_letter_title( $index ) );
 	}
 
 	/**
@@ -1077,14 +1077,14 @@ class Query {
 		 * @since 1.8.0
 		 * @param string $letter The title of the letter.
 		 */
-		$letter = \apply_filters( 'the_a_z_letter_title', $letter );
+		$letter = apply_filters( 'the_a_z_letter_title', $letter );
 		/**
 		 * Modify the letter title or heading
 		 *
 		 * @since 1.8.0
 		 * @param string $letter The title of the letter.
 		 */
-		$letter = \apply_filters( 'the-a-z-letter-title', $letter );
+		$letter = apply_filters( 'the-a-z-letter-title', $letter );
 
 		return $letter;
 	}
@@ -1108,23 +1108,23 @@ class Query {
 	 */
 	public function get_the_title(): string {
 		$title = $this->current_item['title'];
-		if ( \is_string( $this->current_item['item'] ) ) {
-			$item = \explode( ':', $this->current_item['item'], 2 );
+		if ( is_string( $this->current_item['item'] ) ) {
+			$item = explode( ':', $this->current_item['item'], 2 );
 		} else {
 			$item = $this->current_item['item'];
 		}
 
-		if ( \is_array( $item ) ) {
+		if ( is_array( $item ) ) {
 			if ( 'post' === $item[0] ) {
-				return \apply_filters( 'the_title', $title, $item[1] );
+				return apply_filters( 'the_title', $title, $item[1] );
 			} elseif ( 'term' === $item[0] ) {
-				return \apply_filters( 'term_name', $title, $item[1] );
+				return apply_filters( 'term_name', $title, $item[1] );
 			}
 		} else {
 			if ( $item instanceof \WP_Post ) {
-				return \apply_filters( 'the_title', $title, $item->ID );
+				return apply_filters( 'the_title', $title, $item->ID );
 			} elseif ( $item instanceof \WP_Term ) {
-				return \apply_filters( 'term_name', $title, $item->term_id );
+				return apply_filters( 'term_name', $title, $item->term_id );
 			}
 		}
 
@@ -1138,7 +1138,7 @@ class Query {
 	 * @return void
 	 */
 	public function the_permalink() {
-		echo \esc_url( $this->get_the_permalink() );
+		echo esc_url( $this->get_the_permalink() );
 	}
 
 	/**
