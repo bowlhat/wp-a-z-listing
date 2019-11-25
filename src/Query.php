@@ -221,21 +221,15 @@ class Query {
 
 			if ( $query instanceof \WP_Query ) {
 				$this->query = $query;
-				// $items       = $query->posts;
 			} else {
-				// add_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
-				// add_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10, 2 );
 				if ( isset( $query['child_of'] ) ) {
 					$items       = get_pages( $query );
 					$this->query = $query;
 				} else {
-					// $query       = wp_parse_args( $query, [ 'numberposts'  => -1, 'nopaging' => true ] );
 					$wq          = new WP_Query( $query );
 					$this->query = $wq;
 					$items       = $wq->posts;
 				}
-				// remove_filter( 'posts_fields', [ __CLASS__, 'wp_query_fields' ], 10 );
-				// remove_filter( 'split_the_query', [ __CLASS__, 'split_the_query' ], 10 );
 			}
 
 			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
