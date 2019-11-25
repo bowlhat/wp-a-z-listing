@@ -221,7 +221,6 @@ class Query {
 
 			if ( $query instanceof \WP_Query ) {
 				$this->query = $query;
-				// $items       = $query->posts;
 			} else {
 				if ( isset( $query['child_of'] ) ) {
 					$items       = get_pages( $query );
