@@ -42,7 +42,7 @@ function a_z_listing_force_enqueue_tabs() {
  * @return void
  */
 function a_z_listing_force_enable_tabs() {
-	if ( false === has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' ) ) {
+	if ( false !== has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' ) ) {
 		remove_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' );
 	}
 	add_action( 'wp_enqueue_scripts', 'a_z_listing_force_enqueue_tabs' );

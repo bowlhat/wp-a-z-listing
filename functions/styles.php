@@ -52,7 +52,7 @@ function a_z_listing_force_enqueue_styles() {
  * @return void
  */
 function a_z_listing_force_enable_styles() {
-	if ( false === has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' ) ) {
+	if ( false !== has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' ) ) {
 		remove_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' );
 	}
 	add_action( 'wp_enqueue_scripts', 'a_z_listing_force_enqueue_styles' );
