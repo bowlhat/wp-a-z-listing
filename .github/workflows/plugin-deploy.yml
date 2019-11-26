@@ -57,6 +57,16 @@ jobs:
         docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
 
+    - name: Install phive
+      run: |
+        wget -O phive.phar "https://phar.io/releases/phive.phar"
+        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
+        gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
+        gpg --verify phive.phar.asc phive.phar
+        rm phive.phar.asc
+        chmod +x phive.phar
+        mv phive.phar /usr/local/bin/phive
+
     - uses: actions/checkout@v1
 
     - name: Install php-scoper
@@ -67,7 +77,7 @@ jobs:
 
     - name: Run composer install
       run: composer install --prefer-dist --no-dev --optimize-autoloader
-  
+
     - name: Run yarn install
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
@@ -77,7 +87,7 @@ jobs:
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
-    
+
     - name: Upload build result
       uses: actions/upload-artifact@v1
       with:
@@ -121,7 +131,7 @@ jobs:
         docker-php-ext-install -j$(nproc) gd
         pecl install mcrypt-1.0.2
         docker-php-ext-enable mcrypt
-    
+
     - name: Install phive
       run: |
         wget -O phive.phar "https://phar.io/releases/phive.phar"
@@ -139,7 +149,11 @@ jobs:
         path: .
 
     - name: Install phpcs
-      run: phive install --trust-gpg-keys phpcs
+      run: |
+        phive install phpcs --trust-gpg-keys 31C7E470E2138192
+        git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git /tmp/phpcs
+        git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
+        /tmp/phpcs/bin/phpcs --config-set installed_paths /tmp/sniffs
 
     - name: Run PHPCS Coding Standards
       run: ./tools/phpcs $GITHUB_WORKSPACE
