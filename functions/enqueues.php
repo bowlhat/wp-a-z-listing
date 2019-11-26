@@ -22,19 +22,19 @@ function a_z_listing_do_enqueue() {
 	wp_register_style(
 		'a-z-listing',
 		plugins_url( 'css/a-z-listing-default.css', dirname( __FILE__ ) ),
-		[ 'dashicons' ]
+		array( 'dashicons' )
 	);
 
 	wp_register_style(
 		'a-z-listing-admin',
 		plugins_url( 'css/a-z-listing-customize.css', dirname( __FILE__ ) ),
-		[]
+		array()
 	);
 
 	wp_register_script(
 		'a-z-listing-tabs',
 		plugins_url( 'scripts/a-z-listing-tabs.js', dirname( __FILE__ ) ),
-		[ 'jquery', 'jquery-ui-tabs' ],
+		array( 'jquery', 'jquery-ui-tabs' ),
 		false,
 		true
 	);
@@ -42,14 +42,14 @@ function a_z_listing_do_enqueue() {
 	wp_register_script(
 		'a-z-listing-widget-admin',
 		plugins_url( 'scripts/a-z-listing-widget-admin.js', dirname( __FILE__ ) ),
-		[ 'jquery', 'jquery-ui-autocomplete' ],
+		array( 'jquery', 'jquery-ui-autocomplete' ),
 		false,
 		true
 	);
 	wp_localize_script(
 		'a-z-listing-widget-admin',
 		'a_z_listing_widget_admin',
-		[ 'ajax_url' => admin_url( 'admin-ajax.php' ) ]
+		array( 'ajax_url' => admin_url( 'admin-ajax.php' ) )
 	);
 
 	$add_styles = get_option( 'a-z-listing-add-styling', true );

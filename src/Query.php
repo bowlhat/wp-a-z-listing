@@ -73,7 +73,7 @@ class Query {
 	 *
 	 * @var array<int,mixed>
 	 */
-	private $current_letter_items = [];
+	private $current_letter_items = array();
 
 	/**
 	 * The current letter array-index in $matched_item_indices. internal use only
@@ -114,7 +114,7 @@ class Query {
 
 			$this->type = 'terms';
 
-			$defaults = [ 'hide_empty' => false ];
+			$defaults = array( 'hide_empty' => false );
 
 			if ( is_array( $query ) ) {
 				$query = wp_parse_args( $query, $defaults );
@@ -123,7 +123,7 @@ class Query {
 				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
 
 				$query = wp_parse_args(
-					[ 'taxonomy' => (array) $taxonomies ],
+					array( 'taxonomy' => (array) $taxonomies ),
 					$defaults
 				);
 			}
@@ -171,7 +171,7 @@ class Query {
 			$this->type = 'posts';
 
 			if ( empty( $query ) ) {
-				$query = [];
+				$query = array();
 			}
 
 			/**
@@ -212,7 +212,7 @@ class Query {
 					}
 				}
 
-				$query = wp_parse_args( $query, [ 'post_type' => 'page' ] );
+				$query = wp_parse_args( $query, array( 'post_type' => 'page' ) );
 			}
 
 			if ( $this->check_cache( (array) $query, $type, $use_cache ) ) {
@@ -298,7 +298,7 @@ class Query {
 			 * @param array  $query  The query.
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$cached = apply_filters( 'a_z_listing_get_cached_query', [], (array) $query, $type );
+			$cached = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $type );
 			if ( ! empty( $cached ) ) {
 				$this->matched_item_indices = $cached;
 				return true;
@@ -340,7 +340,7 @@ class Query {
 	protected static function get_section( $page = 0 ) {
 		global $post;
 
-		$pages = get_pages( [ 'parent' => 0 ] );
+		$pages = get_pages( array( 'parent' => 0 ) );
 
 		$sections = array_map(
 			function( \WP_Post $item ): string {
@@ -354,7 +354,7 @@ class Query {
 		 * @deprecated Use a_z_listing_sections
 		 * @see a_z_listing_sections
 		 */
-		$sections = apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
+		$sections = apply_filters_deprecated( 'az_sections', array( $sections ), '1.0.0', 'a_z_listing_sections' );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
@@ -437,14 +437,14 @@ class Query {
 	 * @return array<string,mixed> The indices. This is an associative array of `[ 'index-char' => $item_array ]`.
 	 */
 	protected function get_all_indices_for_item( $item ) {
-		$indexed_items = [];
-		$item_indices  = apply_filters( '_a-z-listing-extract-item-indices', [], $item, $this->type );
+		$indexed_items = array();
+		$item_indices  = apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
 
 		if ( ! empty( $item_indices ) ) {
 			foreach ( $item_indices as $key => $entries ) {
 				if ( ! empty( $entries ) ) {
 					if ( ! isset( $indexed_items[ $key ] ) || ! is_array( $indexed_items[ $key ] ) ) {
-						$indexed_items[ $key ] = [];
+						$indexed_items[ $key ] = array();
 					}
 					$indexed_items[ $key ] = array_merge_recursive( $indexed_items[ $key ], $entries );
 				}
@@ -461,9 +461,9 @@ class Query {
 	 * @param array<int,mixed> $items The items to index.
 	 * @return array<string,mixed> The index letters
 	 */
-	protected function get_all_indices( array $items = [] ): array {
+	protected function get_all_indices( array $items = array() ): array {
 		global $post;
-		$indexed_items = [];
+		$indexed_items = array();
 
 		if ( ! is_array( $items ) || empty( $items ) ) {
 			$items = $this->items;
@@ -584,7 +584,7 @@ class Query {
 	 * @return string The letter links HTML
 	 */
 	public function get_the_letters( string $target = '', $style = '' ): string {
-		$classes = [ 'az-links' ];
+		$classes = array( 'az-links' );
 		if ( is_array( $style ) ) {
 			$classes = array_merge( $classes, $style );
 		} elseif ( is_string( $style ) ) {
@@ -615,7 +615,7 @@ class Query {
 					$id = '_';
 				}
 
-				$classes = [];
+				$classes = array();
 				if ( 1 === $i ) {
 					$classes[] = 'first';
 				} elseif ( $count === $i ) {
@@ -672,10 +672,10 @@ class Query {
 			}
 		}
 
-		$templates = [
+		$templates = array(
 			'a-z-listing-' . $section . '.php',
 			'a-z-listing.php',
-		];
+		);
 
 		if ( $post ) {
 			array_unshift(
@@ -770,7 +770,7 @@ class Query {
 	 */
 	public function the_letter() {
 		$this->current_item_offset  = 0;
-		$this->current_letter_items = [];
+		$this->current_letter_items = array();
 		$key                        = $this->alphabet->get_key_for_offset( $this->current_letter_offset );
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
 			$this->current_letter_items = $this->matched_item_indices[ $key ];
@@ -1030,11 +1030,11 @@ class Query {
 			return 'term';
 		} elseif ( is_string( $current_item ) ) {
 			$item = explode( ':', $current_item, 2 );
-			if ( isset( $item[0] ) && in_array( $item[0], [ 'post', 'term' ], true ) ) {
+			if ( isset( $item[0] ) && in_array( $item[0], array( 'post', 'term' ), true ) ) {
 				return $item[0];
 			}
 		}
-		if ( in_array( $this->type, [ 'terms', 'posts' ], true ) ) {
+		if ( in_array( $this->type, array( 'terms', 'posts' ), true ) ) {
 			return 'terms' === $this->type ? 'term' : 'post';
 		}
 

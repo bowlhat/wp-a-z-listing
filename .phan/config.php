@@ -7,7 +7,7 @@
  * @package a-z-listing
  */
 
-return [
+return array(
 
 	// Supported values: `'5.6'`, `'7.0'`, `'7.1'`, `'7.2'`, `'7.3'`, `'7.4'`, `null`.
 	// If this is set to `null`,
@@ -22,10 +22,10 @@ return [
 	//
 	// Thus, both first-party and third-party code being used by
 	// your application should be included in this list.
-	'directory_list'                  => [
+	'directory_list'                  => array(
 		'.',
 		'../wordpress',
-	],
+	),
 
 	'exclude_file_regex'              => '@^./((?:.*/)?tests?/|bin/|obj/|node_modules/|scripts/|templates/|\..+/)@',
 
@@ -40,17 +40,17 @@ return [
 	// party code, directories containing that code
 	// should be added to the `directory_list` as
 	// to `exclude_analysis_directory_list`.
-	'exclude_analysis_directory_list' => [
+	'exclude_analysis_directory_list' => array(
 		'vendor/',
 		'../wordpress',
-	],
+	),
 
 	// A list of plugin files to execute.
 	// See https://github.com/phan/phan/tree/master/.phan/plugins for even more.
 	// Pass these in as relative paths.
 	// Base names without extensions such as 'AlwaysReturnPlugin'
 	// can be used to refer to a plugin that is bundled with Phan.
-	'plugins'                         => [
+	'plugins'                         => array(
 		// checks if a function, closure or method unconditionally returns.
 
 		// can also be written as 'vendor/phan/phan/.phan/plugins/AlwaysReturnPlugin.php'.
@@ -78,7 +78,7 @@ return [
 		'PreferNamespaceUsePlugin',
 		'StrictComparisonPlugin',
 		'EmptyMethodAndFunctionPlugin',
-	],
+	),
 
-	'plugin_config'                   => [],
-];
+	'plugin_config'                   => array(),
+);

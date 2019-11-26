@@ -29,7 +29,7 @@ class A_Z_Listing_Widget extends WP_Widget {
 	 * @param array<string,mixed> $control_options Optional. Widget control options. See wp_register_widget_control() for
 	 *                                             information on accepted arguments. Default empty array.
 	 */
-	public function __construct( $id_base = '', $name = '', $widget_options = [], $control_options = [] ) {
+	public function __construct( $id_base = '', $name = '', $widget_options = array(), $control_options = array() ) {
 		$widget_options['classname']   = $widget_options['classname'] ?? 'a-z-listing-widget';
 		$widget_options['description'] = $widget_options['description'] ?? __(
 			'Alphabetised links to the A-Z site map',
@@ -518,12 +518,12 @@ function a_z_listing_autocomplete_post_titles() {
 
 	$results = a_z_listing_get_posts_by_title( $post_title, $post_type );
 
-	$titles = [];
+	$titles = array();
 	foreach ( $results as $result ) {
-		$titles[] = [
+		$titles[] = array(
 			'value' => intval( $result->ID ),
 			'label' => addslashes( $result->post_title ),
-		];
+		);
 	}
 
 	echo json_encode( $titles );

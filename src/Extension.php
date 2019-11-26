@@ -29,7 +29,7 @@ interface Extension {
 	 * @param array<string,mixed> $plugin the plugin details.
 	 * @return Extension extension object.
 	 */
-	public function activate( string $file = '', array $plugin = [] ): Extension;
+	public function activate( string $file = '', array $plugin = array() ): Extension;
 
 	/**
 	 * Initialize

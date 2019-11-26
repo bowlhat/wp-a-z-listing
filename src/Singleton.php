@@ -23,7 +23,7 @@ abstract class Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array<string,Extension>
 	 */
-	private static $_instances = [];
+	private static $_instances = array();
 
 	/**
 	 * Singleton
@@ -48,7 +48,7 @@ abstract class Singleton implements Extension {
 	 * @see Extension::activate
 	 * @suppress PhanPluginUnknownArrayMethodParamType,PhanPluginUnknownArrayMethodParamType
 	 */
-	public function activate( string $file = '', array $plugin = [] ): Extension {
+	public function activate( string $file = '', array $plugin = array() ): Extension {
 		return $this;
 	}
 

@@ -44,8 +44,8 @@ class Numbers {
 		if ( 'before' === $position || 'after' === $position ) {
 			$this->position = $position;
 			$this->group    = a_z_listing_is_truthy( $group );
-			add_filter( 'a-z-listing-alphabet', [ $this, 'add_to_alphabet' ] );
-			add_filter( 'the-a-z-letter-title', [ $this, 'title' ] );
+			add_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+			add_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 		}
 	}
 
@@ -56,8 +56,8 @@ class Numbers {
 	 * @return void
 	 */
 	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', [ $this, 'add_to_alphabet' ] );
-		remove_filter( 'the-a-z-letter-title', [ $this, 'title' ] );
+		remove_filter( 'a-z-listing-alphabet', array( $this, 'add_to_alphabet' ) );
+		remove_filter( 'the-a-z-letter-title', array( $this, 'title' ) );
 	}
 
 	/**
@@ -79,9 +79,9 @@ class Numbers {
 		}
 
 		if ( 'before' === $this->position ) {
-			return join( ',', [ $numbers, $alphabet ] );
+			return join( ',', array( $numbers, $alphabet ) );
 		} else {
-			return join( ',', [ $alphabet, $numbers ] );
+			return join( ',', array( $alphabet, $numbers ) );
 		}
 	}
 
