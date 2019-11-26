@@ -70,7 +70,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Install php-scoper
-      run: phive install humbug/php-scoper
+      run: phive install humbug/php-scoper --force-accept-unsigned
 
     - name: Run php-scoper
       run: ./tools/php-scoper --add-prefix
@@ -151,9 +151,8 @@ jobs:
     - name: Install phpcs
       run: |
         phive install phpcs --trust-gpg-keys 31C7E470E2138192
-        git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git /tmp/phpcs
         git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
-        /tmp/phpcs/bin/phpcs --config-set installed_paths /tmp/sniffs
+        ./tools/phpcs --config-set installed_paths /tmp/sniffs
 
     - name: Run PHPCS Coding Standards
       run: ./tools/phpcs $GITHUB_WORKSPACE
@@ -221,8 +220,6 @@ jobs:
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
         docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
-        # pecl install mcrypt-1.0.2
-        # docker-php-ext-enable mcrypt
 
     - name: Install phive
       run: |

@@ -60,9 +60,8 @@ jobs:
     - name: Install phpcs
       run: |
         phive install phpcs --trust-gpg-keys 31C7E470E2138192
-        git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git /tmp/phpcs
         git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
-        /tmp/phpcs/bin/phpcs --config-set installed_paths /tmp/sniffs
+        ./tools/phpcs --config-set installed_paths /tmp/sniffs
 
     - name: Run PHPCS Coding Standards
       run: ./tools/phpcs $GITHUB_WORKSPACE
