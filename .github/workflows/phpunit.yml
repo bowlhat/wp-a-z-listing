@@ -69,24 +69,29 @@ jobs:
 
     - uses: actions/checkout@v1
 
+    - name: Install composer dependencies
+      run: composer install --prefer-dist --no-interaction --no-progress
+  
     - name: Run php-scoper
       run: ./tools/php-scoper add-prefix
 
-    - name: Remove dev dependencies
-      run: composer update --no-dev --optimize-autoloader
+    - name: Remove composer dev dependencies
+      run: composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress
 
     - name: Run yarn install
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install
+        $HOME/.yarn/bin/yarn install --non-interactive --no-progress
 
     - name: Run yarn build
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
     
-    - name: Remove node files
-      run: rm -rf node_modules
+    - name: Trim to production node_modules
+      run: |
+        rm -rf node_modules
+        $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
 
     - name: Upload build result
       uses: actions/upload-artifact@v1
