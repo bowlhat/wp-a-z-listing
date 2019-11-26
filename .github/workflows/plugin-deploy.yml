@@ -63,7 +63,7 @@ jobs:
       run: phive install humbug/php-scoper
 
     - name: Run php-scoper
-      run: php-scoper --add-prefix
+      run: ./tools/php-scoper --add-prefix
 
     - name: Run composer install
       run: composer install --prefer-dist --no-dev --optimize-autoloader

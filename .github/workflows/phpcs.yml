@@ -71,4 +71,4 @@ jobs:
       run: phive install phpcs --trust-gpg-keys 31C7E470E2138192
 
     - name: Run PHPCS Coding Standards
-      run: phpcs $GITHUB_WORKSPACE
+      run: ./tools/phpcs $GITHUB_WORKSPACE
