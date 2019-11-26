@@ -2,7 +2,6 @@
     "name": "bowlhat/wp-a-z-listing",
     "description": "The A-Z Listing plugin for WordPress",
     "require-dev": {
-        "symfony/finder": "^5.0"
     },
     "license": "GPL-2.0-or-later",
     "authors": [
