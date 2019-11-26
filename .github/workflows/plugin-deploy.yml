@@ -101,7 +101,19 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: build
-        path: .
+        path: build
+    
+    - name: Upload languages
+      uses: actions/upload-artifact@v1
+      with:
+        name: languages
+        path: languages
+    
+    - name: Upload styles
+      uses: actions/upload-artifact@v1
+      with:
+        name: css
+        path: css
 
   phpcs:
     name: PHPCS
@@ -151,11 +163,22 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
+    - uses: actions/checkout@v1
+
     - name: Download build files
       uses: actions/download-artifact@v1
       with:
         name: build
-        path: .
+
+    - name: Download languages
+      uses: actions/download-artifact@v1
+      with:
+        name: languages
+    
+    - name: Download styles
+      uses: actions/download-artifact@v1
+      with:
+        name: css
 
     - name: Install phpcs
       run: |
@@ -240,11 +263,22 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
+    - uses: actions/checkout@v1
+
     - name: Download build files
       uses: actions/download-artifact@v1
       with:
         name: build
-        path: .
+
+    - name: Download languages
+      uses: actions/download-artifact@v1
+      with:
+        name: languages
+    
+    - name: Download styles
+      uses: actions/download-artifact@v1
+      with:
+        name: css
 
     - name: Install phpunit
       run: phive install --trust-gpg-keys phpunit
