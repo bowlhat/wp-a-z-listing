@@ -6,7 +6,7 @@
  * @since 2.3.0
  */
 
-// declare(strict_types=1); // disabled for php5.6.
+declare(strict_types=1);
 
 /**
  * Add A-Z Listing Health Checks

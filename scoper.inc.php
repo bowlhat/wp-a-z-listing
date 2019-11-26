@@ -1,6 +1,6 @@
 <?php
 
-// declare(strict_types=1); // disabled for php5.6.
+declare(strict_types=1);
 
 use Isolated\Symfony\Component\Finder\Finder;
 
