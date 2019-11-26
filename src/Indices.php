@@ -23,7 +23,7 @@ class Indices extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		add_filter( '_a-z-listing-extract-item-indices', [ $this, 'get_item_indices' ], 1, 3 );
+		add_filter( '_a-z-listing-extract-item-indices', array( $this, 'get_item_indices' ), 1, 3 );
 	}
 
 	/**
@@ -99,7 +99,7 @@ class Indices extends Singleton implements Extension {
 		 * @param \WP_Post|\WP_Term $item The item
 		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
-		$index_letters = apply_filters( 'a-z-listing-item-index-letter', [ $index ], $item, $type );
+		$index_letters = apply_filters( 'a-z-listing-item-index-letter', array( $index ), $item, $type );
 
 		/**
 		 * Modify the indice(s) to group this item under
@@ -114,11 +114,11 @@ class Indices extends Singleton implements Extension {
 		$index_letters = array_unique( array_filter( $index_letters ) );
 
 		foreach ( $index_letters as $letter ) {
-			$indices[ $letter ][] = [
+			$indices[ $letter ][] = array(
 				'title' => $title,
 				'item'  => ( $item instanceof \WP_Term ) ? "term:{$item_id}" : "post:{$item_id}",
 				'link'  => $permalink,
-			];
+			);
 		}
 
 		$filter_params = array( $indices, $item );

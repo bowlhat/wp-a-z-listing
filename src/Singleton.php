@@ -23,7 +23,7 @@ abstract class Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array<string,Extension>
 	 */
-	private static $_instances = [];
+	private static $_instances = array();
 
 	/**
 	 * Singleton

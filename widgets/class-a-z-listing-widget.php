@@ -518,12 +518,12 @@ function a_z_listing_autocomplete_post_titles() {
 
 	$results = a_z_listing_get_posts_by_title( $post_title, $post_type );
 
-	$titles = [];
+	$titles = array();
 	foreach ( $results as $result ) {
-		$titles[] = [
+		$titles[] = array(
 			'value' => intval( $result->ID ),
 			'label' => addslashes( $result->post_title ),
-		];
+		);
 	}
 
 	echo json_encode( $titles );

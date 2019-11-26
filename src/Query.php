@@ -73,7 +73,7 @@ class Query {
 	 *
 	 * @var array<int,mixed>
 	 */
-	private $current_letter_items = [];
+	private $current_letter_items = array();
 
 	/**
 	 * The current letter array-index in $matched_item_indices. internal use only
@@ -123,7 +123,7 @@ class Query {
 				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
 
 				$query = wp_parse_args(
-					[ 'taxonomy' => (array) $taxonomies ],
+					array( 'taxonomy' => (array) $taxonomies ),
 					$defaults
 				);
 			}
@@ -171,7 +171,7 @@ class Query {
 			$this->type = 'posts';
 
 			if ( empty( $query ) ) {
-				$query = [];
+				$query = array();
 			}
 
 			/**
@@ -298,7 +298,7 @@ class Query {
 			 * @param array  $query  The query.
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$cached = apply_filters( 'a_z_listing_get_cached_query', [], (array) $query, $type );
+			$cached = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $type );
 			if ( ! empty( $cached ) ) {
 				$this->matched_item_indices = $cached;
 				return true;
@@ -354,7 +354,7 @@ class Query {
 		 * @deprecated Use a_z_listing_sections
 		 * @see a_z_listing_sections
 		 */
-		$sections = apply_filters_deprecated( 'az_sections', [ $sections ], '1.0.0', 'a_z_listing_sections' );
+		$sections = apply_filters_deprecated( 'az_sections', array( $sections ), '1.0.0', 'a_z_listing_sections' );
 		/**
 		 * Override the detected top-level sections for the site. Defaults to contain each page with no post-parent.
 		 *
@@ -670,10 +670,10 @@ class Query {
 			}
 		}
 
-		$templates = [
+		$templates = array(
 			'a-z-listing-' . $section . '.php',
 			'a-z-listing.php',
-		];
+		);
 
 		if ( $post ) {
 			array_unshift(
@@ -772,7 +772,7 @@ class Query {
 	 */
 	public function the_letter() {
 		$this->current_item_offset  = 0;
-		$this->current_letter_items = [];
+		$this->current_letter_items = array();
 		$key                        = $this->alphabet->get_key_for_offset( $this->current_letter_offset );
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
 			$this->current_letter_items = $this->matched_item_indices[ $key ];

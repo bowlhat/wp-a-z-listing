@@ -17,10 +17,10 @@ declare(strict_types=1);
  * @return array<string,mixed> The health checks.
  */
 function a_z_listing_add_health_check( array $tests ): array {
-	$tests['direct']['a_z_listing_mbstring'] = [
+	$tests['direct']['a_z_listing_mbstring'] = array(
 		'label' => __( 'A to Z Listing plugin', 'a-z-listing' ),
 		'test'  => 'a_z_listing_mbstring_health_check',
-	];
+	);
 	return $tests;
 }
 add_filter( 'site_status_tests', 'a_z_listing_add_health_check' );
@@ -33,20 +33,20 @@ add_filter( 'site_status_tests', 'a_z_listing_add_health_check' );
  * @return array<string,mixed> The health check results.
  */
 function a_z_listing_mbstring_health_check(): array {
-	$result = [
+	$result = array(
 		'label'       => __( 'A-Z Listing: PHP mbstring module is enabled', 'a-z-listing' ),
 		'status'      => 'good',
-		'badge'       => [
+		'badge'       => array(
 			'label' => __( 'Compatibility', 'a-z-listing' ),
 			'color' => 'green',
-		],
+		),
 		'description' => sprintf(
 			'<p>%s</p>',
 			__( 'The mbstring PHP module improves support for non-latin languages in the A-Z Listing plugin.', 'a-z-listing' )
 		),
 		'actions'     => '',
 		'test'        => 'a_z_listing_mbstring_health_check',
-	];
+	);
 
 	if ( ! extension_loaded( 'mbstring' ) ) {
 		$result['status']         = 'recommended';
