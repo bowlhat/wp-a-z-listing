@@ -103,7 +103,7 @@ jobs:
       run: phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
 
     - name: Run php-scoper
-      run: php-scoper --add-prefix
+      run: ./tools/php-scoper --add-prefix
 
     - name: Run composer install
       run: composer install --prefer-dist --no-dev --optimize-autoloader
@@ -127,4 +127,4 @@ jobs:
         if [ $WP_MULTISITE = 1 ]; then
           ARGS="$ARGS -c phpunit-multisite.xml"
         fi
-        phpunit $ARGS $GITHUB_WORKSPACE
+        ./tools/phpunit $ARGS $GITHUB_WORKSPACE
