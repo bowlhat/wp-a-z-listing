@@ -5,7 +5,7 @@
  * @package a-z-listing
  */
 
-// declare(strict_types=1);
+// declare(strict_types=1); // disabled for php5.6.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
