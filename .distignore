@@ -49,6 +49,8 @@ phpcs.xml.dist
 phpunit.xml
 phpunit.xml.dist
 phpunit-multisite.xml
+phive.xml
+tools/
 README.md
 scoper.inc.php
 src/
