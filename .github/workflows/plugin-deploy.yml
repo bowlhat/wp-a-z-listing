@@ -134,17 +134,17 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
-    - name: Install phpcs
-      run: phive install phpcs
-
     - name: Download build files
       uses: actions/download-artifact@v1
       with:
         name: build
         path: .
 
+    - name: Install phpcs
+      run: phive install --trust-gpg-keys phpcs
+
     - name: Run PHPCS Coding Standards
-      run: phpcs $GITHUB_WORKSPACE
+      run: ./tools/phpcs $GITHUB_WORKSPACE
 
   phpunit:
     name: PHPUnit
@@ -222,14 +222,14 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
-    - name: Install phpunit
-      run: phive install phpunit
-
     - name: Download build files
       uses: actions/download-artifact@v1
       with:
         name: build
         path: .
+
+    - name: Install phpunit
+      run: phive install --trust-gpg-keys phpunit
 
     - name: Install WordPress Test Suite
       run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
@@ -240,7 +240,7 @@ jobs:
         if [ $WP_MULTISITE = 1 ]; then
           ARGS="$ARGS -c phpunit-multisite.xml"
         fi
-        phpunit $ARGS $GITHUB_WORKSPACE
+        ./tools/phpunit $ARGS $GITHUB_WORKSPACE
 
   deploy_to_worg:
     name: Deploy to WordPress.org
