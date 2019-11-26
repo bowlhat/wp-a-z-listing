@@ -1,4 +1,4 @@
-name: Run PHPCS on pull requests
+name: Run PHPUnit on pull requests
 
 on:
 - push
