@@ -1,0 +1,131 @@
+name: Run PHPCS on pull requests
+
+on:
+- push
+- pull_request
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        node: ['10.16.3']
+        phpunit: ['^6']
+        mysql:
+        - '5.6'
+        - '5.7'
+        # - '8.0'
+        php:
+        - '7.0'
+        - '7.1'
+        - '7.2'
+        - '7.3'
+        wordpress:
+        - '5.0'
+        - '5.1'
+        - '5.2'
+        - '5.3'
+        - latest
+        - trunk
+        multisite: ['0','1']
+    runs-on: ubuntu-latest
+    container:
+      image: php:${{ matrix.php }}
+      env:
+        WP_MULTISITE: ${{ matrix.multisite }}
+      volumes:
+      - $GITHUB_WORKSPACE:/var/www/html
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+        - 3306
+        volumes:
+        - $HOME/mysql:/var/lib/mysql
+    steps:
+    - name: Set up container
+      run: |
+        echo "Install base packages"
+        apt-get update
+        apt-get install -y build-essential \
+          libssl-dev \
+          gnupg \
+          libfreetype6-dev \
+          libjpeg62-turbo-dev \
+          libmcrypt-dev \
+          libicu-dev \
+          libxml2-dev \
+          vim \
+          wget \
+          unzip \
+          git \
+          subversion \
+          default-mysql-client
+
+        echo "Install NVM"
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
+        echo "Install node"
+        nvm install ${{ matrix.node }}
+        nvm use ${{ matrix.node }}
+
+        echo "Install yarn"
+        curl -sS -L https://yarnpkg.com/install.sh | bash
+
+        echo "Install composer"
+        curl -sS -L https://getcomposer.org/installer | php
+        mv composer.phar /usr/local/bin/composer
+
+        echo "Install PHP extensions"
+        docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
+        docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+        docker-php-ext-install -j$(nproc) gd
+        pecl install mcrypt-1.0.2
+        docker-php-ext-enable mcrypt
+
+    - name: Install phive
+      run: |
+        wget -O phive.phar "https://phar.io/releases/phive.phar"
+        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
+        gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
+        gpg --verify phive.phar.asc phive.phar
+        rm phive.phar.asc
+        chmod +x phive.phar
+        mv phive.phar /usr/local/bin/phive
+
+    - name: Install php-scoper
+      run: phive install humbug/php-scoper
+
+    - name: Install phpunit
+      run: phive install phpunit@6
+
+    - uses: actions/checkout@v1
+
+    - name: Run php-scoper
+      run: php-scoper --add-prefix
+
+    - name: Run composer install
+      run: composer install --prefer-dist --no-dev --optimize-autoloader
+
+    - name: Run yarn install
+      run: |
+        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
+        $HOME/.yarn/bin/yarn install
+
+    - name: Run yarn build
+      run: |
+        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
+        $HOME/.yarn/bin/yarn build
+
+    - name: Install WordPress Test Suite
+      run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
+
+    - name: Run phpunit
+      run: |
+        ARGS=""
+        if [ $WP_MULTISITE = 1 ]; then
+          ARGS="$ARGS -c phpunit-multisite.xml"
+        fi
+        phpunit $ARGS $GITHUB_WORKSPACE

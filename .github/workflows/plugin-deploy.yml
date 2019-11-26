@@ -5,6 +5,10 @@ on:
     tags:
     - "*"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Update workflows
 jobs:
   build:
     name: Build
