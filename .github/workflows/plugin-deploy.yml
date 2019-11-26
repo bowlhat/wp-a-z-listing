@@ -73,7 +73,7 @@ jobs:
       run: phive install humbug/php-scoper --force-accept-unsigned
 
     - name: Run php-scoper
-      run: ./tools/php-scoper --add-prefix
+      run: ./tools/php-scoper add-prefix
 
     - name: Run composer install
       run: composer install --prefer-dist --no-dev --optimize-autoloader
