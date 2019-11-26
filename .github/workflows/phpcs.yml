@@ -36,16 +36,6 @@ jobs:
           subversion \
           default-mysql-client
 
-        echo "Install NVM"
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        echo "Install node"
-        nvm install ${{ matrix.node }}
-        nvm use ${{ matrix.node }}
-
-        echo "Install yarn"
-        curl -sS -L https://yarnpkg.com/install.sh | bash
-
         echo "Install composer"
         curl -sS -L https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
@@ -68,7 +58,11 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Install phpcs
-      run: phive install phpcs --trust-gpg-keys 31C7E470E2138192
+      run: |
+        phive install phpcs --trust-gpg-keys 31C7E470E2138192
+        git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git /tmp/phpcs
+        git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
+        /tmp/phpcs/bin/phpcs --config-set installed_paths /tmp/sniffs
 
     - name: Run PHPCS Coding Standards
       run: ./tools/phpcs $GITHUB_WORKSPACE
