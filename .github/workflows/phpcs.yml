@@ -67,29 +67,10 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
-    - name: Install php-scoper
-      run: phive install humbug/php-scoper
-
     - name: Install phpcs
-      run: phive install phpcs
+      run: phive install phpcs --trust-gpg-keys 31C7E470E2138192
 
     - uses: actions/checkout@v1
-
-    - name: Run php-scoper
-      run: php-scoper --add-prefix
-
-    - name: Run composer install
-      run: composer install --prefer-dist --no-dev --optimize-autoloader
-
-    - name: Run yarn install
-      run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install
-
-    - name: Run yarn build
-      run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn build
 
     - name: Run PHPCS Coding Standards
       run: phpcs $GITHUB_WORKSPACE

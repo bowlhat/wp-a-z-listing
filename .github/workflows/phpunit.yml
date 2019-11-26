@@ -96,10 +96,10 @@ jobs:
         mv phive.phar /usr/local/bin/phive
 
     - name: Install php-scoper
-      run: phive install humbug/php-scoper
+      run: phive install humbug/php-scoper --force-accept-unsigned
 
     - name: Install phpunit
-      run: phive install phpunit@6
+      run: phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
 
     - uses: actions/checkout@v1
 
