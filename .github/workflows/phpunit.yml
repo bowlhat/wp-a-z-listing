@@ -70,7 +70,7 @@ jobs:
     - uses: actions/checkout@v1
 
     - name: Install php-scoper
-      run: phive install humbug/php-scoper
+      run: phive install humbug/php-scoper --force-accept-unsigned
 
     - name: Run php-scoper
       run: ./tools/php-scoper --add-prefix
