@@ -94,6 +94,7 @@ jobs:
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
+        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
 
     - name: Upload build result
