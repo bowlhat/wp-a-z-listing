@@ -50,7 +50,6 @@ phpcs.xml.dist
 phpunit-multisite.xml
 phpunit.xml
 phpunit.xml.dist
-phpunit-multisite.xml
 tools/
 README.md
 scoper.inc.php

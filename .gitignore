@@ -9,7 +9,6 @@ vendor/
 vendor-bin/*/vendor/
 composer.phar
 phive.xml
-tools/
 node_modules/
 phpcs.xml
 phpunit.xml
