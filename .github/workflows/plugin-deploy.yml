@@ -107,6 +107,9 @@ jobs:
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
+    
+    - name: Remove node files
+      run: rm -rf node_modules
 
     - name: Trim to production node_modules
       run: |

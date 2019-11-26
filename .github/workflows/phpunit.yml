@@ -69,16 +69,11 @@ jobs:
 
     - uses: actions/checkout@v1
 
-    - name: Install php-scoper
-      run: |
-        phive install humbug/php-scoper --force-accept-unsigned
-        composer global require symfony/finder
-
     - name: Run php-scoper
       run: ./tools/php-scoper add-prefix
 
-    - name: Run composer install
-      run: composer install --prefer-dist --no-dev --optimize-autoloader
+    - name: Remove dev dependencies
+      run: composer update --no-dev --optimize-autoloader
 
     - name: Run yarn install
       run: |
@@ -89,6 +84,9 @@ jobs:
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
+    
+    - name: Remove node files
+      run: rm -rf node_modules
 
     - name: Upload build result
       uses: actions/upload-artifact@v1
