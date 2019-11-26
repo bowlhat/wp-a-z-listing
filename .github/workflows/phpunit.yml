@@ -16,6 +16,7 @@ jobs:
         - '5.7'
         # - '8.0'
         php:
+        - '5.6'
         - '7.0'
         - '7.1'
         - '7.2'
@@ -82,8 +83,6 @@ jobs:
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
         docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
-        pecl install mcrypt-1.0.2
-        docker-php-ext-enable mcrypt
 
     - name: Install phive
       run: |
