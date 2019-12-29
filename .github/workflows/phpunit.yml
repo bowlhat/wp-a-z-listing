@@ -81,7 +81,7 @@ jobs:
 
     - name: Install composer dependencies
       run: composer install --prefer-dist --no-interaction --no-progress
-  
+
     - name: Run php-scoper
       run: ./tools/php-scoper add-prefix
 
@@ -97,7 +97,7 @@ jobs:
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
-    
+
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
@@ -109,13 +109,13 @@ jobs:
       with:
         name: build
         path: build
-    
+
     - name: Upload languages
       uses: actions/upload-artifact@v1
       with:
         name: languages
         path: languages
-    
+
     - name: Upload styles
       uses: actions/upload-artifact@v1
       with:
@@ -208,7 +208,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: languages
-    
+
     - name: Download styles
       uses: actions/download-artifact@v1
       with:
@@ -316,7 +316,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: languages
-    
+
     - name: Download styles
       uses: actions/download-artifact@v1
       with:
