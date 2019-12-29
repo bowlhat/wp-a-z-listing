@@ -65,7 +65,7 @@ jobs:
 
     - name: Install composer dependencies
       run: composer install --prefer-dist --no-interaction --no-progress
-  
+
     - name: Run php-scoper
       run: php-scoper add-prefix
 

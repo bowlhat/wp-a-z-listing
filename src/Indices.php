@@ -106,9 +106,9 @@ class Indices extends Singleton implements Extension {
 		 *
 		 * @since 2.1.0
 		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
-		 * @param array                 $indices The current indices
+		 * @param array             $indices The current indices
 		 * @param \WP_Post|\WP_Term $item The item
-		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
 		$index_letters = apply_filters( 'a_z_listing_item_index_letter', $index_letters, $item, $type );
 		$index_letters = array_unique( array_filter( $index_letters ) );

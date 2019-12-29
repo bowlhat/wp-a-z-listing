@@ -58,45 +58,9 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 			)
 		);
 
-		$expected = sprintf( file_get_contents( 'tests/data/populated-listing.txt' ), $title, $p + 5 );
-		$actual   = do_shortcode( "[a-z-listing parent-post='$parent']" );
-
-		$this->assertHTMLEquals( $expected, $actual );
-	}
-
-	public function test_populated_taxonomy_listing() {
-		$title = 'test category';
-		$t     = $this->factory->term->create(
-			array(
-				'name'     => $title,
-				'taxonomy' => 'category',
-			)
-		);
-
-		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $title, $t );
-		$actual   = do_shortcode( '[a-z-listing display="terms" taxonomy="category"]' );
-
-		$this->assertHTMLEquals( $expected, $actual );
-	}
-
-	public function test_populated_multiple_taxonomy_listing() {
-		$cat_title = 'Test Category';
-		$cat       = $this->factory->term->create(
-			array(
-				'name'     => $cat_title,
-				'taxonomy' => 'category',
-			)
-		);
-		$tag_title = 'Test Tag';
-		$tag       = $this->factory->term->create(
-			array(
-				'name'     => $tag_title,
-				'taxonomy' => 'post_tag',
-			)
-		);
-		
-		$expected = sprintf( file_get_contents( 'tests/data/populated-multiple-taxonomy-listing.txt' ), $cat_title, $cat, $tag_title, $tag );
-		$actual   = do_shortcode( '[a-z-listing display="terms" taxonomy="category,post_tag"]' );
+		$expected  = sprintf( file_get_contents( 'tests/data/populated-listing.txt' ), $title, $p + 5 );
+		$shortcode = sprintf( '[a-z-listing parent-post="%s"]', $parent );
+		$actual    = do_shortcode( $shortcode );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
@@ -186,6 +150,45 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 
 		$expected = sprintf( file_get_contents( 'tests/data/populated-listing-multiple-post-types.txt' ), $title1, $post1, $title2, $post2 );
 		$actual   = do_shortcode( '[a-z-listing post-type="post,page"]' );
+
+		$this->assertHTMLEquals( $expected, $actual );
+	}
+
+	public function test_empty_listing_after_exclude_posts() {
+		$title = 'Test Page';
+		$p     = $this->factory->post->create(
+			array(
+				'post_title' => $title,
+				'post_type'  => 'page',
+			)
+		);
+
+		$expected  = file_get_contents( 'tests/data/default-listing.txt' );
+		$shortcode = sprintf( '[a-z-listing display="posts" post-type="page" exclude-posts="%s"]', $p );
+		$actual    = do_shortcode( $shortcode );
+
+		$this->assertHTMLEquals( $expected, $actual );
+	}
+
+	public function test_populated_listing_after_exclude_posts() {
+		$exclude_id = $this->factory->post->create(
+			array(
+				'post_title' => 'Must not be visible',
+				'post_type'  => 'post',
+			)
+		);
+
+		$post_title = 'Test Post';
+		$p          = $this->factory->post->create(
+			array(
+				'post_title' => $post_title,
+				'post_type'  => 'post',
+			)
+		);
+
+		$expected = sprintf( file_get_contents( 'tests/data/populated-listing.txt' ), $post_title, $p );
+		$shortcode = sprintf( '[a-z-listing display="posts" post-type="page" exclude-posts="%s"]', $exclude_id );
+		$actual    = do_shortcode( $shortcode );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}

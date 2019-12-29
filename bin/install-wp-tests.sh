@@ -48,8 +48,6 @@ else
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
 
-set -ex
-
 install_wp() {
 
 	if [ -d $WP_CORE_DIR ]; then
@@ -146,8 +144,12 @@ install_db() {
 		fi
 	fi
 
+	if [ -n "$DB_PASS" ]; then
+		EXTRA+=" --password='$DB_PASS'"
+	fi
+
 	# create database
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	mysqladmin create $DB_NAME --user="$DB_USER" $EXTRA
 }
 
 install_wp
