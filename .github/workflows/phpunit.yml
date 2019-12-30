@@ -128,8 +128,8 @@ jobs:
     strategy:
       matrix:
         mysql:
-        - '5.6'
-        # - '5.7'
+        # - '5.6'
+        - '5.7'
         # - '8.0'
         php:
         - '7.0'
@@ -154,7 +154,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-        - 3306
+        - 8888:3306
         volumes:
         - $HOME/mysql:/var/lib/mysql
     steps:
@@ -225,7 +225,7 @@ jobs:
         fi
 
     - name: Install WordPress Test Suite
-      run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
+      run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:8888 ${{ matrix.wordpress }}
 
     - name: Run phpunit
       run: ./tools/phpunit $GITHUB_WORKSPACE
@@ -236,8 +236,8 @@ jobs:
     strategy:
       matrix:
         mysql:
-        - '5.6'
-        # - '5.7'
+        # - '5.6'
+        - '5.7'
         # - '8.0'
         php:
         - '7.0'
@@ -262,7 +262,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-        - 3306
+        - 8888:3306
         volumes:
         - $HOME/mysql:/var/lib/mysql
     steps:
@@ -333,7 +333,7 @@ jobs:
         fi
 
     - name: Install WordPress Test Suite
-      run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
+      run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:8888 ${{ matrix.wordpress }}
 
     - name: Run phpunit
       run: ./tools/phpunit -c phpunit-multisite.xml $GITHUB_WORKSPACE
