@@ -144,10 +144,6 @@ install_db() {
 		EXTRA=" --socket=$DB_SOCK_OR_PORT"
 	fi
 
-	if [ -n "$DB_PASS" ]; then
-		EXTRA+=" --password='$DB_PASS'"
-	fi
-
 	# create database
 	set -e
 	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
