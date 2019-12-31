@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         node: ['10.16.3']
-        php: ['7.3']
+        php: ['7.4']
     runs-on: ubuntu-latest
     container:
       image: php:${{ matrix.php }}
@@ -22,19 +22,20 @@ jobs:
         echo "Install base packages"
         apt-get update
         apt-get install -y build-essential \
-          libssl-dev \
-          gnupg \
-          libfreetype6-dev \
-          libjpeg62-turbo-dev \
-          libmcrypt-dev \
-          libicu-dev \
-          libxml2-dev \
-          vim \
-          wget \
-          unzip \
-          git \
-          subversion \
-          default-mysql-client
+        libssl-dev \
+        gnupg \
+        libfreetype6-dev \
+        libicu-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libonig-dev \
+        libxml2-dev \
+        vim \
+        wget \
+        unzip \
+        git \
+        subversion \
+        default-mysql-client
 
         echo "Install composer"
         curl -sS -L https://getcomposer.org/installer | php
@@ -42,7 +43,7 @@ jobs:
 
         echo "Install PHP extensions"
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
-        docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+        # docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
 
     - name: Install node
@@ -182,7 +183,7 @@ jobs:
 
         echo "Install PHP extensions"
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
-        docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+        # docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
 
     - name: Install composer
@@ -293,7 +294,7 @@ jobs:
 
         echo "Install PHP extensions"
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring
-        docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+        # docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
         docker-php-ext-install -j$(nproc) gd
 
     - name: Install composer
