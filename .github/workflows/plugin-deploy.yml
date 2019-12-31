@@ -423,7 +423,7 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: languages
-    
+
     - name: Download styles
       uses: actions/download-artifact@v1
       with:
