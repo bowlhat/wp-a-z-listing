@@ -6,7 +6,7 @@ require_once 'html-assertions.php';
 class AZ_Shortcode_Tests extends WP_UnitTestCase {
 	use HtmlAssertions;
 
-	public function test_empty() {
+	public function test_empty_listing() {
 		$expected = file_get_contents( 'tests/data/default-listing.txt' );
 		$actual   = do_shortcode( '[a-z-listing]' );
 
@@ -28,7 +28,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$this->assertHTMLEquals( $expected, $actual );
 	}
 
-	public function test_populated_lowercase_titles() {
+	public function test_populated_lowercase_titles_listing() {
 		$p = $this->factory->post->create(
 			array(
 				'post_title' => 'test page',
@@ -42,7 +42,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$this->assertHTMLEquals( $expected, $actual );
 	}
 
-	public function test_populated_children() {
+	public function test_populated_children_listing() {
 		$title  = 'Test Page';
 		$parent = $this->factory->post->create(
 			array(
@@ -65,7 +65,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$this->assertHTMLEquals( $expected, $actual );
 	}
 
-	public function test_populated_filtered_pages_listing() {
+	public function test_populated_pages_filtered_by_taxonomy_terms_listing() {
 		$this->factory->post->create(
 			array(
 				'post_title' => 'Must not be visible',
@@ -98,7 +98,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$this->assertHTMLEquals( $expected, $actual );
 	}
 
-	public function test_populated_filtered_posts_listing() {
+	public function test_populated_posts_filtered_by_taxonomy_terms_listing() {
 		$this->factory->post->create(
 			array(
 				'post_title' => 'Must not be visible',
@@ -174,7 +174,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$exclude_id = $this->factory->post->create(
 			array(
 				'post_title' => 'Must not be visible',
-				'post_type'  => 'post',
+				'post_type'  => 'page',
 			)
 		);
 
@@ -182,7 +182,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$p          = $this->factory->post->create(
 			array(
 				'post_title' => $post_title,
-				'post_type'  => 'post',
+				'post_type'  => 'page',
 			)
 		);
 
