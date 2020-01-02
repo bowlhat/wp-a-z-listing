@@ -67,16 +67,6 @@ jobs:
         chmod +x phive.phar
         mv phive.phar /usr/local/bin/phive
 
-    - name: Install phive
-      run: |
-        wget -O phive.phar "https://phar.io/releases/phive.phar"
-        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
-        gpg --keyserver ipv4.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
-        gpg --verify phive.phar.asc phive.phar
-        rm phive.phar.asc
-        chmod +x phive.phar
-        mv phive.phar /usr/local/bin/phive
-
     - uses: actions/checkout@v1
 
     - name: Install php-scoper
@@ -107,7 +97,7 @@ jobs:
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         $HOME/.yarn/bin/yarn build
-    
+
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
@@ -131,7 +121,7 @@ jobs:
       with:
         name: languages
         path: languages
-    
+
     - name: Upload styles
       uses: actions/upload-artifact@v1
       with:
@@ -277,11 +267,6 @@ jobs:
 
         echo "Install PHP extensions"
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
-
-    - name: Install composer
-      run: |
-        curl -sS -L https://getcomposer.org/installer | php
-        mv composer.phar /usr/local/bin/composer
 
     - name: Install composer
       run: |
