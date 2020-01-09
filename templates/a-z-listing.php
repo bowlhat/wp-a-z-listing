@@ -72,15 +72,7 @@ $_a_z_listing_minpercol = 10;
 			?>
 		</div>
 	</div>
+	<?php else : ?>
+		<p><?php esc_html_e( 'There are no posts included in this index.', 'a-z-listing' ); ?></p>
+	<?php endif; ?>
 </div>
-<?php else : ?>
-	<p>
-		<?php
-		esc_html_e(
-			'There are no posts included in this index.',
-			'a-z-listing'
-		);
-		?>
-	</p>
-	<?php
-endif;
