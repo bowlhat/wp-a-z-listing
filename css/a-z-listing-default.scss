@@ -1,5 +1,8 @@
 @import "mixins.scss";
 
+$defaultColumnWidth: 15em;
+$defaultColumnGap: 0.6em;
+
 .az-letters,
 .a-z-listing-widget .az-letters,
 .a-z-listing-widget.widget .az-letters {
@@ -52,21 +55,40 @@
 	ul.columns {
 		width: 100%;
 		box-sizing: border-box;
-		column-gap: 0.6em;
-		column-width: 15em;
 		line-height: 1.6em;
+		column-gap: $defaultColumnGap;
+		column-width: $defaultColumnWidth;
 		> li {
 			display: block;
 		}
 		&.max-0-columns,
 		&.max-1-columns {
 			column-count: 1;
-			max-width: 15.6em;
+			max-width: $defaultColumnWidth + $defaultColumnGap;
 		}
 		@for $column from 2 to 16 {
 			&.max-#{$column}-columns {
 				column-count: $column;
-				max-width: ($column * 15em) + (($column - 1) * 0.6em);
+				max-width:
+					($column * $defaultColumnWidth)
+					+ (($column - 1) * $defaultColumnGap);
+			}
+		}
+	}
+	ul.columns {
+		column-gap: var(--a-z-listing-column-gap, #{$defaultColumnGap});
+		column-width: var(--a-z-listing-column-width, #{$defaultColumnWidth});
+		&.max-0-columns,
+		&.max-1-columns {
+			column-count: 1;
+			max-width: calc(var(--a-z-listing-column-width, #{$defaultColumnWidth}) + var(--a-z-listing-defualt-column-gap, #{$defaultColumnGap}));
+		}
+		@for $column from 2 to 16 {
+			&.max-#{$column}-columns {
+				column-count: $column;
+				max-width: calc(
+					(#{$column} * var(--a-z-listing-column-width, #{$defaultColumnWidth}))
+					+ ((#{$column} - 1) * var(--a-z-listing-column-gap, #{$defaultColumnGap})));
 			}
 		}
 	}

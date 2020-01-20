@@ -4,8 +4,8 @@
 **Donate Link:** https://liberapay.com/diddledan/donate  
 **Tags:** a to z, a-z, archive, listing, widget, index  
 **Requires at least:** 4.6  
-**Requires PHP:** 5.6  
-**Tested up to:** 5.4  
+**Requires PHP:** 7.0  
+**Tested up to:** 5.6  
 **Stable tag:** 3.1.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -53,7 +53,7 @@ To specify a post-type to display instead of `page` then use, e.g. `post`:
 
 To filter the posts by a term from a taxonomy:
 
-    [a-z-listing display="posts" taxonomy="category" terms="my-term-slug"]
+    [a-z-listing display="posts" post-type="post" taxonomy="category" terms="my-term-slug"]
 
 To display pages that are direct children of the page with ID `24`:
 
