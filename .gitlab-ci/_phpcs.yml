@@ -1,4 +1,6 @@
 .phpcs:
+  extends:
+    - .php74-linux
   stage: test
   needs: [build]
   extends: .base
