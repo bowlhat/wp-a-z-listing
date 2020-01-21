@@ -136,30 +136,30 @@ jobs:
     steps:
     - name: Set up container
       run: |
-      echo "Install base packages"
-      apt-get update
-      apt-get install -y build-essential \
-      libssl-dev \
-      gnupg \
-      libfreetype6-dev \
-      libicu-dev \
-      libjpeg62-turbo-dev \
-      libmcrypt-dev \
-      libonig-dev \
-      libxml2-dev \
-      vim \
-      wget \
-      unzip \
-      git \
-      subversion \
-      default-mysql-client
+        echo "Install base packages"
+        apt-get update
+        apt-get install -y build-essential \
+        libssl-dev \
+        gnupg \
+        libfreetype6-dev \
+        libicu-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libonig-dev \
+        libxml2-dev \
+        vim \
+        wget \
+        unzip \
+        git \
+        subversion \
+        default-mysql-client
 
-      echo "Install composer"
-      curl -sS -L https://getcomposer.org/installer | php
-      mv composer.phar /usr/local/bin/composer
+        echo "Install composer"
+        curl -sS -L https://getcomposer.org/installer | php
+        mv composer.phar /usr/local/bin/composer
 
-      echo "Install PHP extensions"
-      docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+        echo "Install PHP extensions"
+        docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
 
     - name: Install phive
       run: |
