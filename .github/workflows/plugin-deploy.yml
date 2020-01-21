@@ -164,10 +164,6 @@ jobs:
         curl -sS -L https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
 
-        echo "Install composer"
-        curl -sS -L https://getcomposer.org/installer | php
-        mv composer.phar /usr/local/bin/composer
-
         echo "Install PHP extensions"
         docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
 
