@@ -1,3 +1,9 @@
+include:
+  - project: a-z-listing/wp-a-z-listing
+    file: /.gitlab-ci/_prereqs.yml
+  - project: a-z-listing/wp-a-z-listing
+    file: /.gitlab-ci/_build.yml
+
 .phpunit:
   stage: test
   needs: [build]

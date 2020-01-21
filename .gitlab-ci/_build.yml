@@ -1,0 +1,32 @@
+include:
+  - project: a-z-listing/wp-a-z-listing
+    file: /.gitlab-ci/_prereqs.yml
+
+build:
+  stage: build
+  image: php:7.4
+  before_script:
+    - *install-prereqs
+    - *install-nvm
+    - phive install humbug/php-scoper@0.11.4 --force-accept-unsigned
+  script:
+    - composer install --prefer-dist --no-interaction --no-progress
+    - ./tools/php-scoper add-prefix
+    - composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress
+    - |
+      [ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh"; \
+      $HOME/.yarn/bin/yarn install --non-interactive --no-progress
+    - |
+      [ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh"; \
+      $HOME/.yarn/bin/yarn build
+    - rm -rf node_modules
+    - |
+      [ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh"; \
+      $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
+  artifacts:
+    name: "$CI_JOB_NAME"
+    expire_in: 30 days
+    paths:
+      - build/
+      - languages/
+      - css/
