@@ -80,12 +80,10 @@ $defaultColumnGap: 0.6em;
 		column-width: var(--a-z-listing-column-width, #{$defaultColumnWidth});
 		&.max-0-columns,
 		&.max-1-columns {
-			column-count: 1;
 			max-width: calc(var(--a-z-listing-column-width, #{$defaultColumnWidth}) + var(--a-z-listing-defualt-column-gap, #{$defaultColumnGap}));
 		}
 		@for $column from 2 to 16 {
 			&.max-#{$column}-columns {
-				column-count: $column;
 				max-width: calc(
 					(#{$column} * var(--a-z-listing-column-width, #{$defaultColumnWidth}))
 					+ ((#{$column} - 1) * var(--a-z-listing-column-gap, #{$defaultColumnGap})));
