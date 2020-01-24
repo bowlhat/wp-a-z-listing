@@ -1,7 +1,3 @@
-include:
-  - project: a-z-listing/wp-a-z-listing
-    file: /.gitlab-ci/_prereqs.yml
-
 .phpunit:
   stage: test
   needs: [build]
