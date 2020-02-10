@@ -103,29 +103,18 @@ class Query {
 		global $post;
 		$this->alphabet = new Alphabet();
 
-		if ( is_string( $query ) && ! empty( $query ) ) {
-			$type = 'terms';
-		}
-
-		if ( 'terms' === $type ) {
+		if ( 'terms' === $type || ( is_string( $query ) && ! empty( $query ) ) ) {
 			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
 				do_action( 'log', 'A-Z Listing: Setting taxonomy mode', $query );
 			}
 
 			$this->type = 'terms';
 
-			$defaults = array( 'hide_empty' => false );
-
-			if ( is_array( $query ) ) {
-				$query = \wp_parse_args( $query, $defaults );
-			} elseif ( is_string( $query ) ) {
+			if ( is_string( $query ) ) {
 				$taxonomies = explode( ',', $query );
 				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
 
-				$query = wp_parse_args(
-					array( 'taxonomy' => (array) $taxonomies ),
-					$defaults
-				);
+				$query['taxonomy'] = (array) $taxonomies;
 			}
 
 			/**
@@ -136,7 +125,7 @@ class Query {
 			 * @param array|Object|\WP_Query  $query  The query object
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$query = apply_filters( 'a_z_listing_query', $query, 'terms' );
+			$query = (array) apply_filters( 'a_z_listing_query', (array) $query, 'terms' );
 
 			/**
 			 * Modify or replace the query
@@ -146,11 +135,16 @@ class Query {
 			 * @param array|Object|\WP_Query  $query  The query object
 			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 			 */
-			$query = apply_filters( 'a-z-listing-query', $query, 'terms' );
+			$query = (array) apply_filters( 'a-z-listing-query', (array) $query, 'terms' );
 
-			if ( ! is_array( $query ) ) {
-				$query = (array) $query;
-			}
+			$query = wp_parse_args(
+				(array) $query,
+				array(
+					'hide_empty' => false,
+					'taxonomy'   => 'category',
+				)
+			);
+
 			$this->taxonomy = $query['taxonomy'];
 
 			if ( $this->check_cache( $query, $type, $use_cache ) ) {
@@ -174,30 +168,17 @@ class Query {
 				$query = array();
 			}
 
-			/**
-			 * Modify or replace the query
-			 *
-			 * @since 1.0.0
-			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
-			 * @param array|Object|\WP_Query $query The query object
-			 */
-			$query = apply_filters( 'a_z_listing_query', $query );
-
-			/**
-			 * Modify or replace the query
-			 *
-			 * @since 1.7.1
-			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
-			 * @param array|Object|\WP_Query $query The query object
-			 */
-			$query = apply_filters( 'a-z-listing-query', $query );
+			$query = apply_filters( 'a_z_listing_query', $query, 'posts' );
+			$query = apply_filters( 'a-z-listing-query', $query, 'posts' );
 
 			if ( ! $query instanceof \WP_Query ) {
 				$query = (array) $query;
 
 				if ( isset( $query['post_type'] ) ) {
 					if ( is_array( $query['post_type'] ) && count( $query['post_type'] ) === 1 ) {
-						$query['post_type'] = array_shift( $query['post_type'] );
+						$post_type = array_shift( $query['post_type'] );
+						$query['post_type'] = $post_type;
+						unset( $post_type );
 					}
 				}
 
@@ -208,6 +189,7 @@ class Query {
 							if ( $section && $section instanceof \WP_Post ) {
 								$query['child_of'] = $section->ID;
 							}
+							unset( $section );
 						}
 					}
 				}
@@ -249,7 +231,7 @@ class Query {
 		$this->matched_item_indices = $this->get_all_indices( $items );
 
 		if ( $use_cache ) {
-			do_action( 'a_z_listing_save_cache', $query, $type, $this->matched_item_indices );
+			do_action( 'a_z_listing_save_cache', (array) $query, $type, $this->matched_item_indices );
 		}
 	}
 
