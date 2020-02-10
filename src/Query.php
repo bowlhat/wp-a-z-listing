@@ -695,7 +695,7 @@ class Query {
 			$template = plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php';
 		}
 
-		eval( "\$template = function( \$a_z_listing ) { require '$template_file'; }; \$template( \$this );" );
+		eval( "\$template_fn = function( \$a_z_listing ) { require '$template'; }; \$template_fn( \$this );" );
 
 		wp_reset_postdata();
 	}
