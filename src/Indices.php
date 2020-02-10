@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class A_Z_Indices
+ * Class Indices
  */
 class Indices extends Singleton implements Extension {
 	/**
