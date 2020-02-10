@@ -1,5 +1,7 @@
 .vscode
+.idea
 .DS_Store
+._.*
 *.sql
 *.tar.gz
 *.zip
@@ -17,3 +19,4 @@ obj
 bin/Debug
 bin/Release
 build/
+tools/
