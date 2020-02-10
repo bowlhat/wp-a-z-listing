@@ -127,13 +127,15 @@ class Alphabet {
 					function( array $group_carry, string $character ) use ( $group_index_character ) {
 						$group_carry[ $character ] = $group_index_character;
 						return $group_carry;
-					}
+					},
+					array()
 				);
 				if ( ! is_array( $carry ) ) {
 					return $group_as_array;
 				}
 				return array_merge( $carry, $group_as_array );
-			}
+			},
+			array()
 		);
 
 		$this->unknown_letter = $others;
