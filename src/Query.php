@@ -695,7 +695,7 @@ class Query {
 			$template = plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php';
 		}
 
-		eval( "\$template_fn = function( \$a_z_listing ) { require '$template'; }; \$template_fn( \$this );" );
+		_do_template( $this, $template );
 
 		wp_reset_postdata();
 	}
@@ -1150,4 +1150,16 @@ class Query {
 	public function get_the_permalink(): string {
 		return $this->current_item['link'];
 	}
+}
+
+/**
+ * Load and execute a theme template
+ *
+ * @since 2.1.0
+ * @param Query  $a_z_query The Query object.
+ * @param string $filename The path of the template to execute.
+ * @return void
+ */
+function _do_template( Query $a_z_query ) {
+	require func_get_arg( 1 );
 }
