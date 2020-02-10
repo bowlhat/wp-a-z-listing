@@ -1,0 +1,57 @@
+.install-prereqs: &install-prereqs |
+    echo "Install base packages" && \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential \
+    libssl-dev \
+    gnupg \
+    libfreetype6-dev \
+    libicu-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libonig-dev \
+    libxml2-dev \
+    vim \
+    wget \
+    unzip \
+    git \
+    subversion \
+    default-mysql-client && \
+    \
+    echo "Install composer" && \
+    curl -sS -L https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer && \
+    \
+    echo "Install PHP extensions" && \
+    docker-php-ext-install -j$(nproc) xdebug iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd && \
+    \
+    wget -O phive.phar "https://phar.io/releases/phive.phar" && \
+    wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc" && \
+    gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79 && \
+    gpg --verify phive.phar.asc phive.phar && \
+    rm phive.phar.asc && \
+    chmod +x phive.phar && \
+    mv phive.phar /usr/local/bin/phive
+
+.install-nvm: &install-nvm |
+    echo "Install NVM" && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash && \
+    if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi && \
+    echo "Install node" && \
+    nvm install '10.16.3' && \
+    nvm use '10.16.3' && \
+    \
+    echo "Install yarn" && \
+    curl -sS -L https://yarnpkg.com/install.sh | bash
+
+.install-phpcs: &install-phpcs |
+    phive install phpcs --trust-gpg-keys 31C7E470E2138192 && \
+    git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs && \
+    ./tools/phpcs --config-set installed_paths /tmp/sniffs
+
+.install-phpunit: &install-phpunit |
+    if [ "${{ matrix.php }}" = "5.6" ] || [ "${{ matrix.php }}" = "7.0" ]; then
+      composer global require phpunit/phpunit ^5 --prefer-dist --no-interaction --no-progress
+      mkdir -p tools
+      ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
+    else
+      phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
+    fi
