@@ -35,7 +35,7 @@ $_a_z_listing_minpercol = 10;
 				?>
 				<?php if ( $a_z_query->have_items() ) : ?>
 					<?php
-					$item_count  = $a_z_query->get_the_letter_count();
+					$item_count  = $a_z_query->get_the_letter_items_count();
 					$num_columns = ceil(
 						$item_count / $_a_z_listing_minpercol
 					);
