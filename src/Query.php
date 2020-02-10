@@ -691,11 +691,12 @@ class Query {
 		}
 
 		$template = locate_template( $templates );
-		if ( ! empty( $template ) ) {
-			_do_template( $this, $template );
-		} else {
-			_do_template( $this, plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
+		if ( empty( $template ) ) {
+			$template = plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php';
 		}
+
+		eval( "\$template = function( \$a_z_listing ) { require '$template_file'; }; \$template( \$this );" );
+
 		wp_reset_postdata();
 	}
 
@@ -1149,16 +1150,4 @@ class Query {
 	public function get_the_permalink(): string {
 		return $this->current_item['link'];
 	}
-}
-
-/**
- * Load and execute a theme template
- *
- * @since 2.1.0
- * @param Query  $a_z_query The Query object.
- * @param string $template_file The path of the template to execute.
- * @return void
- */
-function _do_template( Query $a_z_query, string $template_file ) {
-	require $template_file;
 }
