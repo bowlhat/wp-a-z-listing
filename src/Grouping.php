@@ -103,7 +103,8 @@ class Grouping {
 				}
 
 				return $carry;
-			}
+			},
+			array()
 		);
 
 		$this->headings = array_reduce(
