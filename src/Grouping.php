@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Adds and maintains functionality to group the alphabet letters
+ * A-Z Listing Alphabet grouping system class
  *
  * @since 2.0.0
  */
