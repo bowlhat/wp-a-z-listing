@@ -62,7 +62,7 @@ class AZ_Shortcode_Taxonomies_Tests extends WP_UnitTestCase {
 			)
 		);
 
-		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $tag_title, $tag );
+		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $title, $t );
 		$actual   = do_shortcode( sprintf( '[a-z-listing display="terms" taxonomy="category,post_tag" parent-term-id="%s"]', $cat ) );
 
 		$this->assertHTMLEquals( $expected, $actual );
@@ -87,7 +87,7 @@ class AZ_Shortcode_Taxonomies_Tests extends WP_UnitTestCase {
 			)
 		);
 
-		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $tag_title, $tag );
+		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $title, $t );
 		$actual   = do_shortcode( sprintf( '[a-z-listing display="terms" taxonomy="category,post_tag" parent-term="%s"]', $cat ) );
 
 		$this->assertHTMLEquals( $expected, $actual );
@@ -112,7 +112,7 @@ class AZ_Shortcode_Taxonomies_Tests extends WP_UnitTestCase {
 			)
 		);
 		
-		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $tag_title, $tag );
+		$expected = sprintf( file_get_contents( 'tests/data/populated-taxonomy-listing.txt' ), $cat_title, $cat, $title, $t );
 		$actual   = do_shortcode( sprintf( '[a-z-listing display="terms" taxonomy="category,post_tag" parent-term="%s"]', $cat_slug ) );
 
 		$this->assertHTMLEquals( $expected, $actual );
