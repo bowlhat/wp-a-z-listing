@@ -1140,7 +1140,7 @@ class Query {
  * Load and execute a theme template
  *
  * @since 2.1.0
- * @param Query  $a_z_query The Query object.
+ * @param Query $a_z_query The Query object.
  * @return void
  */
 function _do_template( Query $a_z_query ) {
