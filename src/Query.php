@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define( 'DEFAULT_A_Z_TEMPLATE', plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php' );
+
 /**
  * The main A-Z Query class
  *
@@ -176,7 +178,7 @@ class Query {
 
 				if ( isset( $query['post_type'] ) ) {
 					if ( is_array( $query['post_type'] ) && count( $query['post_type'] ) === 1 ) {
-						$post_type = array_shift( $query['post_type'] );
+						$post_type          = array_shift( $query['post_type'] );
 						$query['post_type'] = $post_type;
 						unset( $post_type );
 					}
@@ -674,7 +676,7 @@ class Query {
 
 		$template = locate_template( $templates );
 		if ( empty( $template ) ) {
-			$template = plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php';
+			$template = DEFAULT_A_Z_TEMPLATE;
 		}
 
 		_do_template( $this, $template );
@@ -1139,9 +1141,12 @@ class Query {
  *
  * @since 2.1.0
  * @param Query  $a_z_query The Query object.
- * @param string $filename The path of the template to execute.
  * @return void
  */
 function _do_template( Query $a_z_query ) {
-	require func_get_arg( 1 );
+	if ( func_get_arg( 1 ) ) {
+		require func_get_arg( 1 );
+	} else {
+		require DEFAULT_A_Z_TEMPLATE;
+	}
 }
