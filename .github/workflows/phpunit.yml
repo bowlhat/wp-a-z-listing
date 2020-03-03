@@ -90,7 +90,11 @@ jobs:
     - name: Run yarn install
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install --non-interactive --no-progress
+        if [ -f "yarn.lock" ]; then
+          $HOME/.yarn/bin/yarn install --non-interactive --no-progress
+        else
+          npm install
+        fi
 
     - name: Run yarn build
       run: |
@@ -101,7 +105,11 @@ jobs:
       run: |
         rm -rf node_modules
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
+        if [ -f "yarn.lock" ]; then
+          $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
+        else
+          npm install --production --no-bin-links
+        fi
 
     - name: Upload build result
       uses: actions/upload-artifact@v1
