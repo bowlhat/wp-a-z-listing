@@ -82,9 +82,9 @@ class Indices extends Singleton implements Extension {
 		 */
 		$title = apply_filters( 'a_z_listing_pre_index_item_title', $title, $item, $type );
 
-		if ( $type instanceof \WP_Term ) {
+		if ( $item instanceof \WP_Term ) {
 			$item->term_name = $title;
-		} elseif ( $type instanceof \WP_Post ) {
+		} elseif ( $item instanceof \WP_Post ) {
 			$item->post_title = $title;
 		}
 
