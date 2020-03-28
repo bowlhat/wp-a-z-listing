@@ -1,7 +1,7 @@
 .az-letters,
 .a-z-listing-widget .az-letters,
 .a-z-listing-widget.widget .az-letters {
-  white-space: unset; }
+  white-space: initial; }
   .az-letters > ul.az-links,
   .a-z-listing-widget .az-letters > ul.az-links,
   .a-z-listing-widget.widget .az-letters > ul.az-links {
@@ -36,105 +36,88 @@
 
 div.letter-section {
   margin-bottom: 2em;
-  white-space: unset; }
+  white-space: initial; }
   div.letter-section h2.letter-title {
     border-bottom: 1px solid black;
     margin-bottom: 0.2em;
     padding-bottom: 0.2em;
     width: 100%; }
-  div.letter-section ul,
-  div.letter-section ul > li {
-    list-style: none;
-    margin: 0;
-    padding: 0; }
   div.letter-section > ul.columns {
+    margin: 0;
     width: 100%;
     float: initial;
     box-sizing: border-box;
     line-height: 1.6em;
     column-gap: 0.6em;
-    column-width: 15em; }
+    column-width: 15em;
+    column-gap: var(--a-z-listing-column-gap, 0.6em);
+    column-width: var(--a-z-listing-column-width, 15em); }
     div.letter-section > ul.columns > li {
+      padding: 0;
+      list-style: none;
       display: block; }
     div.letter-section > ul.columns.max-0-columns, div.letter-section > ul.columns.max-1-columns {
       column-count: 1;
-      max-width: 15.6em; }
+      max-width: 15.6em;
+      max-width: calc(var(--a-z-listing-column-width, 15em) + var(--a-z-listing-defualt-column-gap, 0.6em)); }
     div.letter-section > ul.columns.max-2-columns {
       column-count: 2;
-      max-width: 30.6em; }
+      max-width: 30.6em;
+      max-width: calc( (2 * var(--a-z-listing-column-width, 15em)) + ((2 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-3-columns {
       column-count: 3;
-      max-width: 46.2em; }
+      max-width: 46.2em;
+      max-width: calc( (3 * var(--a-z-listing-column-width, 15em)) + ((3 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-4-columns {
       column-count: 4;
-      max-width: 61.8em; }
+      max-width: 61.8em;
+      max-width: calc( (4 * var(--a-z-listing-column-width, 15em)) + ((4 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-5-columns {
       column-count: 5;
-      max-width: 77.4em; }
+      max-width: 77.4em;
+      max-width: calc( (5 * var(--a-z-listing-column-width, 15em)) + ((5 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-6-columns {
       column-count: 6;
-      max-width: 93em; }
+      max-width: 93em;
+      max-width: calc( (6 * var(--a-z-listing-column-width, 15em)) + ((6 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-7-columns {
       column-count: 7;
-      max-width: 108.6em; }
+      max-width: 108.6em;
+      max-width: calc( (7 * var(--a-z-listing-column-width, 15em)) + ((7 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-8-columns {
       column-count: 8;
-      max-width: 124.2em; }
+      max-width: 124.2em;
+      max-width: calc( (8 * var(--a-z-listing-column-width, 15em)) + ((8 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-9-columns {
       column-count: 9;
-      max-width: 139.8em; }
+      max-width: 139.8em;
+      max-width: calc( (9 * var(--a-z-listing-column-width, 15em)) + ((9 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-10-columns {
       column-count: 10;
-      max-width: 155.4em; }
+      max-width: 155.4em;
+      max-width: calc( (10 * var(--a-z-listing-column-width, 15em)) + ((10 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-11-columns {
       column-count: 11;
-      max-width: 171em; }
+      max-width: 171em;
+      max-width: calc( (11 * var(--a-z-listing-column-width, 15em)) + ((11 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-12-columns {
       column-count: 12;
-      max-width: 186.6em; }
+      max-width: 186.6em;
+      max-width: calc( (12 * var(--a-z-listing-column-width, 15em)) + ((12 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-13-columns {
       column-count: 13;
-      max-width: 202.2em; }
+      max-width: 202.2em;
+      max-width: calc( (13 * var(--a-z-listing-column-width, 15em)) + ((13 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-14-columns {
       column-count: 14;
-      max-width: 217.8em; }
+      max-width: 217.8em;
+      max-width: calc( (14 * var(--a-z-listing-column-width, 15em)) + ((14 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
     div.letter-section > ul.columns.max-15-columns {
       column-count: 15;
-      max-width: 233.4em; }
-  div.letter-section ul.columns {
-    column-gap: var(--a-z-listing-column-gap, 0.6em);
-    column-width: var(--a-z-listing-column-width, 15em); }
-    div.letter-section ul.columns.max-0-columns, div.letter-section ul.columns.max-1-columns {
-      max-width: calc(var(--a-z-listing-column-width, 15em) + var(--a-z-listing-defualt-column-gap, 0.6em)); }
-    div.letter-section ul.columns.max-2-columns {
-      max-width: calc( (2 * var(--a-z-listing-column-width, 15em)) + ((2 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-3-columns {
-      max-width: calc( (3 * var(--a-z-listing-column-width, 15em)) + ((3 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-4-columns {
-      max-width: calc( (4 * var(--a-z-listing-column-width, 15em)) + ((4 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-5-columns {
-      max-width: calc( (5 * var(--a-z-listing-column-width, 15em)) + ((5 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-6-columns {
-      max-width: calc( (6 * var(--a-z-listing-column-width, 15em)) + ((6 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-7-columns {
-      max-width: calc( (7 * var(--a-z-listing-column-width, 15em)) + ((7 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-8-columns {
-      max-width: calc( (8 * var(--a-z-listing-column-width, 15em)) + ((8 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-9-columns {
-      max-width: calc( (9 * var(--a-z-listing-column-width, 15em)) + ((9 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-10-columns {
-      max-width: calc( (10 * var(--a-z-listing-column-width, 15em)) + ((10 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-11-columns {
-      max-width: calc( (11 * var(--a-z-listing-column-width, 15em)) + ((11 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-12-columns {
-      max-width: calc( (12 * var(--a-z-listing-column-width, 15em)) + ((12 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-13-columns {
-      max-width: calc( (13 * var(--a-z-listing-column-width, 15em)) + ((13 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-14-columns {
-      max-width: calc( (14 * var(--a-z-listing-column-width, 15em)) + ((14 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
-    div.letter-section ul.columns.max-15-columns {
+      max-width: 233.4em;
       max-width: calc( (15 * var(--a-z-listing-column-width, 15em)) + ((15 - 1) * var(--a-z-listing-column-gap, 0.6em))); }
   div.letter-section div.back-to-top {
+    display: var(--a-z-listing-back-to-top-display, block);
     width: 100%;
     text-align: right; }
     div.letter-section div.back-to-top a {
