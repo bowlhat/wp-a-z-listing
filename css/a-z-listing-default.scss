@@ -37,7 +37,7 @@ $defaultColumnGap: 0.6em;
 	}
 }
 
-.letter-section {
+div.letter-section {
 	margin-bottom: 2em;
 	white-space: unset;
 	h2.letter-title {
@@ -52,8 +52,9 @@ $defaultColumnGap: 0.6em;
 		margin: 0;
 		padding: 0;
 	}
-	ul.columns {
+	> ul.columns {
 		width: 100%;
+		float: initial;
 		box-sizing: border-box;
 		line-height: 1.6em;
 		column-gap: $defaultColumnGap;
