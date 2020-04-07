@@ -1,8 +1,3 @@
-if ( document.readyState === 'loading' ) {
-    document.addEventListener('DOMContentLoaded', fixAZListingScroll);
-} else {
-    fixAZListingScroll();
-}
 function fixAZListingScroll() {
     document.querySelectorAll( '.az-links a[href^="#letter-"]' )
     .forEach( function( a ) {
@@ -13,4 +8,9 @@ function fixAZListingScroll() {
             window.scrollBy( 0, -120 );
         });
     });
+}
+if ( document.readyState === 'loading' ) {
+    document.addEventListener('DOMContentLoaded', fixAZListingScroll);
+} else {
+    fixAZListingScroll();
 }
