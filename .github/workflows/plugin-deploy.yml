@@ -54,9 +54,6 @@ jobs:
         nvm install ${{ matrix.node }}
         nvm use ${{ matrix.node }}
 
-        echo "Install yarn"
-        curl -sS -L https://yarnpkg.com/install.sh | bash
-
     - name: Install phive
       run: |
         wget -O phive.phar "https://phar.io/releases/phive.phar"
@@ -88,21 +85,21 @@ jobs:
     - name: Remove composer dev dependencies
       run: composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress
 
-    - name: Run yarn install
+    - name: Run npm install
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install --non-interactive --no-progress
+        npm install --non-interactive --no-progress
 
-    - name: Run yarn build
+    - name: Run npm build
       run: |
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn build
+        npm run build
 
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
         if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
+        npm install --production --no-bin-links --non-interactive --no-progress
 
     - name: Trim to production node_modules
       run: |
