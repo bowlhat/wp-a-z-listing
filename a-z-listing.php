@@ -30,8 +30,9 @@ require __DIR__ . '/build/vendor/autoload.php';
  * @return void
  */
 function a_z_listing_init() {
-	\A_Z_Listing\Shortcode::instance()->activate( __FILE__, array() )->initialize();
-	\A_Z_Listing\Indices::instance()->activate( __FILE__, array() )->initialize();
+	\A_Z_Listing\Shortcode::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Indices::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\GutenBlock::instance()->activate( __FILE__ )->initialize();
 }
 
 /**

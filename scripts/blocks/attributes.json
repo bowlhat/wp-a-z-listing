@@ -1,0 +1,75 @@
+{
+    "className": {
+        "type": "string"
+    },
+    "columns": {
+        "type": "number",
+        "default": 3
+    },
+    "display": {
+        "type": "string",
+        "enum": ["posts", "terms", "users"],
+        "default": "posts"
+    },
+    "post-type": {
+        "type": "string",
+        "default": "page"
+    },
+    "displayPostContent": {
+        "type": "boolean",
+        "default": false
+    },
+    "displayPostContentRadio": {
+        "type": "string",
+        "default": "excerpt"
+    },
+    "excerptLength": {
+        "type": "number",
+        "default": 55
+    },
+    "displayPostDate": {
+        "type": "boolean",
+        "default": false
+    },
+    "displayFeaturedImage": {
+        "type": "boolean",
+        "default": false
+    },
+    "featuredImageAlign": {
+        "type": "string",
+        "enum": ["left", "center", "right"]
+    },
+    "featuredImageSizeSlug": {
+        "type": "string",
+        "default":"thumbnail"
+    },
+    "featuredImageSizeWidth": {
+        "type": "number",
+        "default":null
+    },
+    "featuredImageSizeHeight": {
+        "type": "number",
+        "default":null
+    },
+    "terms": {
+        "type": "array",
+        "items": {
+            "type": "object"
+        }
+    },
+    "taxonomy": {
+        "type": "string"
+    },
+    "numbers": {
+        "type": "string",
+        "enum": ["before", "after"]
+    },
+    "grouping": {
+        "type": "number",
+        "default": 1
+    },
+    "group-numbers": {
+        "type": "boolean",
+        "default": false
+    }
+}

@@ -1,10 +1,20 @@
 {
   "name": "wp-a-z-listing",
   "version": "4.0.0",
-  "main": "Gruntfile.js",
+  "main": "build/index.js",
   "author": "Daniel Llewellyn",
   "scripts": {
-    "build": "grunt"
+    "build": "wp-scripts build ./scripts/blocks/index.js",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
+    "env": "wp-scripts env",
+    "format:js": "wp-scripts format-js ./scripts",
+    "lint:css": "wp-scripts lint-style ./css/editor.css ./css/style.css",
+    "lint:js": "wp-scripts lint-js ./scripts",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "packages-update": "wp-scripts packages-update",
+    "postpackages-update": "npm run build",
+    "start": "wp-scripts start ./scripts/blocks/index.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -17,6 +27,23 @@
     "grunt-sass": "^3.0.2",
     "grunt-wp-i18n": "^1.0.3",
     "grunt-wp-readme-to-markdown": "^2.0.1",
-    "node-sass": "^4.13.1"
+    "node-sass": "^4.13.1",
+    "@wordpress/scripts": "^8.0.1"
+  },
+  "wp-env": {
+    "plugin-dir": "a-z-listing",
+    "plugin-name": "A-Z Listing",
+    "welcome-logo": [
+      ",⁻⁻⁻·       .                 |",
+      "|  ،⁓’.   . |---  ,---. ,---. |---. ,---. ,---. ,---.",
+      "|   | |   | |     |---' |   | |   | |---' |     |   |",
+      "`---' `---' `---’ `---’ '   ` `---' `---’ `     `---|",
+      "                                                `---'"
+    ],
+    "welcome-build-command": "npm run dev"
+  },
+  "dependencies": {
+    "@wordpress/components": "^9.4.1",
+    "@wordpress/icons": "^1.3.1"
   }
 }
