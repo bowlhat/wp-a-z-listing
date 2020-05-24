@@ -122,4 +122,4 @@ export default withSelect( ( select, props ) => {
 					return post;
 			  } ),
 	};
-} )( LatestPostsEdit );
+} )( A_Z_Listing_Edit );
