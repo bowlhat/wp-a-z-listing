@@ -301,7 +301,7 @@ class A_Z_Listing_Edit extends Component {
 												onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__grouping', { grouping: value } ) ) }
 											/>
 
-											{ 'hide' !== attributes.numbers && (
+											{ 'hide' !== attributes.numbers && ! ( 1 < attributes.grouping ) && (
 												<ToggleControl
 													label={ __( 'Group numbers' ) }
 													help={ __( 'Group 0-9 as a single letter' ) }

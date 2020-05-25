@@ -116,10 +116,11 @@ class Grouping {
 			 * @param string $heading
 			 * @return array<string,string>
 			 */
-			function( array $carry, string $heading ): array {
+			function( array $carry, array $heading ): array {
 				$carry[ Strings::maybe_mb_substr( $heading[0], 0, 1 ) ] = $heading;
 				return $carry;
-			}
+			},
+			array()
 		);
 
 		return join( ',', $groups );

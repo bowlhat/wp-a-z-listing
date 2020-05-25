@@ -11,13 +11,14 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center; }
+    justify-content: center;
+    font-size: 1.2rem; }
     .az-letters > ul.az-links > li,
     .a-z-listing-widget .az-letters > ul.az-links > li,
     .a-z-listing-widget.widget .az-letters > ul.az-links > li {
       list-style: none;
-      width: 2em;
-      height: 2em;
+      width: 2.6em;
+      height: 2.4rem;
       box-sizing: border-box;
       margin: 0 0.1rem 0.6em;
       border: 2px solid #e5e5e5;
