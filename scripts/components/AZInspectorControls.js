@@ -1,10 +1,12 @@
-import { createSlotFill, PanelRow } from '@wordpress/components';
+import { createSlotFill, PanelBody } from '@wordpress/components';
 
 export const { Fill, Slot } = createSlotFill( 'AZListingInspectorControls' );
 
-const AZInspectorControls = ( { children, className } ) => (
+const AZInspectorControls = ( { children, title } ) => (
     <Fill>
-		{ children }
+		<PanelBody title={ title }>
+			{ children }
+		</PanelBody>
     </Fill>
 );
 
