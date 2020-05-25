@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DEFAULT_A_Z_TEMPLATE', plugin_dir_path( dirname( __DIR__ ) ) . 'templates/a-z-listing.php' );
+define( 'DEFAULT_A_Z_TEMPLATE', plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
 
 /**
  * The main A-Z Query class
@@ -422,7 +422,7 @@ class Query {
 	 */
 	protected function get_all_indices_for_item( $item ) {
 		$indexed_items = array();
-		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type );
+		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type, $this->alphabet );
 
 		if ( ! empty( $item_indices ) ) {
 			foreach ( $item_indices as $key => $entries ) {
@@ -435,6 +435,9 @@ class Query {
 			}
 		}
 
+		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
+			do_action( 'log', 'A-Z Listing: Complete item indices', $indexed_items );
+		}
 		return $indexed_items;
 	}
 

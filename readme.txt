@@ -460,9 +460,9 @@ If there is code already in your functions.php then add just the lines between `
 = 4.0.0 =
 
 * Bump minimum PHP requirement to 7.0
-* Make classes namespaced
 * Update stylesheet to use CSS Variables
 * Lots of refactoring for better maintainability
+* Make classes namespaced
 * Improvements to documentation
 * Add legacy non-namespaced backwards-compatibility classes
 * Add parent post ID and parent post name support

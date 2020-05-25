@@ -28,32 +28,12 @@ class GutenBlock extends Singleton implements Extension {
     }
 
     public function render( $attributes ) {
-		$attributes = shortcode_atts(
-			array(
-				'alphabet'         => '',
-				'display'          => 'posts',
-				'exclude-posts'    => '',
-				'exclude-terms'    => '',
-				'get-all-children' => 'false',
-				'group-numbers'    => '',
-				'grouping'         => '',
-				'hide-empty-terms' => 'false',
-				'numbers'          => 'hide',
-				'parent-post'      => '',
-				'parent-term'      => '',
-				'parent-term-id'   => '',
-				'post-type'        => 'page',
-				'return'           => 'listing',
-				'target'           => '',
-				'taxonomy'         => '',
-				'terms'            => '',
-			),
-			$attributes,
-			'a-z-listing'
-        );
+        global $shortcode_tags;
+        if ( empty( $shortcode_tags ) || ! is_array( $shortcode_tags ) || ! array_key_exists( 'a-z-listing', $shortcode_tags ) ) {
+            return 'The A-Z Listing plugin has been disabled.';
+        }
 
-        $this->excerpt_length = $attributes['excerpt-length'];
-        add_filter( 'excerpt_length', array( $this, 'get_excerpt_length' ), 20 );
+        return call_user_func( $shortcode_tags['a-z-listing'], $attributes );
     }
 
     final public function initialize() {
@@ -69,15 +49,15 @@ class GutenBlock extends Singleton implements Extension {
         $script_asset = require( $script_asset_path );
         wp_register_script(
             'a-z-listing-block-editor',
-            plugins_url( $index_js, __FILE__ ),
+            plugins_url( $index_js, __DIR__ ),
             $script_asset['dependencies'],
-            $script_asset['version']
+			$script_asset['version']
         );
 
         $editor_css = 'css/editor.css';
         wp_register_style(
             'a-z-listing-block-editor',
-            plugins_url( $editor_css, __FILE__ ),
+            plugins_url( $editor_css, __DIR__ ),
             array(),
             filemtime( "$dir/$editor_css" )
         );
@@ -85,16 +65,20 @@ class GutenBlock extends Singleton implements Extension {
         $style_css = 'css/style.css';
         wp_register_style(
             'a-z-listing-block',
-            plugins_url( $style_css, __FILE__ ),
+            plugins_url( $style_css, __DIR__ ),
             array(),
             filemtime( "$dir/$style_css" )
         );
 
+        $attributes = json_decode( file_get_contents( plugin_dir_path( __DIR__ ) . 'scripts/blocks/attributes.json' ), true );
+        $attributes = apply_filters( '_a-z-listing-supported-attributes', $attributes );
+
         register_block_type( 'a-z-listing/block', array(
-            'editor_script' => 'a-z-listing-block-editor',
-            'editor_style'  => 'a-z-listing-block-editor',
-            'style'         => 'a-z-listing-block',
+            'editor_script'   => 'a-z-listing-block-editor',
+            'editor_style'    => 'a-z-listing-block-editor',
+            'style'           => 'a-z-listing-block',
             'render_callback' => array( $this, 'render' ),
+            'attributes'      => $attributes,
         ) );
     }
 }

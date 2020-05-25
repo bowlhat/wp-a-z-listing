@@ -3,11 +3,33 @@
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
+import { __ } from '@wordpress/i18n';
+
+import { registerStore, withSelect } from '@wordpress/data';
+import { createHooks } from '@wordpress/hooks';
 import { registerBlockType } from '@wordpress/blocks';
 import { postList as icon } from '@wordpress/icons';
+import { registerPlugin } from '@wordpress/plugins';
 
 import edit from './edit';
 import attributes from './attributes.json';
+import DisplayOptions from '../components/DisplayOptions';
+import ItemSelection from '../components/ItemSelection';
+
+const hooks = createHooks();
+
+registerStore( 'a-z-listing/slotfills', {
+	reducer( state = {}, action ) { return state },
+	actions: {},
+	selectors: {
+		getDisplayOptions() {
+			return DisplayOptions;
+		},
+		getItemSelection() {
+			return ItemSelection;
+		},
+	}
+} );
 
 /**
  * Every block starts by registering a new block type definition.

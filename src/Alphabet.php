@@ -103,6 +103,9 @@ class Alphabet {
 		$others = apply_filters( 'a-z-listing-non-alpha-char', $others );
 
 		$alphabet_groups = explode( ',', $alphabet );
+		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 1 ) {
+			do_action( 'log', 'A-Z Listing: Alphabet Groups', $alphabet_groups );
+		}
 		$letters         = array_reduce(
 			$alphabet_groups,
 			/**
@@ -125,6 +128,7 @@ class Alphabet {
 					 * @return array<string,string>
 					 */
 					function( array $group_carry, string $character ) use ( $group_index_character ) {
+						$character = "__$character";
 						$group_carry[ $character ] = $group_index_character;
 						return $group_carry;
 					},
@@ -137,6 +141,10 @@ class Alphabet {
 			},
 			array()
 		);
+
+		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
+			do_action( 'log', 'A-Z Listing: Alphabet', $letters );
+		}
 
 		$this->unknown_letter = $others;
 		$this->alphabet_keys  = array_values( array_unique( $letters ) );
@@ -151,8 +159,8 @@ class Alphabet {
 	 * @return string The letter.
 	 */
 	public function get_letter_for_key( string $key ): string {
-		if ( in_array( $key, array_keys( $this->keyed_alphabet ), true ) ) {
-			return $this->keyed_alphabet[ $key ];
+		if ( in_array( "__$key", array_keys( $this->keyed_alphabet ), true ) ) {
+			return $this->keyed_alphabet[ "__$key" ];
 		} else {
 			return $this->unknown_letter;
 		}

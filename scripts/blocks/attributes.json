@@ -45,24 +45,27 @@
     },
     "featuredImageSizeWidth": {
         "type": "number",
-        "default":null
+        "default":150
     },
     "featuredImageSizeHeight": {
         "type": "number",
-        "default":null
+        "default":150
     },
     "terms": {
         "type": "array",
         "items": {
-            "type": "object"
-        }
+            "type": "string"
+        },
+        "default": []
     },
     "taxonomy": {
-        "type": "string"
+        "type": "string",
+        "default": ""
     },
     "numbers": {
         "type": "string",
-        "enum": ["before", "after"]
+        "enum": ["before", "after", "hide"],
+        "default": "after"
     },
     "grouping": {
         "type": "number",

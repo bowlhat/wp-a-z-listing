@@ -59,4 +59,16 @@ class Strings {
 			return substr( $string, $start, $length );
 		}
 	}
+
+	public static function maybe_explode_string( string $separator, $value = null ) {
+		$result = array();
+		if ( is_string( $value ) ) {
+			$result = explode( $separator, $value );
+		} elseif ( is_array( $value ) ) {
+			$result = $value;
+		}
+		$result = array_map( 'trim', $result );
+        $result = array_filter( $result );
+		return $result;
+	}
 }

@@ -23,7 +23,7 @@ class Indices extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		add_filter( '_a-z-listing-extract-item-indices', array( $this, 'get_item_indices' ), 1, 3 );
+		add_filter( '_a-z-listing-extract-item-indices', array( $this, 'get_item_indices' ), 1, 4 );
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Indices extends Singleton implements Extension {
 	 * @param string                $type    Type of listing - terms or posts.
 	 * @return array<string,mixed> The post's index letters (usually matching the first character of the post title)
 	 */
-	public static function get_item_indices( array $indices, $item, string $type ): array {
+	public static function get_item_indices( array $indices, $item, string $type, Alphabet $alphabet ): array {
 		if ( 'terms' === $type || $item instanceof \WP_Term ) {
 			if ( ! $item instanceof \WP_Term ) {
 				$item = get_term( $item );
@@ -114,7 +114,7 @@ class Indices extends Singleton implements Extension {
 		$index_letters = array_unique( array_filter( $index_letters ) );
 
 		foreach ( $index_letters as $letter ) {
-			$indices[ $letter ][] = array(
+			$indices[ $alphabet->get_letter_for_key( $letter ) ][] = array(
 				'title' => $title,
 				'item'  => ( $item instanceof \WP_Term ) ? "term:{$item_id}" : "post:{$item_id}",
 				'link'  => $permalink,
@@ -170,7 +170,7 @@ class Indices extends Singleton implements Extension {
 		$indices = apply_filters_deprecated( 'a-z-listing-item-indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
 
 		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
-			\do_action( 'log', 'Item indices', $indices );
+			\do_action( 'log', 'A-Z Listing: Item indices', $indices );
 		}
 
 		return $indices;
