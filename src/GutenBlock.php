@@ -62,7 +62,7 @@ class GutenBlock extends Singleton implements Extension {
             filemtime( "$dir/$editor_css" )
         );
 
-        $style_css = 'css/style.css';
+        $style_css = 'css/a-z-listing-default.css';
         wp_register_style(
             'a-z-listing-block',
             plugins_url( $style_css, __DIR__ ),

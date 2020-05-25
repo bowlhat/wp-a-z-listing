@@ -464,9 +464,9 @@ If there is code already in your functions.php then add just the lines between `
 ### 4.0.0 ###
 
 * Bump minimum PHP requirement to 7.0
-* Make classes namespaced
 * Update stylesheet to use CSS Variables
 * Lots of refactoring for better maintainability
+* Make classes namespaced
 * Improvements to documentation
 * Add legacy non-namespaced backwards-compatibility classes
 * Add parent post ID and parent post name support
@@ -503,22 +503,6 @@ This is a major version change, which means that it might break your site when y
 * Complete refactor to use more modern PHP features.
 * Minor refactoring of `get_the_item_object`, `get_item_meta`, and `get_the_item_count` template tags.
 * Miscellaneous documentation Fixes.
-
-### 2.3.0 ###
-
-* Add multiple taxonomy support to taxonomy terms listing.
-* Add site health-check feature compatibility.
-* Fix `hide-empty-terms` in a taxonomy terms listing. Previously completely broken.
-* Fix hard-coded `admin-ajax.php` URL in widget configuration javascript.
-* Improve documentation in the readme.txt file, which is shown on the plugin page at WordPress.org.
-
-### 2.2.0 ###
-
-* Add `get_the_item_post_count` and `the_item_post_count` template methods to get or display the number of posts associated with a term.
-* Add support for `get-all-children` when specifying a `parent-term`.
-* Add extra filename for template matching: `a-z-listing-$slug.php` where `$slug` is the slug of the post containing the short-code.
-* Deprecate PHP 5.3-5.5. Please ensure you are running at least PHP 5.6. The plugin may work on older PHP versions, but compatibility is not guaranteed.
-* Bugfix for incorrect behaviour of `exclude-terms` in the short-code. Thanks go to Chris Skrzypchak for finding this.
 
 ### BREAKING CHANGES in 2.0.0+ ###
 

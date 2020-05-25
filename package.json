@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "author": "Daniel Llewellyn",
   "scripts": {
-    "build": "wp-scripts build ./scripts/blocks/index.js",
+    "build": "wp-scripts build ./scripts/blocks/index.js && grunt",
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "env": "wp-scripts env",

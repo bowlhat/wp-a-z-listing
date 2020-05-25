@@ -102,8 +102,9 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
-	grunt.loadNpmTasks( 'grunt-babel' );
+	// grunt.loadNpmTasks( 'grunt-babel' );
 	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.registerTask( 'default', ['build'] );
 	grunt.registerTask( 'build', [ 'i18n','readme',
 		// 'babel',
 		'sass' ] );
