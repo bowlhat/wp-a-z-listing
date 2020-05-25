@@ -12,15 +12,11 @@ import {
 	FormTokenField,
 	PanelBody,
 	Placeholder,
-	QueryControls,
-	RadioControl,
 	RangeControl,
 	SelectControl,
 	Spinner,
-	TextControl,
 	ToggleControl,
 	ToolbarGroup,
-	createSlotFill,
 } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 import apiFetch from '@wordpress/api-fetch';
@@ -46,6 +42,7 @@ import {
 
 import ItemSelection from '../components/ItemSelection';
 import DisplayOptions from '../components/DisplayOptions';
+import AZInspectorControls from '../components/AZInspectorControls';
 
 
 /**
@@ -173,168 +170,176 @@ class A_Z_Listing_Edit extends Component {
 		}
 		const inspectorControls = (
 			<InspectorControls>
-				<PanelBody title={ __( 'Featured image settings' ) }>
-					<ToggleControl
-						label={ __( 'Display featured image' ) }
-						checked={ displayFeaturedImage }
-						onChange={ ( value ) =>
-							setAttributes( { displayFeaturedImage: value } )
-						}
-					/>
-					{ displayFeaturedImage && (
+				<AZInspectorControls.Slot>
+					{ ( fills ) => (
 						<>
-							<ImageSizeControl
-								onChange={ ( value ) => {
-									const newAttrs = {};
-									if ( value.hasOwnProperty( 'width' ) ) {
-										newAttrs.featuredImageSizeWidth =
-											value.width;
-									}
-									if ( value.hasOwnProperty( 'height' ) ) {
-										newAttrs.featuredImageSizeHeight =
-											value.height;
-									}
-									setAttributes( newAttrs );
-								} }
-								slug={ featuredImageSizeSlug }
-								width={ featuredImageSizeWidth }
-								height={ featuredImageSizeHeight }
-								imageWidth={ defaultImageWidth }
-								imageHeight={ defaultImageHeight }
-								imageSizeOptions={ imageSizeOptions }
-								onChangeImage={ ( value ) =>
-									setAttributes( {
-										featuredImageSizeSlug: value,
-										featuredImageSizeWidth: undefined,
-										featuredImageSizeHeight: undefined,
-									} )
-								}
-							/>
-							<BaseControl>
-								<BaseControl.VisualLabel>
-									{ __( 'Image alignment' ) }
-								</BaseControl.VisualLabel>
-								<BlockAlignmentToolbar
-									value={ featuredImageAlign }
+							<PanelBody title={ __( 'Featured image settings' ) }>
+								<ToggleControl
+									label={ __( 'Display featured image' ) }
+									checked={ displayFeaturedImage }
 									onChange={ ( value ) =>
-										setAttributes( {
-											featuredImageAlign: value,
-										} )
+										setAttributes( { displayFeaturedImage: value } )
 									}
-									controls={ [ 'left', 'center', 'right' ] }
-									isCollapsed={ false }
 								/>
-							</BaseControl>
+								{ displayFeaturedImage && (
+									<>
+										<ImageSizeControl
+											onChange={ ( value ) => {
+												const newAttrs = {};
+												if ( value.hasOwnProperty( 'width' ) ) {
+													newAttrs.featuredImageSizeWidth =
+														value.width;
+												}
+												if ( value.hasOwnProperty( 'height' ) ) {
+													newAttrs.featuredImageSizeHeight =
+														value.height;
+												}
+												setAttributes( newAttrs );
+											} }
+											slug={ featuredImageSizeSlug }
+											width={ featuredImageSizeWidth }
+											height={ featuredImageSizeHeight }
+											imageWidth={ defaultImageWidth }
+											imageHeight={ defaultImageHeight }
+											imageSizeOptions={ imageSizeOptions }
+											onChangeImage={ ( value ) =>
+												setAttributes( {
+													featuredImageSizeSlug: value,
+													featuredImageSizeWidth: undefined,
+													featuredImageSizeHeight: undefined,
+												} )
+											}
+										/>
+										<BaseControl>
+											<BaseControl.VisualLabel>
+												{ __( 'Image alignment' ) }
+											</BaseControl.VisualLabel>
+											<BlockAlignmentToolbar
+												value={ featuredImageAlign }
+												onChange={ ( value ) =>
+													setAttributes( {
+														featuredImageAlign: value,
+													} )
+												}
+												controls={ [ 'left', 'center', 'right' ] }
+												isCollapsed={ false }
+											/>
+										</BaseControl>
+									</>
+								) }
+							</PanelBody>
+
+							<PanelBody title={ __( 'Item selection' ) }>
+								<ItemSelection.Slot>
+									{ ( fills ) => (
+										<>
+											<SelectControl
+												label={ __( 'Display mode' ) }
+												value={ display }
+												options={ [
+													{ value: 'posts', label: __( 'Posts' ) },
+													{ value: 'terms', label: __( 'Taxonomy terms' ) }
+												] }
+												onChange={ (value) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__display', { display: value } ) )
+												}
+											/>
+
+											{ ( 'posts' === attributes.display ) && (
+												<SelectControl
+													label={ __( 'Post Type' ) }
+													value={ attributes['post-type'] }
+													options={ Object.keys( postTypeList ).map( ( type, idx ) => ( {
+														value: type,
+														label: postTypeList[ type ].name,
+													} ) ) }
+													onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__post-type', { 'post-type': value } ) ) }
+												/>
+											) }
+
+											<SelectControl
+												label={ __( 'Taxonomy' ) }
+												value={ attributes.taxonomy }
+												options={ getFilteredTaxonomies() }
+												onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__taxonomy', { taxonomy: value } ) ) }
+											/>
+
+											{ ( 'posts' === attributes.display && !! attributes.taxonomy ) && (
+												<FormTokenField
+													label={ __( 'Taxonomy terms' ) }
+													value={ attributes.terms }
+													onChange={ ( value ) => setAttributes( { terms: value } ) }
+												/>
+											) }
+
+											{ fills }
+										</>
+									) }
+								</ItemSelection.Slot>
+							</PanelBody>
+
+							<PanelBody title={ __( 'Display options' ) }>
+								<DisplayOptions.Slot>
+									{ ( fills ) => (
+										<>
+											<SelectControl
+												label={ __( 'Numbers' ) }
+												value={ attributes.numbers }
+												options={ [
+													{ value: 'hide',   label: __( 'Hide numbers' ) },
+													{ value: 'before', label: __( 'Prepend before alphabet' ) },
+													{ value: 'after',  label: __( 'Append after alphabet' ) },
+												] }
+												onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__numbers', { numbers: value } ) ) }
+											/>
+
+											<RangeControl
+												label={ __( 'Group letters' ) }
+												help={ __( 'The number of letters to include in a single group' ) }
+												value={ attributes.grouping || 1 }
+												min={ 1 }
+												max={ 10 }
+												onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__grouping', { grouping: value } ) ) }
+											/>
+
+											{ 'hide' !== attributes.numbers && (
+												<ToggleControl
+													label={ __( 'Group numbers' ) }
+													help={ __( 'Group 0-9 as a single letter' ) }
+													checked={ !! attributes['group-numbers'] }
+													onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__group-numbers', { 'group-numbers': !!value } ) ) }
+												/>
+											) }
+
+											{ fills }
+										</>
+									) }
+								</DisplayOptions.Slot>
+
+								{ postLayout === 'grid' && (
+									<RangeControl
+										label={ __( 'Columns' ) }
+										value={ columns }
+										onChange={ ( value ) =>
+											setAttributes( { columns: value } )
+										}
+										min={ 2 }
+										max={
+											! hasPosts
+												? MAX_POSTS_COLUMNS
+												: Math.min(
+														MAX_POSTS_COLUMNS,
+														latestPosts.length
+												)
+										}
+										required
+									/>
+								) }
+							</PanelBody>
+
+							{ fills }
 						</>
 					) }
-				</PanelBody>
-
-				<PanelBody title={ __( 'Item selection' ) }>
-					<ItemSelection.Slot>
-						{ ( fills ) => (
-							<>
-								<SelectControl
-									label={ __( 'Display mode' ) }
-									value={ display }
-									options={ [
-										{ value: 'posts', label: __( 'Posts' ) },
-										{ value: 'terms', label: __( 'Taxonomy terms' ) }
-									] }
-									onChange={ (value) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__display', { display: value } ) )
-									}
-								/>
-
-								{ ( 'posts' === attributes.display ) && (
-									<SelectControl
-										label={ __( 'Post Type' ) }
-										value={ attributes['post-type'] }
-										options={ Object.keys( postTypeList ).map( ( type, idx ) => ( {
-											value: type,
-											label: postTypeList[ type ].name,
-										} ) ) }
-										onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__post-type', { 'post-type': value } ) ) }
-									/>
-								) }
-
-								<SelectControl
-									label={ __( 'Taxonomy' ) }
-									value={ attributes.taxonomy }
-									options={ getFilteredTaxonomies() }
-									onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__taxonomy', { taxonomy: value } ) ) }
-								/>
-
-								{ ( 'posts' === attributes.display && !! attributes.taxonomy ) && (
-									<FormTokenField
-										label={ __( 'Taxonomy terms' ) }
-										value={ attributes.terms }
-										onChange={ ( value ) => setAttributes( { terms: value } ) }
-									/>
-								) }
-
-								{ fills }
-							</>
-						) }
-					</ItemSelection.Slot>
-				</PanelBody>
-
-				<PanelBody title={ __( 'Display options' ) }>
-					<DisplayOptions.Slot>
-						{ ( fills ) => (
-							<>
-								<SelectControl
-									label={ __( 'Numbers' ) }
-									value={ attributes.numbers }
-									options={ [
-										{ value: 'hide',   label: __( 'Hide numbers' ) },
-										{ value: 'before', label: __( 'Prepend before alphabet' ) },
-										{ value: 'after',  label: __( 'Append after alphabet' ) },
-									] }
-									onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__numbers', { numbers: value } ) ) }
-								/>
-
-								<RangeControl
-									label={ __( 'Group letters' ) }
-									help={ __( 'The number of letters to include in a single group' ) }
-									value={ attributes.grouping || 1 }
-									min={ 1 }
-									max={ 10 }
-									onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__grouping', { grouping: value } ) ) }
-								/>
-
-								{ 'hide' !== attributes.numbers && (
-									<ToggleControl
-										label={ __( 'Group numbers' ) }
-										help={ __( 'Group 0-9 as a single letter' ) }
-										checked={ !! attributes['group-numbers'] }
-										onChange={ ( value ) => setAttributes( applyFilters( 'a_z_listing_selection_changed_for__group-numbers', { 'group-numbers': !!value } ) ) }
-									/>
-								) }
-
-								{ fills }
-							</>
-						) }
-					</DisplayOptions.Slot>
-
-					{ postLayout === 'grid' && (
-						<RangeControl
-							label={ __( 'Columns' ) }
-							value={ columns }
-							onChange={ ( value ) =>
-								setAttributes( { columns: value } )
-							}
-							min={ 2 }
-							max={
-								! hasPosts
-									? MAX_POSTS_COLUMNS
-									: Math.min(
-											MAX_POSTS_COLUMNS,
-											latestPosts.length
-									)
-							}
-							required
-						/>
-					) }
-				</PanelBody>
+				</AZInspectorControls.Slot>
 			</InspectorControls>
 		);
 

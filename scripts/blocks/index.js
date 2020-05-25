@@ -15,6 +15,7 @@ import edit from './edit';
 import attributes from './attributes.json';
 import DisplayOptions from '../components/DisplayOptions';
 import ItemSelection from '../components/ItemSelection';
+import AZInspectorControls from '../components/AZInspectorControls';
 
 const hooks = createHooks();
 
@@ -27,6 +28,9 @@ registerStore( 'a-z-listing/slotfills', {
 		},
 		getItemSelection() {
 			return ItemSelection;
+		},
+		getInspectorControls() {
+			return AZInspectorControls;
 		},
 	}
 } );
