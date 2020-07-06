@@ -92,6 +92,20 @@ class Query {
 	private $query;
 
 	/**
+	 * Number of instances on the page
+	 *
+	 * @var integer
+	 */
+	private static $num_instances = 1;
+
+	/**
+	 * Current instance number
+	 *
+	 * @var integer
+	 */
+	private $instance_num;
+
+	/**
 	 * A_Z_Listing constructor
 	 *
 	 * @since 0.1
@@ -103,6 +117,7 @@ class Query {
 	 */
 	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true ) {
 		global $post;
+		$this->instance_num = self::$num_instances++;
 		$this->alphabet = new Alphabet();
 
 		if ( 'terms' === $type || ( is_string( $query ) && ! empty( $query ) ) ) {
@@ -621,7 +636,7 @@ class Query {
 
 				$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 				if ( ! empty( $indices[ $character ] ) ) {
-					$ret .= '<a href="' . esc_url( $target . '#letter-' . $id ) . '">';
+					$ret .= '<a href="' . esc_url( "$target#letter-$id-{$this->instance_num}" ) . '">';
 				}
 				$ret .= '<span>' . esc_html( $that->get_the_letter_title( $character ) ) . '</span>';
 				if ( ! empty( $indices[ $character ] ) ) {
@@ -699,6 +714,25 @@ class Query {
 		$r = ob_get_clean();
 
 		return $r;
+	}
+
+	/**
+	 * Retrieve the listing instance ID. This is not escaped!
+	 * 
+	 * @since 4.0.0
+	 * @return string The instance number
+	 */
+	public function get_the_instance_id() {
+		return "az-listing-{$this->instance_num}";
+	}
+
+	/**
+	 * Print the listing instance ID.
+	 * 
+	 * @since 4.0.0
+	 */
+	public function the_instance_id() {
+		echo esc_attr( $this->get_the_instance_id() );
 	}
 
 	/**
@@ -972,7 +1006,7 @@ class Query {
 		if ( $this->alphabet->get_unknown_letter() === $id ) {
 			$id = '_';
 		}
-		return 'letter-' . $id;
+		return "letter-$id-{$this->instance_num}";
 	}
 
 	/**

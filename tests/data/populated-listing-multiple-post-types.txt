@@ -1,5 +1,5 @@
-<div id="az-tabs">
-    <div id="letters">
+<div id="az-listing-0" class="az-listing">
+    <div class="az-letters-wrap">
         <div class="az-letters">
             <ul class="az-links">
                 <li class="first odd no-posts"><span>A</span></li>
@@ -31,9 +31,9 @@
             </ul>
         </div>
     </div>
-    <div id="az-slider">
-        <div id="inner-slider">
-            <div class="letter-section" id="letter-T">
+    <div class="items-outer">
+        <div class="items-inner">
+            <div class="letter-section" id="letter-T-0">
                 <h2 class="letter-title"><span>T</span></h2>
                 <ul class="columns max-0-columns">
                     <li><a href="http://example.org/?page_id=%2$d">%1$s</a></li>

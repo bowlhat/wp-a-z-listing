@@ -20,15 +20,15 @@
  */
 $_a_z_listing_minpercol = 10;
 ?>
-<div id="az-tabs">
-	<div id="letters">
+<div id="<?php $a_z_query->the_instance_id; ?>" class="az-listing">
+	<div class="az-letters-wrap">
 		<div class="az-letters">
 			<?php $a_z_query->the_letters(); ?>
 		</div>
 	</div>
 	<?php if ( $a_z_query->have_letters() ) : ?>
-	<div id="az-slider">
-		<div id="inner-slider">
+	<div class="items-outer">
+		<div class="items-inner">
 			<?php
 			while ( $a_z_query->have_letters() ) :
 				$a_z_query->the_letter();
@@ -48,7 +48,7 @@ $_a_z_listing_minpercol = 10;
 							</span>
 						</h2>
 						<?php $column_class = "max-$num_columns-columns"; ?>
-						<ul class="columns <?php echo $column_class; ?>">
+						<ul class="az-columns <?php echo $column_class; ?>">
 							<?php
 							while ( $a_z_query->have_items() ) :
 								$a_z_query->the_item();
@@ -61,7 +61,7 @@ $_a_z_listing_minpercol = 10;
 							<?php endwhile; ?>
 						</ul>
 						<div class="back-to-top">
-							<a href="#letters">
+							<a href="#<?php $a_z_query->the_instance_id; ?>">
 								<?php _e( 'Back to top', 'a-z-listing' ); ?>
 							</a>
 						</div>
