@@ -29,18 +29,18 @@ module.exports = function( grunt ) {
 				options: {
 					screenshot_url: 'assets/{screenshot}.png',
 					pre_convert: function( readme ) {
-						readme = readme.replace( new RegExp("^`$[\n\r]+([^`]*)[\n\r]+^`$","gm"), function( codeblock, codeblockContents ) {
+						readme = readme.replace( new RegExp('^`$[\n\r]+([^`]*)[\n\r]+^`$','gm'), function( codeblock, codeblockContents ) {
 							const blockStartEnd = '```';
-							let lines = codeblockContents.split("\n");
-							if ( String( lines[0] ).startsWith("<?php") ) {
-								return `${blockStartEnd}php\n${lines.join("\n")}\n${blockStartEnd}`;
+							let lines = codeblockContents.split('\n');
+							if ( String( lines[0] ).startsWith('<?php') ) {
+								return `${blockStartEnd}php\n${lines.join('\n')}\n${blockStartEnd}`;
 							}
-						})
+						});
 						return readme;
 					},
 					post_convert: function( readme ) {
 						readme = readme.replace( /^## Description ##$/, function( title ) {
-							return `${title}\n\n[![Build Status](https://travis-ci.org/bowlhat/wp-a-z-listing.svg?branch=master)](https://travis-ci.org/bowlhat/wp-a-z-listing)\n\n`
+							return `${title}\n\n[![Build Status](https://travis-ci.org/bowlhat/wp-a-z-listing.svg?branch=master)](https://travis-ci.org/bowlhat/wp-a-z-listing)\n\n`;
 						});
 						readme = readme.replace( /^\*\*([^*\s][^*]*)\*\*$/gm, function( a, b ) {
 							return `#### ${b} ####`;

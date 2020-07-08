@@ -52,6 +52,19 @@ function a_z_listing_do_enqueue() {
 		array( 'ajax_url' => admin_url( 'admin-ajax.php' ) )
 	);
 
+	wp_register_script(
+		'a-z-listing-scroll-fix',
+		plugins_url( 'scripts/a-z-listing-scroll-fix.js', dirname( __FILE__ ) ),
+		array(),
+		false,
+		true
+	);
+	wp_localize_script(
+		'a-z-listing-scroll-fix',
+		'a_z_listing_scroll_fix',
+		array( 'offset' => -120 )
+	);
+
 	$add_styles = get_option( 'a-z-listing-add-styling', true );
 	/**
 	 * Determine whether to add default listing styling

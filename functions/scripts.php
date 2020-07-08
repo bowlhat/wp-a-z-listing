@@ -57,3 +57,13 @@ function a_z_listing_force_enable_tabs() {
 function a_z_listing_enqueue_widget_admin_script() {
 	wp_enqueue_script( 'a-z-listing-widget-admin' );
 }
+
+/**
+ * Enqueue Scrollfix script
+ * 
+ * @since 4.0.0
+ * @return void
+ */
+function a_z_listing_enqueue_scroll_fix() {
+	wp_enqueue_script( 'a-z-listing-scroll-fix' );
+}

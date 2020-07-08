@@ -6,7 +6,6 @@
 Thumbs.db
 
 # Editors
-.vscode
 .idea
 
 composer.phar
