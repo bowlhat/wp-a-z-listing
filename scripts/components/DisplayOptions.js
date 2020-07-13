@@ -1,12 +1,8 @@
-import { createSlotFill, PanelRow } from '@wordpress/components';
+import { createSlotFill } from '@wordpress/components';
 
 export const { Fill, Slot } = createSlotFill( 'AZListingDisplayOptions' );
 
-const DisplayOptions = ( { children, className } ) => (
-    <Fill>
-		{ children }
-    </Fill>
-);
+const DisplayOptions = ( { children } ) => <Fill>{ children }</Fill>;
 
 DisplayOptions.Slot = Slot;
 

@@ -5,11 +5,10 @@
  */
 import { __ } from '@wordpress/i18n';
 
-import { registerStore, withSelect } from '@wordpress/data';
+import { registerStore } from '@wordpress/data';
 import { createHooks } from '@wordpress/hooks';
 import { registerBlockType } from '@wordpress/blocks';
 import { postList as icon } from '@wordpress/icons';
-import { registerPlugin } from '@wordpress/plugins';
 
 import edit from './edit';
 import attributes from './attributes.json';
@@ -20,7 +19,9 @@ import AZInspectorControls from '../components/AZInspectorControls';
 const hooks = createHooks();
 
 registerStore( 'a-z-listing/slotfills', {
-	reducer( state = {}, action ) { return state },
+	reducer( state = {} ) {
+		return state;
+	},
 	actions: {},
 	selectors: {
 		getDisplayOptions() {
@@ -32,7 +33,7 @@ registerStore( 'a-z-listing/slotfills', {
 		getInspectorControls() {
 			return AZInspectorControls;
 		},
-	}
+	},
 } );
 
 /**
@@ -72,8 +73,8 @@ registerBlockType( 'a-z-listing/wp-a-z-listing-block', {
 	 * Optional block extended support features.
 	 */
 	supports: {
-        align: true,
-        html: false,
+		align: true,
+		html: false,
 	},
 
 	attributes: hooks.applyFilters( 'a_z_listing_attributes', attributes ),
