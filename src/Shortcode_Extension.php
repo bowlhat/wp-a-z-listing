@@ -1,6 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class Shortcode_Extension extends Singleton implements Extension {
 	public $attribute_name = '';

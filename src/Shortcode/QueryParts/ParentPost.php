@@ -1,6 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace A_Z_Listing\Shortcode\QueryParts;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 use \A_Z_Listing\Shortcode_Extension;
 

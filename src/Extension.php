@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace A_Z_Listing;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * A-Z Listing Extension interface
  */

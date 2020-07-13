@@ -5,7 +5,13 @@
  * @package WordPress
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class GutenBlock extends Singleton implements Extension {
     /**
