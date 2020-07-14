@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \A_Z_Listing\Singleton;
 use \A_Z_Listing\Extension;
+use \A_Z_Listing\Singleton;
 
 abstract class Query extends Singleton implements Extension {
 	public $display;
@@ -17,10 +17,11 @@ abstract class Query extends Singleton implements Extension {
 	final public function initialize() {
 		add_filter( 'a_z_listing_shortcode_query_types', array( $this, 'add_attribute' ) );
 		add_filter( "a_z_listing_shortcode_query_for_display__{$this->display}", array( $this, 'apply_query_to_shortcode' ), 5, 2 );
+		add_action( "a_z_listing_get_items_for_display__{$this->display}", array( $this, 'get_items' ), 5, 1 );
 	}
 
 	public function add_attribute( $query_types ) {
-		$query_types[] = self::QUERY_TYPE;
+		$query_types[] = $this->display;
 		return $query_types;
 	}
 

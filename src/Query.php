@@ -120,150 +120,85 @@ class Query {
 		$this->instance_num = self::$num_instances++;
 		$this->alphabet = new Alphabet();
 
-		if ( 'terms' === $type || ( is_string( $query ) && ! empty( $query ) ) ) {
-			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-				do_action( 'log', 'A-Z Listing: Setting taxonomy mode', $query );
-			}
-
+		if ( is_string( $query ) && ! empty( $query ) ) {
 			$this->type = 'terms';
-
-			if ( is_string( $query ) ) {
-				$taxonomies = explode( ',', $query );
-				$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
-
-				$query['taxonomy'] = (array) $taxonomies;
-			}
-
-			/**
-			 * Modify or replace the query
-			 *
-			 * @since 1.0.0
-			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
-			 * @param array|Object|\WP_Query  $query  The query object
-			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
-			 */
-			$query = (array) apply_filters( 'a_z_listing_query', (array) $query, 'terms' );
-
-			/**
-			 * Modify or replace the query
-			 *
-			 * @since 1.7.1
-			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
-			 * @param array|Object|\WP_Query  $query  The query object
-			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
-			 */
-			$query = (array) apply_filters( 'a-z-listing-query', (array) $query, 'terms' );
-
-			$query = wp_parse_args(
-				(array) $query,
-				array(
-					'hide_empty' => false,
-					'taxonomy'   => 'category',
-				)
-			);
-
-			$this->taxonomy = $query['taxonomy'];
-
-			if ( $this->check_cache( $query, $type, $use_cache ) ) {
-				return;
-			}
-
-			$items       = get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
-			$this->query = $query;
-
-			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-				\do_action( 'log', 'A-Z Listing: Terms', '!ID', $items );
-			}
 		} else {
-			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-				\do_action( 'log', 'A-Z Listing: Setting posts mode', $query );
-			}
+			$types = apply_filters( 'a_z_listing_shortcode_query_types', array() );
+			$this->type = in_array( $type, $types ) ? $type : 'posts';
+		}
 
-			$this->type = 'posts';
+		$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->type}", $query );
 
-			if ( empty( $query ) ) {
-				$query = array();
-			}
+		/**
+		 * Modify or replace the query
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
+		 * @param array|Object|\WP_Query  $query  The query object
+		 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
+		 */
+		$query = apply_filters( 'a_z_listing_query', $query, $this->type );
 
-			$query = apply_filters( 'a_z_listing_query', $query, 'posts' );
-			$query = apply_filters( 'a-z-listing-query', $query, 'posts' );
+		/**
+		 * Modify or replace the query
+		 *
+		 * @since 1.7.1
+		 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
+		 * @param array|Object|\WP_Query  $query  The query object
+		 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
+		 */
+		$query = apply_filters( 'a-z-listing-query', $query, $this->type );
 
-			if ( ! $query instanceof \WP_Query ) {
-				$query = (array) $query;
+		/**
+		 * Get the cached data
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
+		 * @since 4.0.0 apply to all queries.
+		 * @param array  $items  The items from previous cache modules.
+		 * @param array  $query  The query.
+		 * @param string  $type  The type of the query. e.g. posts, terms, etc.
+		 */
+		$items = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $this->type );
 
-				if ( isset( $query['post_type'] ) ) {
-					if ( is_array( $query['post_type'] ) && count( $query['post_type'] ) === 1 ) {
-						$post_type          = array_shift( $query['post_type'] );
-						$query['post_type'] = $post_type;
-						unset( $post_type );
-					}
-				}
+		if ( ! is_array( $items ) || 0 >= count( $items ) ) {
+			/**
+			 * Run the query to fetch the current items
+			 * 
+			 * @since 4.0.0
+			 * @param array $items The items.
+			 * @param array|\WP_Query $query The query.
+			 */
+			$items = apply_filters( "a_z_listing_get_items_for_display__{$this->type}", array(), $query );
+		}
 
-				if ( ! isset( $query['post_parent'] ) && ! isset( $query['child_of'] ) ) {
-					if ( isset( $query['post_type'] ) && isset( $post ) ) {
-						if ( 'page' === $query['post_type'] && 'page' === $post->post_type ) {
-							$section = self::get_section();
-							if ( $section && $section instanceof \WP_Post ) {
-								$query['child_of'] = $section->ID;
-							}
-							unset( $section );
-						}
-					}
-				}
-
-				$query = \wp_parse_args( $query, array( 'post_type' => 'page' ) );
-			}
-
-			if ( $this->check_cache( (array) $query, $type, $use_cache ) ) {
-				return;
-			}
-
-			if ( $query instanceof \WP_Query ) {
-				$this->query = $query;
-			} else {
-				if ( isset( $query['child_of'] ) ) {
-					$items       = get_pages( $query );
-					$this->query = $query;
-				} else {
-					$wq          = new \WP_Query( $query );
-					$this->query = $wq;
-					$items       = $wq->posts;
-				}
-			}
-
-			if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-				\do_action( 'log', 'A-Z Listing: Posts', '!ID', $items );
-			}
-		} // End if ( type is terms ).
+		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
+			\do_action( 'log', "A-Z Listing: {$this->type}", '!ID', $items );
+		}
 
 		/**
 		 * Filter items from the query results
 		 *
+		 * @since 2.0.0
 		 * @param array  $items The query results.
-		 * @param string $type  The query type - terms or posts.
+		 * @param string $type  The query type - e.g. terms, posts, etc.
 		 * @param array  $query The query as an array.
 		 */
-		$items = apply_filters( 'a-z-listing-filter-items', $items, $type, (array) $query );
+		$items = apply_filters( 'a-z-listing-filter-items', $items, $this->type, (array) $query );
 
 		$this->matched_item_indices = $this->get_all_indices( $items );
 
 		if ( $use_cache ) {
-			do_action( 'a_z_listing_save_cache', (array) $query, $type, $this->matched_item_indices );
+			/**
+			 * Save the data to cache
+			 * 
+			 * @since 2.0.0
+			 * @param array  $query  The query.
+			 * @param string  $type  The type of the query. e.g. posts, terms, etc.
+			 * @param array  $items  The items from query.
+			 */
+			do_action( 'a_z_listing_save_cache', (array) $query, $this->type, $this->matched_item_indices );
 		}
-	}
-
-	/**
-	 * Set the fields we require on \WP_Query.
-	 *
-	 * @since 3.0.0 Introduced.
-	 * @since 4.0.0 Converted to static function.
-	 * @param string    $fields The current fields in SQL format.
-	 * @param \WP_Query $query  The \WP_Query instance.
-	 * @return string The new fields in SQL format.
-	 */
-	public static function wp_query_fields( string $fields, \WP_Query $query ): string {
-		global $wpdb;
-		return "{$wpdb->posts}.ID, {$wpdb->posts}.post_title, {$wpdb->posts}.post_type, {$wpdb->posts}.post_name, {$wpdb->posts}.post_parent, {$wpdb->posts}.post_date";
 	}
 
 	/**
@@ -275,38 +210,6 @@ class Query {
 	 */
 	public static function split_the_query( bool $split_the_query, \WP_Query $query ): bool {
 		return true;
-	}
-
-	/**
-	 * Check for cached queries
-	 *
-	 * @since 2.0.0
-	 * @param array<string,string> $query     the query.
-	 * @param string               $type      the type of query.
-	 * @param bool                 $use_cache whether to check the cache.
-	 * @return bool whether we found a cached query
-	 */
-	private function check_cache( array $query, string $type, bool $use_cache ): bool {
-		if ( $use_cache ) {
-			/**
-			 * Get the cached data
-			 *
-			 * @since 1.0.0
-			 * @since 2.0.0 apply to taxonomy queries. Add type parameter indicating type of query.
-			 * @param array  $items  The items from previous cache modules.
-			 * @param array  $query  The query.
-			 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
-			 */
-			$cached = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $type );
-			if ( ! empty( $cached ) ) {
-				$this->matched_item_indices = $cached;
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
 	}
 
 	/**

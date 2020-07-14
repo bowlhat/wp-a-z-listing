@@ -18,7 +18,7 @@ class PostType extends Shortcode_Extension {
 		$post_type = Strings::maybe_explode_string( ',', $value );
 		$post_type = array_unique( $post_type );
 
-		$query['post_type'] = $post_type;
+		$query['post_type'] = ( is_string( $post_type ) && ! empty( $post_type ) ) ? $post_type : 'page';
 
 		return $query;
 	}

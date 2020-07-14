@@ -8,7 +8,7 @@
     },
     "display": {
         "type": "string",
-        "enum": ["posts", "terms", "users"],
+        "enum": ["posts", "terms"],
         "default": "posts"
     },
     "post-type": {

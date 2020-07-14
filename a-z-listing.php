@@ -41,7 +41,6 @@ function a_z_listing_init() {
 	\A_Z_Listing\Shortcode::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\PostsQuery::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\TermsQuery::instance()->activate( __FILE__ )->initialize();
-	\A_Z_Listing\Shortcode\UsersQuery::instance()->activate( __FILE__ )->initialize();
 
 	// Shortcode attribute handlers.
 	\A_Z_Listing\Shortcode\QueryParts\Alphabet::instance()->activate( __FILE__ )->initialize();

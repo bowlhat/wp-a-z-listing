@@ -7,8 +7,6 @@
 
 declare(strict_types=1);
 
-namespace A_Z_Listing;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -18,4 +16,4 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.0.0
  */
-class A_Z_Listing_Numbers extends \A_Z_Listing_Numbers {}
+class A_Z_Listing_Numbers extends \A_Z_Listing\Numbers {}

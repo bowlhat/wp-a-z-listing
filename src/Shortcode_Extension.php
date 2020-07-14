@@ -50,7 +50,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 			return;
 		}
 
-		$hook = [ $name, $function, $order, $arguments ];
+		$hook = array( $name, $function, $order, $arguments );
 		if ( defined( 'PHPUNIT_TEST_SUITE' ) || ( $this->activator && $this->activator->get_api_key_status( false ) ) ) {
 			call_user_func_array( "add_$type", $hook );
 			$this->hooks[ $type ][] = $hook;
