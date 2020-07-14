@@ -1,4 +1,9 @@
 <?php
+/**
+ * Posts Query class
+ *
+ * @package a-z-listing
+ */
 
 declare(strict_types=1);
 
@@ -8,9 +13,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * PostsQuery
+ */
 class PostsQuery extends Query {
+	/**
+	 * The display/query type name.
+	 *
+	 * @var string
+	 */
 	public $display = 'posts';
 
+	/**
+	 * Get the items for the query.
+	 *
+	 * @since 4.0.0
+	 * @param array $items The items.
+	 * @param mixed $query The query.
+	 * @return array<\WP_Post> The items.
+	 */
 	public function get_items( $items, $query ) {
 		add_filter( 'posts_fields', array( $this, 'wp_query_fields' ), 10, 2 );
 		if ( ! is_array( $items ) || 0 >= count( $items ) ) {
@@ -25,7 +46,7 @@ class PostsQuery extends Query {
 		remove_filter( 'posts_fields', array( $this, 'wp_query_fields' ) );
 		return $items;
 	}
-	
+
 	/**
 	 * Set the fields we require on \WP_Query.
 	 *

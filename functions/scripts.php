@@ -60,7 +60,7 @@ function a_z_listing_enqueue_widget_admin_script() {
 
 /**
  * Enqueue Scrollfix script
- * 
+ *
  * @since 4.0.0
  * @return void
  */

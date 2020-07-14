@@ -30,9 +30,10 @@ class Indices extends Singleton implements Extension {
 	 * Find and return the index letter for a post
 	 *
 	 * @since 2.0.0
-	 * @param array<string,mixed>   $indices Previously discovered indices.
-	 * @param int|\WP_Post|\WP_Term $item    ID of the item whose index letters we want to find.
-	 * @param string                $type    Type of listing - terms or posts.
+	 * @param array<string,mixed>   $indices  Previously discovered indices.
+	 * @param int|\WP_Post|\WP_Term $item     ID of the item whose index letters we want to find.
+	 * @param string                $type     Type of listing - terms or posts.
+	 * @param Alphabet              $alphabet The alphabet object.
 	 * @return array<string,mixed> The post's index letters (usually matching the first character of the post title)
 	 */
 	public static function get_item_indices( array $indices, $item, string $type, Alphabet $alphabet ): array {

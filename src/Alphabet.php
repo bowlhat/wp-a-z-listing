@@ -106,7 +106,7 @@ class Alphabet {
 		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 1 ) {
 			do_action( 'log', 'A-Z Listing: Alphabet Groups', $alphabet_groups );
 		}
-		$letters         = array_reduce(
+		$letters = array_reduce(
 			$alphabet_groups,
 			/**
 			 * Closure to extract the alphabet groups
@@ -128,7 +128,7 @@ class Alphabet {
 					 * @return array<string,string>
 					 */
 					function( array $group_carry, string $character ) use ( $group_index_character ) {
-						$character = "__$character";
+						$character                 = "__$character";
 						$group_carry[ $character ] = $group_index_character;
 						return $group_carry;
 					},

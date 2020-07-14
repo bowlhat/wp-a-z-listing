@@ -60,6 +60,13 @@ class Strings {
 		}
 	}
 
+	/**
+	 * Perform a multibyte explode operation if mbstring is loaded, else use explode.
+	 *
+	 * @param string $separator The character to mark each field.
+	 * @param [type] $value     The multibyte string to explode.
+	 * @return array<string> The fields extracted from $value by exploding.
+	 */
 	public static function maybe_explode_string( string $separator, $value = null ) {
 		$result = array();
 		if ( is_string( $value ) ) {
@@ -68,7 +75,7 @@ class Strings {
 			$result = $value;
 		}
 		$result = array_map( 'trim', $result );
-        $result = array_filter( $result );
+		$result = array_filter( $result );
 		return $result;
 	}
 }

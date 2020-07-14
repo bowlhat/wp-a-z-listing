@@ -118,13 +118,19 @@ class Query {
 	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true ) {
 		global $post;
 		$this->instance_num = self::$num_instances++;
-		$this->alphabet = new Alphabet();
+		$this->alphabet     = new Alphabet();
 
 		if ( is_string( $query ) && ! empty( $query ) ) {
 			$this->type = 'terms';
 		} else {
-			$types = apply_filters( 'a_z_listing_shortcode_query_types', array() );
-			$this->type = in_array( $type, $types ) ? $type : 'posts';
+			/**
+			 * Filter the available display/query types.
+			 *
+			 * @param array<string> $types The supported display/query types.
+			 * @return array<string> The supported display/query types.
+			 */
+			$types      = apply_filters( 'a_z_listing_shortcode_query_types', array() );
+			$this->type = in_array( $type, $types, true ) ? $type : 'posts';
 		}
 
 		$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->type}", $query );
@@ -164,7 +170,7 @@ class Query {
 		if ( ! is_array( $items ) || 0 >= count( $items ) ) {
 			/**
 			 * Run the query to fetch the current items
-			 * 
+			 *
 			 * @since 4.0.0
 			 * @param array $items The items.
 			 * @param array|\WP_Query $query The query.
@@ -191,7 +197,7 @@ class Query {
 		if ( $use_cache ) {
 			/**
 			 * Save the data to cache
-			 * 
+			 *
 			 * @since 2.0.0
 			 * @param array  $query  The query.
 			 * @param string  $type  The type of the query. e.g. posts, terms, etc.
@@ -621,7 +627,7 @@ class Query {
 
 	/**
 	 * Retrieve the listing instance ID. This is not escaped!
-	 * 
+	 *
 	 * @since 4.0.0
 	 * @return string The instance number
 	 */
@@ -631,7 +637,7 @@ class Query {
 
 	/**
 	 * Print the listing instance ID.
-	 * 
+	 *
 	 * @since 4.0.0
 	 */
 	public function the_instance_id() {
