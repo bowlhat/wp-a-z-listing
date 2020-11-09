@@ -397,12 +397,15 @@ class Query {
 					$indexed_items[ $key ] = $value;
 				}
 
-				$offset++;
-				if ( 0 === $offset % $posts_per_page ) {
-					$q           = $this->query->query;
-					$q['offset'] = $offset * $posts_per_page;
-					$this->query = new WP_Query( $q );
+			if ( array_key_exists( $this->unknown_letters, $indexed_items ) && ! empty( $indexed_items[ $this->unknown_letters ] ) ) {
+				if ( ! in_array( $this->alphabet_chars, $this->unknown_letters	) ) {
+					if ( apply_filters( 'a_z_listing_unknown_letters_first', false ) {
+						array_unshift( $this->alphabet_chars, $this->unknown_letters );
+					} else {
+						array_push( $this->alphabet_chars, $this->unknown_letters );
+					}
 				}
+				$this->alphabet[ $this->unknown_letters ] = $this->unknown_letters;
 			}
 			wp_reset_postdata();
 		}
