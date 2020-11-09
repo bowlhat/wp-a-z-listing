@@ -399,7 +399,7 @@ class Query {
 
 			if ( array_key_exists( $this->unknown_letters, $indexed_items ) && ! empty( $indexed_items[ $this->unknown_letters ] ) ) {
 				if ( ! in_array( $this->alphabet_chars, $this->unknown_letters	) ) {
-					if ( apply_filters( 'a_z_listing_unknown_letters_first', false ) {
+					if ( apply_filters( 'a_z_listing_unknown_letters_first', false ) ) {
 						array_unshift( $this->alphabet_chars, $this->unknown_letters );
 					} else {
 						array_push( $this->alphabet_chars, $this->unknown_letters );
