@@ -1,5 +1,9 @@
 # Full Changelog #
 
+## 3.1.0 ##
+
+* Add support for symbols-first display
+
 ## 3.0.2 ##
 
 * Fix for causing "This site is experiencing difficulties" errors on some sites.
