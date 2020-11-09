@@ -2,7 +2,7 @@
     <div id="letters">
         <div class="az-letters">
             <ul class="az-links">
-                <li class="first odd has-posts"><a href="letter-_"><span>#</span></li>
+                <li class="first odd has-posts"><a href="letter-_"><span>#</span></a></li>
                 <li class="even no-posts"><span>A</span></li>
                 <li class="odd no-posts"><span>B</span></li>
                 <li class="even no-posts"><span>C</span></li>
