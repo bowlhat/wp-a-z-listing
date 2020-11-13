@@ -133,8 +133,6 @@ class Query {
 			$this->type = in_array( $type, $types, true ) ? $type : 'posts';
 		}
 
-		$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->type}", $query );
-
 		/**
 		 * Modify or replace the query
 		 *
