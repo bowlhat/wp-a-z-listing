@@ -43,6 +43,10 @@ class TermsQuery extends Query {
 				'taxonomy'   => 'category',
 			)
 		);
-		return get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
+		$rv = get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
+		if ( $rv instanceof \WP_Error ) {
+			return $items;
+		}
+		return $rv;
 	}
 }

@@ -33,15 +33,16 @@ class PostsQuery extends Query {
 	 * @return array<\WP_Post> The items.
 	 */
 	public function get_items( $items, $query ) {
+		if ( is_array( $items ) && 0 < count( $items ) ) {
+			return $items;
+		}
 		add_filter( 'posts_fields', array( $this, 'wp_query_fields' ), 10, 2 );
-		if ( ! is_array( $items ) || 0 >= count( $items ) ) {
-			if ( $query instanceof \WP_Query ) {
-				$items = $query->posts;
-			} elseif ( isset( $query['child_of'] ) ) {
-				$items = get_pages( $query );
-			} else {
-				$items = ( new \WP_Query( $query ) )->posts;
-			}
+		if ( $query instanceof \WP_Query ) {
+			$items = $query->posts;
+		} elseif ( isset( $query['child_of'] ) ) {
+			$items = get_pages( $query );
+		} else {
+			$items = ( new \WP_Query( $query ) )->posts;
 		}
 		remove_filter( 'posts_fields', array( $this, 'wp_query_fields' ) );
 		return $items;

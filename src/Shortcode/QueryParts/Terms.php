@@ -74,7 +74,7 @@ class PostsTerms extends TermsCommon {
 			'operator' => 'IN',
 		);
 
-		$query['tax_query'] = wp_parse_args( $query['tax_query'], $tax_query );
+		$query['tax_query'] = wp_parse_args( $query['tax_query'] ?? array(), $tax_query );
 		return $query;
 	}
 }
