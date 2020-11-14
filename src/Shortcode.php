@@ -35,11 +35,11 @@ class Shortcode extends Singleton implements Extension {
 	 * @since 2.0.0 Add parent-term and hide-empty parameters.
 	 * @since 3.0.0 Move into a class and namespace.
 	 * @since 4.0.0 Abstract away most of the specifics into separate classes.
-	 * @param  array<string,mixed> $attributes Provided by WordPress core. Contains the shortcode attributes.
+	 * @param  string|array<string,mixed> $attributes Provided by WordPress core. Contains the shortcode attributes.
 	 * @return string The A-Z Listing HTML.
 	 * @suppress PhanPluginPossiblyStaticPublicMethod
 	 */
-	function handle( array $attributes = array() ): string {
+	function handle( $attributes = array() ): string {
 		/**
 		 * Run extensions.
 		 */
