@@ -45,7 +45,7 @@ class PostsQuery extends Query {
 			$items = ( new \WP_Query( $query ) )->posts;
 		}
 		remove_filter( 'posts_fields', array( $this, 'wp_query_fields' ) );
-		return $items;
+		return $items ?? array();
 	}
 
 	/**
