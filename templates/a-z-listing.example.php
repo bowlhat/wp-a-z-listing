@@ -12,15 +12,15 @@
  */
 
 ?>
-<div id="az-tabs">
-	<div id="letters">
+<div id="<?php $a_z_query->the_instance_id(); ?>" class="az-listing">
+	<div class="az-letters-wrap">
 		<div class="az-letters">
 			<?php $a_z_query->the_letters(); ?>
 		</div>
 	</div>
 	<?php if ( $a_z_query->have_letters() ) : ?>
-	<div id="az-slider">
-		<div id="inner-slider">
+	<div class="items-outer">
+		<div class="items-inner">
 			<?php
 			while ( $a_z_query->have_letters() ) :
 				$a_z_query->the_letter();
@@ -28,7 +28,9 @@
 				<?php if ( $a_z_query->have_items() ) : ?>
 					<div class="letter-section" id="<?php $a_z_query->the_letter_id(); ?>">
 						<h2 class="letter-title">
-							<span><?php $a_z_query->the_letter_title(); ?></span>
+							<span>
+								<?php $a_z_query->the_letter_title(); ?>
+							</span>
 						</h2>
 
 						<ul>
@@ -42,7 +44,11 @@
 							<?php endwhile; ?>
 						</ul>
 
-						<div class="back-to-top"><a href="#letters"><?php _e( 'Back to top', 'a-z-listing' ); ?></a></div>
+						<div class="back-to-top">
+							<a href="#<?php $a_z_query->the_instance_id(); ?>">
+								<?php _e( 'Back to top', 'a-z-listing' ); ?>
+							</a>
+						</div>
 					</div>
 				<?php endif; ?>
 			<?php endwhile; ?>

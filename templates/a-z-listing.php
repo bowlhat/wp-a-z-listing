@@ -20,7 +20,7 @@
  */
 $_a_z_listing_minpercol = 10;
 ?>
-<div id="<?php $a_z_query->the_instance_id; ?>" class="az-listing">
+<div id="<?php $a_z_query->the_instance_id(); ?>" class="az-listing">
 	<div class="az-letters-wrap">
 		<div class="az-letters">
 			<?php $a_z_query->the_letters(); ?>
@@ -40,13 +40,13 @@ $_a_z_listing_minpercol = 10;
 						$item_count / $_a_z_listing_minpercol
 					);
 					?>
-					<div class="letter-section"
-						id="<?php $a_z_query->the_letter_id(); ?>">
+					<div class="letter-section" id="<?php $a_z_query->the_letter_id(); ?>">
 						<h2 class="letter-title">
 							<span>
 								<?php $a_z_query->the_letter_title(); ?>
 							</span>
 						</h2>
+
 						<?php $column_class = "max-$num_columns-columns"; ?>
 						<ul class="az-columns <?php echo $column_class; ?>">
 							<?php
@@ -60,8 +60,9 @@ $_a_z_listing_minpercol = 10;
 								</li>
 							<?php endwhile; ?>
 						</ul>
+
 						<div class="back-to-top">
-							<a href="#<?php $a_z_query->the_instance_id; ?>">
+							<a href="#<?php $a_z_query->the_instance_id(); ?>">
 								<?php _e( 'Back to top', 'a-z-listing' ); ?>
 							</a>
 						</div>
