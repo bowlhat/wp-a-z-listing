@@ -69,7 +69,7 @@ class ParentTermSlugOrId extends ParentTermCommon {
 	 */
 	public function shortcode_query( $query, $value, $attributes ) {
 		if ( is_numeric( $value ) ) {
-			$parent_term = intval( $value );
+			$parent_id = intval( $value );
 		} else {
 			$parent_term = get_term_by( 'slug', $value, $attributes['taxonomy'] );
 			if ( false !== $parent_term ) {
