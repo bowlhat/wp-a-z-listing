@@ -36,7 +36,7 @@ abstract class ParentTermCommon extends Shortcode_Extension {
 			$parent_selector = 'parent';
 		}
 
-		if ( 0 <= $parent_id ) {
+		if ( 0 <= $value ) {
 			$query = wp_parse_args(
 				$query,
 				array( $parent_selector => $value )
@@ -105,7 +105,7 @@ class ParentTermId extends ParentTermCommon {
 	 */
 	public function shortcode_query( $query, $value, $attributes ) {
 		if ( is_numeric( $value ) ) {
-			$parent_term = intval( $value );
+			$parent_id = intval( $value );
 		} else {
 			$parent_id = -1;
 		}
