@@ -70,7 +70,11 @@ class Strings {
 	public static function maybe_explode_string( string $separator, $value = null ) {
 		$result = array();
 		if ( is_string( $value ) ) {
-			$result = explode( $separator, $value );
+			if ( extension_loaded( 'mbstring' ) || class_exists( '\\Symfony\\Polyfill\\Mbstring\\Mbstring' ) ) {
+				$result = mb_split( $separator, $value );
+			} else {
+				$result = explode( $separator, $value );
+			}
 		} elseif ( is_array( $value ) ) {
 			$result = $value;
 		}

@@ -101,7 +101,7 @@ class Numbers {
 }
 
 /**
- * Returns a function for use in the `a_z_listing_alphabet` filter
+ * Sets the A-Z Listing to include numbers.
  *
  * @since 1.7.0
  * @since 1.8.0 Add $group parameter and functionality to group numbers into a single collection.

@@ -134,9 +134,6 @@ class Alphabet {
 					},
 					array()
 				);
-				if ( ! is_array( $carry ) ) {
-					return $group_as_array;
-				}
 				return array_merge( $carry, $group_as_array );
 			},
 			array()
@@ -147,8 +144,7 @@ class Alphabet {
 		}
 
 		$this->unknown_letter          = $others;
-		$this->unknown_letter_key      = '_';
-		$this->unknown_letter_is_first = apply_filters( 'a_z_listing_unknown_letter_is_first', false );
+		$this->unknown_letter_is_first = !! apply_filters( 'a_z_listing_unknown_letter_is_first', false );
 		$this->alphabet_keys           = array_unique( array_values( $letters ) );
 		$this->keyed_alphabet          = $letters;
 	}
@@ -161,11 +157,10 @@ class Alphabet {
 	 * @return string The letter.
 	 */
 	public function get_letter_for_key( string $key ): string {
-		if ( in_array( "__$key", array_keys( $this->keyed_alphabet ), true ) ) {
-			return $this->keyed_alphabet[ "__$key" ];
-		} else {
+		if ( $key === $this->unknown_letter || ! in_array( "__$key", array_keys( $this->keyed_alphabet ), true ) ) {
 			return $this->unknown_letter;
 		}
+		return $this->keyed_alphabet[ "__$key" ];
 	}
 
 	/**
@@ -178,7 +173,7 @@ class Alphabet {
 	public function get_key_for_offset( int $offset ): string {
 		if ( $this->unknown_letter_is_first ) {
 			if ( 0 === $offset ) {
-				return $this->unknown_letter_key;
+				return $this->unknown_letter;
 			}
 			$offset--;
 		}
