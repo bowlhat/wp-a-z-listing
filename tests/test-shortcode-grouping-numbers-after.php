@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Load a-z-listing-specific test extension
 require_once 'html-assertions.php';
 

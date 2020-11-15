@@ -67,14 +67,16 @@ class PostsTerms extends TermsCommon {
 	public function shortcode_query_for_display( $query, $display, $value, $attributes ) {
 		$terms = $this->get_terms( $value );
 
-		$tax_query[] = array(
+		$tax_query_defaults[] = array(
 			'taxonomy' => $attributes['taxonomy'],
 			'field'    => 'slug',
 			'terms'    => $terms,
 			'operator' => 'IN',
 		);
 
-		$query['tax_query'] = wp_parse_args( $query['tax_query'] ?? array(), $tax_query );
+		$tax_query = isset( $query['tax_query'] ) ? $query['tax_query'] : array();
+
+		$query['tax_query'] = wp_parse_args( $tax_query, $tax_query_defaults );
 		return $query;
 	}
 }

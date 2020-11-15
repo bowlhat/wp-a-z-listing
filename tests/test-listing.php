@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Load a-z-listing-specific test extension
 require_once 'html-assertions.php';
 
@@ -33,7 +35,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 		);
 
 		$expected = file_get_contents( 'tests/data/populated-letters.txt' );
-		$actual   = get_the_a_z_letters( $q, false, false, false );
+		$actual   = get_the_a_z_letters( $q, '', '', false );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}

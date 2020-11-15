@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class AZ_String_Tests extends WP_UnitTestCase {
     public function test_mb_string_to_array() {
         $input = "é€á";

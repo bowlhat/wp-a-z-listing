@@ -146,9 +146,11 @@ class Alphabet {
 			do_action( 'log', 'A-Z Listing: Alphabet', $letters );
 		}
 
-		$this->unknown_letter = $others;
-		$this->alphabet_keys  = array_values( array_unique( $letters ) );
-		$this->keyed_alphabet = $letters;
+		$this->unknown_letter          = $others;
+		$this->unknown_letter_key      = '_';
+		$this->unknown_letter_is_first = apply_filters( 'a_z_listing_unknown_letter_is_first', false );
+		$this->alphabet_keys           = array_unique( array_values( $letters ) );
+		$this->keyed_alphabet          = $letters;
 	}
 
 	/**
@@ -174,6 +176,12 @@ class Alphabet {
 	 * @return string The alphabet group key.
 	 */
 	public function get_key_for_offset( int $offset ): string {
+		if ( $this->unknown_letter_is_first ) {
+			if ( 0 === $offset ) {
+				return $this->unknown_letter_key;
+			}
+			$offset--;
+		}
 		return $this->alphabet_keys[ $offset ];
 	}
 
@@ -196,8 +204,14 @@ class Alphabet {
 	 */
 	public function chars( bool $include_unknown = false ): array {
 		$letters = $this->alphabet_keys;
-		if ( $include_unknown ) {
-			array_push( $letters, $this->unknown_letter );
+		if ( ! $include_unknown ) {
+			return $letters;
+		}
+
+		if ( $this->unknown_letter_is_first ) {
+			array_unshift( $letters, $this->unknown_letter );
+		} else {
+			$letters[] = $this->unknown_letter;
 		}
 		return $letters;
 	}

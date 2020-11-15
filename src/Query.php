@@ -511,7 +511,7 @@ class Query {
 		$i        = 0;
 		$ret      = '<ul class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
-		$this->alphabet->loop(
+		$alphabet->loop(
 			/**
 			 * Closure to build each letter in the letter view
 			 *
@@ -554,7 +554,7 @@ class Query {
 				}
 				$ret .= '</li>';
 			},
-			array_key_exists( $this->alphabet->get_unknown_letter(), $this->matched_item_indices )
+			array_key_exists( $alphabet->get_unknown_letter(), $this->matched_item_indices )
 		);
 
 		$ret .= '</ul>';

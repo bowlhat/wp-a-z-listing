@@ -311,7 +311,7 @@ function the_az_letters( $query = null, $target = false, string $styling = '' ) 
  * @param bool                                     $use_cache use the plugin's in-built query cache.
  * @return void
  */
-function the_a_z_letters( $query = null, $target = false, string $styling = '', bool $use_cache = true ) {
+function the_a_z_letters( $query = null, string $target = '', string $styling = '', bool $use_cache = true ) {
 	echo get_the_a_z_letters( $query, $target, $styling, $use_cache ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
@@ -327,7 +327,7 @@ function the_a_z_letters( $query = null, $target = false, string $styling = '', 
  * @param string                                   $styling unused.
  * @return string HTML ready for echoing containing the list of A-Z letters with anchor links to the A-Z Index page.
  */
-function get_the_az_letters( $query = null, $target = false, string $styling = '' ): string {
+function get_the_az_letters( $query = null, string $target = '', string $styling = '' ): string {
 	_deprecated_function( __FUNCTION__, '0.8.0', 'get_the_a_z_letters' );
 	return get_the_a_z_letters( $query, $target, $styling );
 }
@@ -342,7 +342,7 @@ function get_the_az_letters( $query = null, $target = false, string $styling = '
  * @param bool                                     $use_cache use the plugin's in-built query cache.
  * @return string HTML ready for echoing containing the list of A-Z letters with anchor links to the A-Z Index page.
  */
-function get_the_a_z_letters( $query = null, $target = '', string $styling = '', bool $use_cache = true ): string {
+function get_the_a_z_letters( $query = null, string $target = '', string $styling = '', bool $use_cache = true ): string {
 	return a_z_listing_cache( $query, '', $use_cache )->get_the_letters( $target, $styling );
 }
 
