@@ -38,12 +38,12 @@ class Alphabet extends Shortcode_Extension {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
+	 * @param string $display    The display/query type.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
+	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
 		$this->alphabet = $value;
 		add_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
 		return $query;
