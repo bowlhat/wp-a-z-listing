@@ -98,7 +98,7 @@ class ParentTermSlugOrId extends ParentTermCommon {
 			}
 		}
 
-		return parent::shortcode_query( $query, (string) $parent_id, $attributes );
+		return parent::shortcode_query_for_display( $query, $display, (string) $parent_id, $attributes );
 	}
 }
 
@@ -130,7 +130,7 @@ class ParentTermId extends ParentTermCommon {
 			$parent_id = -1;
 		}
 
-		return parent::shortcode_query( $query, (string) $parent_id, $attributes );
+		return parent::shortcode_query_for_display( $query, $display, (string) $parent_id, $attributes );
 	}
 }
 
