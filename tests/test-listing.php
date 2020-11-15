@@ -10,7 +10,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_empty_letters() {
 		$expected = file_get_contents( 'tests/data/default-letters.txt' );
-		$actual   = get_the_a_z_letters( null, false, false, false );
+		$actual   = get_the_a_z_letters( null, '', '', false );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
@@ -54,7 +54,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 		);
 
 		$expected = file_get_contents( 'tests/data/populated-letters-linked.txt' );
-		$actual   = get_the_a_z_letters( $q, '/test-path', false, false );
+		$actual   = get_the_a_z_letters( $q, '/test-path', '', false );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
@@ -180,7 +180,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 		);
 
 		$expected = file_get_contents( 'tests/data/populated-letters.txt' );
-		$actual   = get_the_a_z_letters( $q, false );
+		$actual   = get_the_a_z_letters( $q, '' );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
@@ -199,7 +199,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 		);
 
 		$expected = file_get_contents( 'tests/data/populated-letters-linked.txt' );
-		$actual   = get_the_a_z_letters( $q, '/test-path', false, false );
+		$actual   = get_the_a_z_letters( $q, '/test-path', '', false );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
