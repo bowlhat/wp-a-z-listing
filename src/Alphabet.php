@@ -145,7 +145,7 @@ class Alphabet {
 
 		$this->unknown_letter          = $others;
 		$this->unknown_letter_is_first = !! apply_filters( 'a_z_listing_unknown_letter_is_first', false );
-		$this->alphabet_keys           = array_unique( array_values( $letters ) );
+		$this->alphabet_keys           = array_values( array_unique( $letters ) );
 		$this->keyed_alphabet          = $letters;
 	}
 
