@@ -22,7 +22,7 @@ class PostsQuery extends Query {
 	 *
 	 * @var string
 	 */
-	public string $display = 'posts';
+	public $display = 'posts';
 
 	/**
 	 * Get the items for the query.

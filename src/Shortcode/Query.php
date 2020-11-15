@@ -25,7 +25,7 @@ abstract class Query extends Singleton implements Extension {
 	 *
 	 * @var string
 	 */
-	public string $display;
+	public $display;
 
 	/**
 	 * Initialize the extension.

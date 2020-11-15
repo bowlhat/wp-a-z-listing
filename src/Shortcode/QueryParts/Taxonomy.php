@@ -25,7 +25,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'taxonomy';
+	public $attribute_name = 'taxonomy';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -33,7 +33,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'terms' );
+	public $display_types = array( 'terms' );
 
 	/**
 	 * Sanitize the shortcode attribute.

@@ -25,7 +25,7 @@ class ParentPost extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'parent-post';
+	public $attribute_name = 'parent-post';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -33,7 +33,7 @@ class ParentPost extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'posts' );
+	public $display_types = array( 'posts' );
 
 	/**
 	 * Update the query with this extension's additional configuration.

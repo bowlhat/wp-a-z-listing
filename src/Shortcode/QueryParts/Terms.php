@@ -28,7 +28,7 @@ abstract class TermsCommon extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'terms';
+	public $attribute_name = 'terms';
 
 	/**
 	 * Get the configured terms.
@@ -55,7 +55,7 @@ class PostsTerms extends TermsCommon {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'posts' );
+	public $display_types = array( 'posts' );
 
 	/**
 	 * Update the query with this extension's additional configuration.
@@ -93,7 +93,7 @@ class TermsTerms extends TermsCommon {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'terms' );
+	public $display_types = array( 'terms' );
 
 	/**
 	 * Update the query with this extension's additional configuration.

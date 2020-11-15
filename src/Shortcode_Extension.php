@@ -23,7 +23,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = '';
+	public $attribute_name = '';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -31,7 +31,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array();
+	public $display_types = array();
 
 	/**
 	 * Our hooks
@@ -39,7 +39,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	protected array $hooks = array(
+	protected $hooks = array(
 		'action' => array(),
 		'filter' => array(),
 	);

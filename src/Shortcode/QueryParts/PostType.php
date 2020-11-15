@@ -26,7 +26,7 @@ class PostType extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'post-type';
+	public $attribute_name = 'post-type';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -34,7 +34,7 @@ class PostType extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'display' );
+	public $display_types = array( 'display' );
 
 	/**
 	 * Sanitize the shortcode attribute.

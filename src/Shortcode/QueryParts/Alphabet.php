@@ -25,14 +25,14 @@ class Alphabet extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'alphabet';
+	public $attribute_name = 'alphabet';
 
 	/**
 	 * The alphabet.
 	 *
 	 * @var string
 	 */
-	public string $alphabet = '';
+	public $alphabet = '';
 
 	/**
 	 * Update the query with this extension's additional configuration.

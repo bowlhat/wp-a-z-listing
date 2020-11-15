@@ -27,7 +27,7 @@ class HideEmptyOld extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'hide-empty';
+	public $attribute_name = 'hide-empty';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -35,7 +35,7 @@ class HideEmptyOld extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'terms' );
+	public $display_types = array( 'terms' );
 
 	/**
 	 * Sanitize the shortcode attribute.
@@ -73,7 +73,7 @@ class HideEmptyTerms extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public string $attribute_name = 'hide-empty-terms';
+	public $attribute_name = 'hide-empty-terms';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -81,7 +81,7 @@ class HideEmptyTerms extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public array $display_types = array( 'terms' );
+	public $display_types = array( 'terms' );
 
 	/**
 	 * Update the query with this extension's additional configuration.

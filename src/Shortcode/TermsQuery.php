@@ -22,7 +22,7 @@ class TermsQuery extends Query {
 	 *
 	 * @var string
 	 */
-	public string $display = 'terms';
+	public $display = 'terms';
 
 	/**
 	 * Get the items for the query.
