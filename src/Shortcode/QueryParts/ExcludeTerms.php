@@ -26,17 +26,26 @@ class ExcludeTerms extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'exclude-terms';
+	public string $attribute_name = 'exclude-terms';
 
 	/**
-	 * Update the shortcode query
+	 * The types of listing this shortcode extension may be used with.
+	 *
+	 * @since 4.0.0
+	 * @var array
+	 */
+	public array $display_types = array( 'terms' );
+
+	/**
+	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		$ex_terms = Strings::maybe_explode_string( ',', $value );
 		$ex_terms = array_unique( $ex_terms );
 

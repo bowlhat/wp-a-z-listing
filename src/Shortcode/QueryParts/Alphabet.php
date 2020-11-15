@@ -25,24 +25,25 @@ class Alphabet extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'alphabet';
+	public string $attribute_name = 'alphabet';
 
 	/**
 	 * The alphabet.
 	 *
 	 * @var string
 	 */
-	public $alphabet = '';
+	public string $alphabet = '';
 
 	/**
-	 * Update the shortcode query
+	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		$this->alphabet = $value;
 		add_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
 		return $query;
@@ -53,7 +54,7 @@ class Alphabet extends Shortcode_Extension {
 	 *
 	 * @return string
 	 */
-	public function return_alphabet() {
+	public function return_alphabet(): string {
 		return $this->alphabet;
 	}
 

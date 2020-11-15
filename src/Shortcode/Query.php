@@ -25,7 +25,7 @@ abstract class Query extends Singleton implements Extension {
 	 *
 	 * @var string
 	 */
-	public $display;
+	public string $display;
 
 	/**
 	 * Initialize the extension.
@@ -45,7 +45,7 @@ abstract class Query extends Singleton implements Extension {
 	 * @param array<string> $query_types The supported query types.
 	 * @return array<string> The updated query types.
 	 */
-	public function add_query_type( $query_types ) {
+	public function add_query_type( array $query_types ): array {
 		$query_types[] = $this->display;
 		return $query_types;
 	}
@@ -57,11 +57,11 @@ abstract class Query extends Singleton implements Extension {
 	 * @param array $attributes The complete set of shortcode attributes.
 	 * @return mixed The query.
 	 */
-	public function apply_query_to_shortcode( $query, $attributes ) {
+	public function apply_query_to_shortcode( $query, array $attributes ) {
 		foreach ( $attributes as $key => $value ) {
 			if ( ! empty( $value ) ) {
-				$query = apply_filters( "a_z_listing_shortcode_query_for_attribute__$key", $query, $value, $attributes );
-				$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->display}__and_attribute__{$key}", $query, $this->display, $value, $attributes );
+				$query = apply_filters( "a_z_listing_shortcode_query_for_attribute__$key", $query, $value, $this->display, $key, $attributes );
+				$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->display}__and_attribute__{$key}", $query, $value, $this->display, $key, $attributes );
 			}
 		}
 		return $query;

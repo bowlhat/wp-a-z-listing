@@ -22,7 +22,7 @@ class PostsQuery extends Query {
 	 *
 	 * @var string
 	 */
-	public $display = 'posts';
+	public string $display = 'posts';
 
 	/**
 	 * Get the items for the query.
@@ -32,7 +32,7 @@ class PostsQuery extends Query {
 	 * @param mixed $query The query.
 	 * @return array<\WP_Post> The items.
 	 */
-	public function get_items( $items, $query ) {
+	public function get_items( array $items, $query ): array {
 		if ( is_array( $items ) && 0 < count( $items ) ) {
 			return $items;
 		}

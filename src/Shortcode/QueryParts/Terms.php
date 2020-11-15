@@ -28,7 +28,7 @@ abstract class TermsCommon extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'terms';
+	public string $attribute_name = 'terms';
 
 	/**
 	 * Get the configured terms.
@@ -37,8 +37,10 @@ abstract class TermsCommon extends Shortcode_Extension {
 	 * @param string $value The shortcode attribute value.
 	 * @return array<string> The terms.
 	 */
-	public function get_terms( $value ) {
+	public function get_terms( string $value ): array {
 		$terms = Strings::maybe_explode_string( ',', $value );
+		$terms = array_map( 'trim', $terms );
+		$terms = array_filter( $terms );
 		return array_unique( $terms );
 	}
 }
@@ -53,7 +55,7 @@ class PostsTerms extends TermsCommon {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public $display_types = array( 'posts' );
+	public array $display_types = array( 'posts' );
 
 	/**
 	 * Update the query with this extension's additional configuration.
@@ -64,7 +66,7 @@ class PostsTerms extends TermsCommon {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, $display, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		$terms = $this->get_terms( $value );
 
 		$tax_query_defaults[] = array(
@@ -91,7 +93,7 @@ class TermsTerms extends TermsCommon {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public $display_types = array( 'terms' );
+	public array $display_types = array( 'terms' );
 
 	/**
 	 * Update the query with this extension's additional configuration.
@@ -102,11 +104,12 @@ class TermsTerms extends TermsCommon {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, $display, $value, $attributes ) {
-		print_r( $value );
-		$terms = $this->get_terms( $value );
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
+		$taxonomies = isset( $attributes['taxonomy'] ) ? $attributes['taxonomy'] : array();
 
+		$terms = $this->get_terms( $value );
 		$terms = array_map( 'trim', $terms );
+		$terms = array_filter( $terms );
 		$terms = array_map(
 			function ( string $term ) use ( $taxonomies ) : int {
 				if ( is_numeric( $term ) ) {

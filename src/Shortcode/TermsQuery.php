@@ -22,7 +22,7 @@ class TermsQuery extends Query {
 	 *
 	 * @var string
 	 */
-	public $display = 'terms';
+	public string $display = 'terms';
 
 	/**
 	 * Get the items for the query.
@@ -32,7 +32,7 @@ class TermsQuery extends Query {
 	 * @param mixed $query The query.
 	 * @return array<\WP_Term> The items.
 	 */
-	public function get_items( $items, $query ) {
+	public function get_items( array $items, $query ): array {
 		if ( is_array( $items ) && 0 < count( $items ) ) {
 			return $items;
 		}

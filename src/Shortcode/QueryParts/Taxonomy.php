@@ -25,7 +25,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'taxonomy';
+	public string $attribute_name = 'taxonomy';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -33,7 +33,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public $display_types = array( 'terms' );
+	public array $display_types = array( 'terms' );
 
 	/**
 	 * Sanitize the shortcode attribute.
@@ -42,8 +42,8 @@ class Taxonomy extends Shortcode_Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return string The sanitized value.
 	 */
-	public function sanitize_attribute( $value, $attributes ) {
-		return $value ?? 'category';
+	public function sanitize_attribute( string $value, array $attributes ): string {
+		return trim( $value ) ?? 'category';
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, $display, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		if ( 'terms' === $display ) {
 			$query['taxonomy'] = $value;
 		}

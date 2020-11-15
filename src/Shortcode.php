@@ -39,7 +39,7 @@ class Shortcode extends Singleton implements Extension {
 	 * @return string The A-Z Listing HTML.
 	 * @suppress PhanPluginPossiblyStaticPublicMethod
 	 */
-	function handle( $attributes = array() ): string {
+	function handle( array $attributes = array() ): string {
 		/**
 		 * Run extensions.
 		 */

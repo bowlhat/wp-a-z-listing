@@ -23,7 +23,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = '';
+	public string $attribute_name = '';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -31,7 +31,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	public $display_types = array();
+	public array $display_types = array();
 
 	/**
 	 * Our hooks
@@ -39,7 +39,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array
 	 */
-	protected $hooks = array(
+	protected array $hooks = array(
 		'action' => array(),
 		'filter' => array(),
 	);
@@ -73,7 +73,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @param int      $order The order to call this function.
 	 * @param int      $arguments The number of arguments the function expects.
 	 */
-	final protected function add_hook( $type, $name, $function, $order = 10, $arguments = 1 ) {
+	final protected function add_hook( string $type, string $name, callable $function, int $order = 10, int $arguments = 1 ) {
 		if ( ! defined( 'PHPUNIT_TEST_SUITE' ) && ( ! in_array( $type, array( 'action', 'filter' ), true ) || ! $this->activator || ! $this->activator->get_api_key_status( false ) ) ) {
 			return;
 		}
@@ -95,7 +95,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @param int      $order The order to call this function.
 	 * @param int      $arguments The number of arguments the function expects.
 	 */
-	final protected function remove_hook( $type, $name, $function, $order = 10, $arguments = 1 ) {
+	final protected function remove_hook( string $type, string $name, callable $function, int $order = 10, int $arguments = 1 ) {
 		$hook = array( $name, $function, $order, $arguments );
 		call_user_func_array( "remove_$type", $hook );
 		array_filter(
@@ -134,8 +134,8 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return string The sanitized value.
 	 */
-	public function sanitize_attribute( string $value, $attributes ) {
-		return $value;
+	public function sanitize_attribute( string $value, array $attributes ): string {
+		return trim( $value );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, string $value, $attributes ) {
+	public function shortcode_query( $query, string $value, array $attributes ) {
 		return $query;
 	}
 
@@ -159,7 +159,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $display, string $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		return $query;
 	}
 }

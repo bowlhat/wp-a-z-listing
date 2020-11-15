@@ -26,17 +26,26 @@ class ExcludePosts extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'exclude-posts';
+	public string $attribute_name = 'exclude-posts';
 
 	/**
-	 * Update the shortcode query
+	 * The types of listing this shortcode extension may be used with.
+	 *
+	 * @since 4.0.0
+	 * @var array
+	 */
+	public array $display_types = array( 'posts' );
+
+	/**
+	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		$exclude_posts = Strings::maybe_explode_string( ',', $value );
 		$exclude_posts = array_map( 'intval', $exclude_posts );
 

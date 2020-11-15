@@ -27,17 +27,37 @@ class HideEmptyOld extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'hide-empty';
+	public string $attribute_name = 'hide-empty';
 
 	/**
-	 * Update the shortcode query
+	 * The types of listing this shortcode extension may be used with.
+	 *
+	 * @since 4.0.0
+	 * @var array
+	 */
+	public array $display_types = array( 'terms' );
+
+	/**
+	 * Sanitize the shortcode attribute.
+	 *
+	 * @param string $value      The value of the shortcode attribute.
+	 * @param array  $attributes The complete set of shortcode attributes.
+	 * @return string The sanitized value.
+	 */
+	public function sanitize_attribute( string $value, array $attributes ): string {
+		return 'true' === $value ? 'true' : 'false';
+	}
+
+	/**
+	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		$query['hide_empty'] = a_z_listing_is_truthy( $value );
 		return $query;
 	}
@@ -53,17 +73,26 @@ class HideEmptyTerms extends Shortcode_Extension {
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'hide-empty-terms';
+	public string $attribute_name = 'hide-empty-terms';
 
 	/**
-	 * Update the shortcode query
+	 * The types of listing this shortcode extension may be used with.
+	 *
+	 * @since 4.0.0
+	 * @var array
+	 */
+	public array $display_types = array( 'terms' );
+
+	/**
+	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, $value, $attributes ) {
+	public function shortcode_query_for_display( $query, string $display, string $value, array $attributes ) {
 		if ( ! isset( $query['hide_empty'] ) && a_z_listing_is_truthy( $value ) ) {
 			$query['hide_empty'] = true;
 		}
