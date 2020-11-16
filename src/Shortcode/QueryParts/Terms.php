@@ -61,12 +61,13 @@ class PostsTerms extends TermsCommon {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		$terms = $this->get_terms( $value );
 
 		$tax_query_defaults[] = array(
@@ -99,12 +100,13 @@ class TermsTerms extends TermsCommon {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		$taxonomies = isset( $attributes['taxonomy'] ) ? $attributes['taxonomy'] : array();
 
 		$terms = $this->get_terms( $value );

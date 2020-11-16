@@ -60,8 +60,8 @@ abstract class Query extends Singleton implements Extension {
 	public function apply_query_to_shortcode( $query, array $attributes ) {
 		foreach ( $attributes as $key => $value ) {
 			if ( ! empty( $value ) ) {
-				$query = apply_filters( "a_z_listing_shortcode_query_for_attribute__$key", $query, $value, $this->display, $key, $attributes );
-				$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->display}__and_attribute__{$key}", $query, $value, $this->display, $key, $attributes );
+				$query = apply_filters( "a_z_listing_shortcode_query_for_attribute__{$key}", $query, $this->display, $key, $value, $attributes );
+				$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->display}__and_attribute__{$key}", $query, $this->display, $key, $value, $attributes );
 			}
 		}
 		return $query;

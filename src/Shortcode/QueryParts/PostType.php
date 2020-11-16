@@ -56,8 +56,8 @@ class PostType extends Shortcode_Extension {
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
-		if ( 'posts' !== $display ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
+		if ( isset( $attributes['display'] ) && 'posts' !== $attributes['display'] ) {
 			return $query;
 		}
 

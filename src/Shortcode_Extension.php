@@ -58,7 +58,7 @@ class Shortcode_Extension extends Singleton implements Extension {
 			add_filter( "a_z_listing_sanitize_shortcode_attribute__{$this->attribute_name}", array( $this, 'sanitize_attribute' ), 10, 2 );
 			add_filter( "a_z_listing_shortcode_query_for_attribute__{$this->attribute_name}", array( $this, 'shortcode_query' ), 10, 3 );
 			foreach ( $this->display_types as $display ) {
-				add_filter( "a_z_listing_shortcode_query_for_display__{$display}__and_attribute__{$this->attribute_name}", array( $this, 'shortcode_query_for_display' ), 10, 4 );
+				add_filter( "a_z_listing_shortcode_query_for_display__{$display}__and_attribute__{$this->attribute_name}", array( $this, 'shortcode_query_for_display_and_attribute' ), 10, 4 );
 			}
 		}
 	}
@@ -142,11 +142,13 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
+	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, string $value, array $attributes ) {
+	public function shortcode_query( $query, string $display, string $attribute, string $value, array $attributes ) {
 		return $query;
 	}
 
@@ -154,12 +156,13 @@ class Shortcode_Extension extends Singleton implements Extension {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		return $query;
 	}
 }

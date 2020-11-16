@@ -41,12 +41,13 @@ abstract class ParentTermCommon extends Shortcode_Extension {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		$parent_id = intval( $value );
 		if ( ! empty( $attributes['get-all-children'] ) && a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
 			$parent_selector = 'child_of';
@@ -81,12 +82,13 @@ class ParentTermSlugOrId extends ParentTermCommon {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		if ( is_numeric( $value ) ) {
 			$parent_id = intval( $value );
 		} else {
@@ -98,7 +100,7 @@ class ParentTermSlugOrId extends ParentTermCommon {
 			}
 		}
 
-		return parent::shortcode_query_for_display( $query, $display, (string) $parent_id, $attributes );
+		return parent::shortcode_query_for_display( $query, (string) $parent_id, $attributes );
 	}
 }
 
@@ -118,19 +120,20 @@ class ParentTermId extends ParentTermCommon {
 	 * Update the query with this extension's additional configuration.
 	 *
 	 * @param mixed  $query      The query.
-	 * @param string $value      The shortcode attribute value.
 	 * @param string $display    The display/query type.
+	 * @param string $attribute  The name of the attribute.
+	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display( $query, string $value, string $display, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
 		if ( is_numeric( $value ) ) {
 			$parent_id = intval( $value );
 		} else {
 			$parent_id = -1;
 		}
 
-		return parent::shortcode_query_for_display( $query, $display, (string) $parent_id, $attributes );
+		return parent::shortcode_query_for_display( $query, (string) $parent_id, $attributes );
 	}
 }
 
