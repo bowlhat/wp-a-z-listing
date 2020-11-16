@@ -56,9 +56,9 @@ class Shortcode_Extension extends Singleton implements Extension {
 
 		if ( ! empty( $this->attribute_name ) ) {
 			add_filter( "a_z_listing_sanitize_shortcode_attribute__{$this->attribute_name}", array( $this, 'sanitize_attribute' ), 10, 2 );
-			add_filter( "a_z_listing_shortcode_query_for_attribute__{$this->attribute_name}", array( $this, 'shortcode_query' ), 10, 3 );
+			add_filter( "a_z_listing_shortcode_query_for_attribute__{$this->attribute_name}", array( $this, 'shortcode_query' ), 10, 5 );
 			foreach ( $this->display_types as $display ) {
-				add_filter( "a_z_listing_shortcode_query_for_display__{$display}__and_attribute__{$this->attribute_name}", array( $this, 'shortcode_query_for_display_and_attribute' ), 10, 4 );
+				add_filter( "a_z_listing_shortcode_query_for_display__{$display}__and_attribute__{$this->attribute_name}", array( $this, 'shortcode_query_for_display_and_attribute' ), 10, 5 );
 			}
 		}
 	}
