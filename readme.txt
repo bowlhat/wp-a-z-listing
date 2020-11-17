@@ -459,17 +459,23 @@ If there is code already in your functions.php then add just the lines between `
 
 = 4.0.0 =
 
+This is a major version change, which means that it might break your site when you upgrade. Please check in a test site first!
+
+* NEW: Block Editor support
+* NEW: symbols-first display
+* NEW: post-ID and parent-post name
 * Bump minimum PHP requirement to 7.0
+* Bump minimum WordPress requirement to 5.0
 * Update stylesheet to use CSS Variables
-* Lots of refactoring for better maintainability
-* Make classes namespaced
-* Improvements to documentation
+* Refactor for better maintainability
+* Namespace all classes
+* Improve documentation
 * Add legacy non-namespaced backwards-compatibility classes
-* Add parent post ID and parent post name support
 * Add PHP type hints
 * Add strict PHP types checking
-* Add php-scoper to reduce conflicts with other plugins
 * Add extra template name to match the displayed post-type
+* Use php-scoper to reduce conflicts with other plugins
+* Update NPM dependencies
 
 **EXTENSIONS**
 
