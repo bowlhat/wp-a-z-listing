@@ -53,27 +53,13 @@ jobs:
         nvm install ${{ matrix.node }}
         nvm use ${{ matrix.node }}
 
-    - name: Install phive
-      run: |
-        wget -O phive.phar "https://phar.io/releases/phive.phar"
-        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
-        gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
-        gpg --verify phive.phar.asc phive.phar
-        rm phive.phar.asc
-        chmod +x phive.phar
-        mv phive.phar /usr/local/bin/phive
-
     - uses: actions/checkout@v1
 
     - name: Install php-scoper
       run: |
-        if [ "${{ matrix.php }}" = "5.6" ] || [ "${{ matrix.php }}" = "7.0" ]; then
-          composer global require humbug/php-scoper@0.11.4 --prefer-dist --no-interaction --no-progress
-          mkdir -p tools
-          ln -sf $HOME/.composer/vendor/bin/php-scoper tools/php-scoper
-        else
-          phive install humbug/php-scoper@0.11.4 --force-accept-unsigned
-        fi
+        composer global require humbug/php-scoper@0.11.4 --prefer-dist --no-interaction --no-progress
+        mkdir -p tools
+        ln -sf $HOME/.composer/vendor/bin/php-scoper tools/php-scoper
 
     - name: Install composer dependencies
       run: composer install --prefer-dist --no-interaction --no-progress
@@ -183,16 +169,6 @@ jobs:
         curl -sS -L https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
 
-    - name: Install phive
-      run: |
-        wget -O phive.phar "https://phar.io/releases/phive.phar"
-        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
-        gpg --keyserver ipv4.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
-        gpg --verify phive.phar.asc phive.phar
-        rm phive.phar.asc
-        chmod +x phive.phar
-        mv phive.phar /usr/local/bin/phive
-
     - uses: actions/checkout@v1
 
     - name: Download build files
@@ -212,13 +188,9 @@ jobs:
 
     - name: Install phpunit
       run: |
-        if [ "${{ matrix.php }}" = "5.6" ] || [ "${{ matrix.php }}" = "7.0" ]; then
-          composer global require phpunit/phpunit ^5 --prefer-dist --no-interaction --no-progress
-          mkdir -p tools
-          ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-        else
-          phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
-        fi
+        composer global require phpunit/phpunit ^6 --prefer-dist --no-interaction --no-progress
+        mkdir -p tools
+        ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
 
     - name: Install WordPress Test Suite
       run: ./bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
@@ -291,16 +263,6 @@ jobs:
         curl -sS -L https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
 
-    - name: Install phive
-      run: |
-        wget -O phive.phar "https://phar.io/releases/phive.phar"
-        wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
-        gpg --keyserver ipv4.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
-        gpg --verify phive.phar.asc phive.phar
-        rm phive.phar.asc
-        chmod +x phive.phar
-        mv phive.phar /usr/local/bin/phive
-
     - uses: actions/checkout@v1
 
     - name: Download build files
@@ -320,13 +282,9 @@ jobs:
 
     - name: Install phpunit
       run: |
-        if [ "${{ matrix.php }}" = "5.6" ] || [ "${{ matrix.php }}" = "7.0" ]; then
-          composer global require phpunit/phpunit ^5 --prefer-dist --no-interaction --no-progress
-          mkdir -p tools
-          ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-        else
-          phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
-        fi
+        composer global require phpunit/phpunit ^5 --prefer-dist --no-interaction --no-progress
+        mkdir -p tools
+        ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
 
     - name: Install WordPress Test Suite
       run: ./bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}

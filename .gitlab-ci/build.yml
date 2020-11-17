@@ -3,23 +3,24 @@ build:
   image: php:7.4
   extends: .base
   script:
+    - |
+      wget -O phive.phar "https://phar.io/releases/phive.phar"
+      wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
+      gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
+      gpg --verify phive.phar.asc phive.phar
+      rm phive.phar.asc
+      chmod +x phive.phar
+      mv phive.phar /usr/local/bin/phive
     - phive install https://github.com/humbug/php-scoper/releases/download/0.13.9/php-scoper.phar --force-accept-unsigned
     - composer install --prefer-dist --no-interaction --no-progress
     - ./tools/php-scoper add-prefix
     - composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress
     - |
       [ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh";
-      if [ -f "yarn.lock" ]; then
-        $HOME/.yarn/bin/yarn install --non-interactive --no-progress
-        $HOME/.yarn/bin/yarn build
-        rm -rf node_modules
-        $HOME/.yarn/bin/yarn install --production --no-bin-links --non-interactive --no-progress
-      else
-        npm install --no-progress --no-audit
-        npm run build
-        rm -rf node_modules
-        npm install --production --no-bin-links --no-progress --no-audit
-      fi
+      npm install --no-progress --no-audit
+      npm run build
+      rm -rf node_modules
+      npm install --production --no-bin-links --no-progress --no-audit
   artifacts:
     name: "$CI_JOB_NAME"
     expire_in: 30 days

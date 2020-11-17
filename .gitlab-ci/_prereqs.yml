@@ -24,41 +24,20 @@
 
     echo "Install PHP extensions"
     docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
-
-    wget -O phive.phar "https://phar.io/releases/phive.phar"
-    wget -O phive.phar.asc "https://phar.io/releases/phive.phar.asc"
-    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys 0x9D8A98B29B2D5D79
-    gpg --verify phive.phar.asc phive.phar
-    rm phive.phar.asc
-    chmod +x phive.phar
-    mv phive.phar /usr/local/bin/phive
   - |
     echo "Install NVM"
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
     if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
     echo "Install node"
-    nvm install '10.16.3'
-    nvm use '10.16.3'
-
-    echo "Install yarn"
-    curl -sS -L https://yarnpkg.com/install.sh | bash
+    nvm install '14.15.1'
+    nvm use '14.15.1'
   - |
-    PHPVERSION="$(php -r 'echo PHP_VERSION;' | cut -d. -f1,2)"
-    if [ "$PHPVERSION" = "5.6" ] || [ "$PHPVERSION" = "7.0" ]; then
-      composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress
-      mkdir -p tools
-      ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-    else
-      phive install phpcs --trust-gpg-keys 31C7E470E2138192
-    fi
+    composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress
+    mkdir -p tools
+    ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
     git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
     ./tools/phpcs --config-set installed_paths /tmp/sniffs
   - |
-    PHPVERSION="$(php -r 'echo PHP_VERSION;' | cut -d. -f1,2)"
-    if [ "$PHPVERSION" = "5.6" ] || [ "$PHPVERSION" = "7.0" ]; then
-      composer global require phpunit/phpunit:^5 --prefer-dist --no-interaction --no-progress
-      mkdir -p tools
-      ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-    else
-      phive install phpunit@6 --trust-gpg-keys 4AA394086372C20A
-    fi
+    composer global require phpunit/phpunit:^6 --prefer-dist --no-interaction --no-progress
+    mkdir -p tools
+    ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit

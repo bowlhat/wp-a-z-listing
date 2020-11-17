@@ -11,26 +11,6 @@ phpcs:
     - .php74-linux
 
 # PHP 7.0
-wordpress46:php70-linux:
-  extends:
-    - .phpunit
-    - .wordpress47
-    - .php70-linux
-wordpress47:php70-linux:
-  extends:
-    - .phpunit
-    - .wordpress47
-    - .php70-linux
-wordpress48:php70-linux:
-  extends:
-    - .phpunit
-    - .wordpress48
-    - .php70-linux
-wordpress49:php70-linux:
-  extends:
-    - .phpunit
-    - .wordpress49
-    - .php70-linux
 wordpress50:php70-linux:
   extends:
     - .phpunit
@@ -68,21 +48,6 @@ WordPress-nightly:php70-linux:
     - .php70-linux
 
 # PHP 7.1
-wordpress47:php71-linux:
-  extends:
-    - .phpunit
-    - .wordpress47
-    - .php71-linux
-wordpress48:php71-linux:
-  extends:
-    - .phpunit
-    - .wordpress48
-    - .php71-linux
-wordpress49:php71-linux:
-  extends:
-    - .phpunit
-    - .wordpress49
-    - .php71-linux
 wordpress50:php71-linux:
   extends:
     - .phpunit
@@ -120,21 +85,6 @@ WordPress-nightly:php71-linux:
     - .php71-linux
 
 # PHP 7.2
-wordpress47:php72-linux:
-  extends:
-    - .phpunit
-    - .wordpress47
-    - .php72-linux
-wordpress48:php72-linux:
-  extends:
-    - .phpunit
-    - .wordpress48
-    - .php72-linux
-wordpress49:php72-linux:
-  extends:
-    - .phpunit
-    - .wordpress49
-    - .php72-linux
 wordpress50:php72-linux:
   extends:
     - .phpunit
@@ -247,21 +197,6 @@ WordPress-nightly:php74-linux:
 
 # multisite
 # PHP 7.0
-wordpress47-multisite:php70-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress47
-    - .php70-linux
-wordpress48-multisite:php70-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress48
-    - .php70-linux
-wordpress49-multisite:php70-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress49
-    - .php70-linux
 wordpress50-multisite:php70-linux:
   extends:
     - .phpunit-multisite
@@ -299,21 +234,6 @@ WordPress-multisite-nightly:php70-linux:
     - .php70-linux
 
 # PHP 7.1
-wordpress47-multisite:php71-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress47
-    - .php71-linux
-wordpress48-multisite:php71-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress48
-    - .php71-linux
-wordpress49-multisite:php71-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress49
-    - .php71-linux
 wordpress50-multisite:php71-linux:
   extends:
     - .phpunit-multisite
@@ -351,21 +271,6 @@ WordPress-multisite-nightly:php71-linux:
     - .php71-linux
 
 # PHP 7.2
-wordpress47-multisite:php72-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress47
-    - .php72-linux
-wordpress48-multisite:php72-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress48
-    - .php72-linux
-wordpress49-multisite:php72-linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress49
-    - .php72-linux
 wordpress50-multisite:php72-linux:
   extends:
     - .phpunit-multisite

@@ -3,7 +3,7 @@
 **Contributors:** [diddledan](https://profiles.wordpress.org/diddledan)  
 **Donate Link:** https://liberapay.com/diddledan/donate  
 **Tags:** a to z, a-z, archive, listing, widget, index  
-**Requires at least:** 4.6  
+**Requires at least:** 5.0  
 **Requires PHP:** 7.0  
 **Tested up to:** 5.6  
 **Stable tag:** 3.1.0  
