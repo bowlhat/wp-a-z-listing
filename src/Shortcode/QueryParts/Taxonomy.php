@@ -13,12 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \A_Z_Listing\Shortcode_Extension;
+use \A_Z_Listing\Shortcode\Extension;
+use \A_Z_Listing\Strings;
 
 /**
  * Taxonomy Query Part extension
  */
-class Taxonomy extends Shortcode_Extension {
+class Taxonomy extends Extension {
 	/**
 	 * The attribute for this Query Part.
 	 *
@@ -43,7 +44,8 @@ class Taxonomy extends Shortcode_Extension {
 	 * @return string The sanitized value.
 	 */
 	public function sanitize_attribute( string $value, array $attributes ): string {
-		return trim( $value ) ?? 'category';
+		$value = trim( $value );
+		return $value ? $value : '';
 	}
 
 	/**
@@ -57,9 +59,7 @@ class Taxonomy extends Shortcode_Extension {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
-		if ( isset( $attributes['display'] ) && 'terms' === $attributes['display'] ) {
-			$query['taxonomy'] = $value;
-		}
+		$query['taxonomy'] = Strings::maybe_mb_split( ',', $value );
 		return $query;
 	}
 }

@@ -22,13 +22,12 @@
                 <li class="even no-posts"><span>R</span></li>
                 <li class="odd no-posts"><span>S</span></li>
                 <li class="even has-posts"><a href="#letter-T"><span>T</span></a></li>
-                <li class="odd has-posts"><a href="#letter-U"><span>U</span></a></li>
+                <li class="odd no-posts"><span>U</span></li>
                 <li class="even no-posts"><span>V</span></li>
                 <li class="odd no-posts"><span>W</span></li>
                 <li class="even no-posts"><span>X</span></li>
                 <li class="odd no-posts"><span>Y</span></li>
-                <li class="even no-posts"><span>Z</span></li>
-                <li class="last odd no-posts"><span>0-9</span></li>
+                <li class="last even no-posts"><span>Z</span></li>
             </ul>
         </div>
     </div>
@@ -38,13 +37,6 @@
                 <h2 class="letter-title"><span>T</span></h2>
                 <ul class="columns max-testId-columns">
                     <li><a href="http://example.org/?cat=%2$d">%1$s</a></li>
-                </ul>
-                <div class="back-to-top"><a href="#letters">Back to top</a></div>
-            </div>
-            <div class="letter-section" id="letter-U-testId">
-                <h2 class="letter-title"><span>U</span></h2>
-                <ul class="columns max-testId-columns">
-                    <li><a href="http://example.org/?cat=1">Uncategorized</a></li>
                 </ul>
                 <div class="back-to-top"><a href="#letters">Back to top</a></div>
             </div>

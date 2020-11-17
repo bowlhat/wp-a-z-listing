@@ -46,12 +46,16 @@ function a_z_listing_init() {
 	\A_Z_Listing\Shortcode\QueryParts\Alphabet::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\QueryParts\ExcludePosts::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\QueryParts\ExcludeTerms::instance()->activate( __FILE__ )->initialize();
-	\A_Z_Listing\Shortcode\QueryParts\HideEmpty::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\HideEmptyOld::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\HideEmptyTerms::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\InstanceId::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\QueryParts\ParentPost::instance()->activate( __FILE__ )->initialize();
-	\A_Z_Listing\Shortcode\QueryParts\ParentTerm::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\ParentTermId::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\ParentTermSlugOrId::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\QueryParts\PostType::instance()->activate( __FILE__ )->initialize();
 	\A_Z_Listing\Shortcode\QueryParts\Taxonomy::instance()->activate( __FILE__ )->initialize();
-	\A_Z_Listing\Shortcode\QueryParts\Terms::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\PostsTerms::instance()->activate( __FILE__ )->initialize();
+	\A_Z_Listing\Shortcode\QueryParts\TermsTerms::instance()->activate( __FILE__ )->initialize();
 }
 
 /**

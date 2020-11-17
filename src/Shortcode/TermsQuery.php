@@ -25,6 +25,25 @@ class TermsQuery extends Query {
 	public $display = 'terms';
 
 	/**
+	 * Execute this query extension.
+	 *
+	 * @param mixed $query      The query.
+	 * @param array $attributes The complete set of shortcode attributes.
+	 * @return mixed The query.
+	 */
+	public function apply_query_to_shortcode( $query, array $attributes ) {
+		$query = wp_parse_args(
+			(array) $query,
+			array(
+				'hide_empty' => 0,
+				'taxonomy'   => 'category',
+			)
+		);
+
+		return parent::apply_query_to_shortcode( $query, $attributes );
+	}
+
+	/**
 	 * Get the items for the query.
 	 *
 	 * @since 4.0.0
@@ -36,17 +55,7 @@ class TermsQuery extends Query {
 		if ( is_array( $items ) && 0 < count( $items ) ) {
 			return $items;
 		}
-		$query = wp_parse_args(
-			(array) $query,
-			array(
-				'hide_empty' => false,
-				'taxonomy'   => 'category',
-			)
-		);
-		$rv = get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
-		if ( $rv instanceof \WP_Error ) {
-			return $items;
-		}
-		return $rv;
+
+		return get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
 	}
 }

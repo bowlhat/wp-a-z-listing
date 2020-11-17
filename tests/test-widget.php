@@ -9,7 +9,7 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 	use HtmlAssertions;
 	
 	public function test_widget() {
-		$p = $this->factory->post->create(
+		$p = self::factory()->post->create(
 			array(
 				'post_title' => 'Index Page',
 				'post_type'  => 'page',
@@ -35,13 +35,13 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_widget() {
-		$p  = $this->factory->post->create(
+		$p  = self::factory()->post->create(
 			array(
 				'post_title' => 'Index Page',
 				'post_type'  => 'page',
 			)
 		);
-		$p2 = $this->factory->post->create(
+		$p2 = self::factory()->post->create(
 			array(
 				'post_title' => 'Test Post',
 				'post_type'  => 'page',
@@ -67,13 +67,13 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_widget_obsolete_configuration() {
-		$p  = $this->factory->post->create(
+		$p  = self::factory()->post->create(
 			array(
 				'post_title' => 'Index Page',
 				'post_type'  => 'page',
 			)
 		);
-		$p2 = $this->factory->post->create(
+		$p2 = self::factory()->post->create(
 			array(
 				'post_title' => 'Test Post',
 				'post_type'  => 'page',
@@ -99,13 +99,13 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_widget_lowercase_titles() {
-		$p  = $this->factory->post->create(
+		$p  = self::factory()->post->create(
 			array(
 				'post_title' => 'Index Page',
 				'post_type'  => 'page',
 			)
 		);
-		$p2 = $this->factory->post->create(
+		$p2 = self::factory()->post->create(
 			array(
 				'post_title' => 'test post',
 				'post_type'  => 'page',

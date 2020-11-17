@@ -1,4 +1,4 @@
-<div id="az-listing-0" class="az-listing">
+<div id="az-listing-testId" class="az-listing">
     <div class="az-letters-wrap">
         <div class="az-letters">
             <ul class="az-links">
@@ -33,16 +33,16 @@
     </div>
     <div class="items-outer">
         <div class="items-inner">
-            <div class="letter-section" id="letter-T-0">
+            <div class="letter-section" id="letter-T-testId">
                 <h2 class="letter-title"><span>T</span></h2>
-                <ul class="columns max-0-columns">
+                <ul class="columns max-testId-columns">
                     <li><a href="http://example.org/?cat=%2$d">%1$s</a></li>
                 </ul>
                 <div class="back-to-top"><a href="#letters">Back to top</a></div>
             </div>
-            <div class="letter-section" id="letter-U-0">
+            <div class="letter-section" id="letter-U-testId">
                 <h2 class="letter-title"><span>U</span></h2>
-                <ul class="columns max-0-columns">
+                <ul class="columns max-testId-columns">
                     <li><a href="http://example.org/?cat=1">Uncategorized</a></li>
                 </ul>
                 <div class="back-to-top"><a href="#letters">Back to top</a></div>

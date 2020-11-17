@@ -32,6 +32,8 @@ import { withSelect } from '@wordpress/data';
 import { pin, list, grid } from '@wordpress/icons';
 import { addFilter, applyFilters } from '@wordpress/hooks';
 
+import {v4 as uuid} from 'uuid';
+
 /**
  * Internal dependencies
  */
@@ -161,6 +163,11 @@ class A_Z_Listing_Edit extends Component {
 			}
 			return errors;
 		};
+
+		if ( ! ( 'instanceId' in attributes && attributes.instanceId ) ) {
+			attributes.instanceId = uuid();
+		}
+
 		const getFilteredTaxonomies = () => {
 			let r = [];
 			if ( 'posts' === attributes.display ) {

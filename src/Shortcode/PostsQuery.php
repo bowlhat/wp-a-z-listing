@@ -36,6 +36,7 @@ class PostsQuery extends Query {
 		if ( is_array( $items ) && 0 < count( $items ) ) {
 			return $items;
 		}
+
 		add_filter( 'posts_fields', array( $this, 'wp_query_fields' ), 10, 2 );
 		if ( $query instanceof \WP_Query ) {
 			$items = $query->posts;
@@ -45,7 +46,8 @@ class PostsQuery extends Query {
 			$items = ( new \WP_Query( $query ) )->posts;
 		}
 		remove_filter( 'posts_fields', array( $this, 'wp_query_fields' ) );
-		return $items ?? array();
+
+		return empty( $items ) ? array() : $items;
 	}
 
 	/**

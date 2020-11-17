@@ -22,7 +22,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_letters() {
-		$p = $this->factory->post->create(
+		$p = self::factory()->post->create(
 			array(
 				'post_title' => 'Test Page',
 				'post_type'  => 'page',
@@ -41,7 +41,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_letters_linked() {
-		$p = $this->factory->post->create(
+		$p = self::factory()->post->create(
 			array(
 				'post_title' => 'Test Page',
 				'post_type'  => 'page',
@@ -61,7 +61,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_listing() {
 		$title = 'Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -81,7 +81,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_listing_with_unknown_letters() {
 		$title = '*Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -101,7 +101,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_taxonomy_listing_string_query() {
 		$title = 'Test Category';
-		$t     = $this->factory->term->create(
+		$t     = self::factory()->term->create(
 			array(
 				'name'     => $title,
 				'taxonomy' => 'category',
@@ -116,7 +116,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_taxonomy_listing_array_query() {
 		$title = 'Test Category';
-		$t     = $this->factory->term->create(
+		$t     = self::factory()->term->create(
 			array(
 				'name'     => $title,
 				'taxonomy' => 'category',
@@ -137,14 +137,14 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_multiple_taxonomy_listing_array_query() {
 		$cat_title = 'Test Category';
-		$cat       = $this->factory->term->create(
+		$cat       = self::factory()->term->create(
 			array(
 				'name'     => $cat_title,
 				'taxonomy' => 'category',
 			)
 		);
 		$tag_title = 'Test Tag';
-		$tag       = $this->factory->term->create(
+		$tag       = self::factory()->term->create(
 			array(
 				'name'     => $tag_title,
 				'taxonomy' => 'post_tag',
@@ -167,7 +167,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_lowercase_letters() {
-		$p = $this->factory->post->create(
+		$p = self::factory()->post->create(
 			array(
 				'post_title' => 'test page',
 				'post_type'  => 'page',
@@ -186,7 +186,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 	}
 
 	public function test_populated_lowercase_letters_linked() {
-		$p = $this->factory->post->create(
+		$p = self::factory()->post->create(
 			array(
 				'post_title' => 'test page',
 				'post_type'  => 'page',
@@ -206,7 +206,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_lowercase_listing() {
 		$title = 'test page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -226,7 +226,7 @@ class AZ_Listing_Tests extends WP_UnitTestCase {
 
 	public function test_populated_lowercase_taxonomy_listing() {
 		$title = 'test category';
-		$t     = $this->factory->term->create(
+		$t     = self::factory()->term->create(
 			array(
 				'name'     => $title,
 				'taxonomy' => 'category',

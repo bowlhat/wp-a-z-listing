@@ -1,8 +1,8 @@
-<div id="az-tabs">
-    <div id="letters">
+<div id="az-listing-testId" class="az-listing">
+    <div class="az-letters-wrap">
         <div class="az-letters">
             <ul class="az-links">
-                <li class="first odd has-posts"><a href="letter-_"><span>#</span></a></li>
+                <li class="first odd has-posts"><a href="letter-_-testId"><span>#</span></a></li>
                 <li class="even no-posts"><span>A</span></li>
                 <li class="odd no-posts"><span>B</span></li>
                 <li class="even no-posts"><span>C</span></li>
@@ -32,11 +32,11 @@
             </ul>
         </div>
     </div>
-    <div id="az-slider">
-        <div id="inner-slider">
-            <div class="letter-section" id="letter-_">
+    <div class="items-outer">
+        <div class="items-inner">
+            <div class="letter-section" id="letter-_-testId">
                 <h2 class="letter-title"><span>#</span></h2>
-                <ul class="columns max-0-columns">
+                <ul class="columns max-testId-columns">
                     <li><a href="http://example.org/?page_id=%2$d">%1$s</a></li>
                 </ul>
                 <div class="back-to-top"><a href="#letters">Back to top</a></div>

@@ -175,8 +175,13 @@ class Alphabet {
 			if ( 0 === $offset ) {
 				return $this->unknown_letter;
 			}
-			$offset--;
+			$offset = $offset - 1;
 		}
+
+		if ( count( $this->alphabet_keys ) <= $offset ) {
+			return $this->unknown_letter;
+		}
+
 		return $this->alphabet_keys[ $offset ];
 	}
 

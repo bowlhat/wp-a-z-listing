@@ -96,14 +96,14 @@ class Query {
 	 *
 	 * @var integer
 	 */
-	private static $num_instances = 1;
+	private static $num_instances = 0;
 
 	/**
-	 * Current instance number
+	 * Current instance ID
 	 *
 	 * @var integer
 	 */
-	private $instance_num;
+	private $instance_id;
 
 	/**
 	 * A_Z_Listing constructor
@@ -117,8 +117,14 @@ class Query {
 	 */
 	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true ) {
 		global $post;
-		$this->instance_num = self::$num_instances++;
-		$this->alphabet     = new Alphabet();
+
+		if ( defined( 'PHPUNIT_TEST_SUITE' ) && PHPUNIT_TEST_SUITE ) {
+			$this->instance_id = 'testId';
+		} else {
+			$this->instance_id = apply_filters( 'a_z_listing_instance_id', self::$num_instances++ );
+		}
+
+		$this->alphabet = new Alphabet();
 
 		if ( is_string( $query ) && ! empty( $query ) ) {
 			$this->type = 'terms';
@@ -131,6 +137,19 @@ class Query {
 			 */
 			$types      = apply_filters( 'a_z_listing_shortcode_query_types', array() );
 			$this->type = in_array( $type, $types, true ) ? $type : 'posts';
+		}
+
+		if ( is_string( $query ) ) {
+			$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', array(), array( 'taxonomy' => $query ) );
+		} elseif ( 'terms' === $type ) {
+			if ( ! isset( $query['taxonomy'] ) ) {
+				$taxonomy = 'category';
+			} elseif ( is_array( $query['taxonomy'] ) ) {
+				$taxonomy = implode( ',', $query['taxonomy'] );
+			} else {
+				$taxonomy = $query['taxonomy'];
+			}
+			$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', $query, array( 'taxonomy' => $taxonomy ) );
 		}
 
 		/**
@@ -153,6 +172,16 @@ class Query {
 		 */
 		$query = apply_filters( 'a-z-listing-query', $query, $this->type );
 
+		if ( is_array( $query ) && isset( $query['taxonomy'] ) ) {
+			$this->taxonomy = $query['taxonomy'];
+		} elseif ( $query instanceof \WP_Query ) {
+			$this->taxonomy = $query->taxonomy;
+		} elseif ( is_string( $query ) ) {
+			$this->taxonomy = $query;
+		}
+
+		$this->query = $query;
+
 		/**
 		 * Get the cached data
 		 *
@@ -165,7 +194,7 @@ class Query {
 		 */
 		$items = apply_filters( 'a_z_listing_get_cached_query', array(), (array) $query, $this->type );
 
-		if ( ! is_array( $items ) || 0 >= count( $items ) ) {
+		if ( ! is_array( $items ) || 0 === count( $items ) ) {
 			/**
 			 * Run the query to fetch the current items
 			 *
@@ -339,10 +368,10 @@ class Query {
 	/**
 	 * Extract an item's indices
 	 *
-	 * @param \WP_Post|\WP_Term $item The item.
+	 * @param mixed $item The item.
 	 * @return array<string,mixed> The indices. This is an associative array of `[ 'index-char' => $item_array ]`.
 	 */
-	protected function get_all_indices_for_item( $item ) {
+	protected function get_all_indices_for_item( $item ): array {
 		$indexed_items = array();
 		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type, $this->alphabet );
 
@@ -381,7 +410,9 @@ class Query {
 		if ( is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				foreach ( $this->get_all_indices_for_item( $item ) as $key => $value ) {
-					$indexed_items[ $key ] = $value;
+					foreach ( $value as $index_entry ) {
+						$indexed_items[ $key ][] = $index_entry;
+					}
 				}
 			}
 		} elseif ( $this->query instanceof \WP_Query ) {
@@ -392,7 +423,9 @@ class Query {
 				$this->query->the_post();
 
 				foreach ( $this->get_all_indices_for_item( $post ) as $key => $value ) {
-					$indexed_items[ $key ] = $value;
+					foreach ( $value as $index_entry ) {
+						$indexed_items[ $key ][] = $index_entry;
+					}
 				}
 
 			if ( array_key_exists( $this->unknown_letters, $indexed_items ) && ! empty( $indexed_items[ $this->unknown_letters ] ) ) {
@@ -451,6 +484,15 @@ class Query {
 							return $default_sort;
 						}
 					);
+
+					if ( is_int( $sort ) ) {
+						if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
+							do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+						}
+						return $sort;
+					}
+
+					return $default_sort;
 				}
 			},
 			array_key_exists( $this->alphabet->get_unknown_letter(), $indexed_items )
@@ -507,7 +549,7 @@ class Query {
 
 		$that     = $this;
 		$alphabet = $this->alphabet;
-		$indices  = $this->matched_item_indices;
+		$indices  = &$this->matched_item_indices;
 		$i        = 0;
 		$ret      = '<ul class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
@@ -546,7 +588,7 @@ class Query {
 
 				$ret .= '<li class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 				if ( ! empty( $indices[ $character ] ) ) {
-					$ret .= '<a href="' . esc_url( "$target#letter-$id-{$this->instance_num}" ) . '">';
+					$ret .= '<a href="' . esc_url( "$target#letter-$id-{$this->instance_id}" ) . '">';
 				}
 				$ret .= '<span>' . esc_html( $that->get_the_letter_title( $character ) ) . '</span>';
 				if ( ! empty( $indices[ $character ] ) ) {
@@ -633,7 +675,7 @@ class Query {
 	 * @return string The instance number
 	 */
 	public function get_the_instance_id() {
-		return "az-listing-{$this->instance_num}";
+		return "az-listing-{$this->instance_id}";
 	}
 
 	/**
@@ -707,7 +749,7 @@ class Query {
 		$this->current_letter_items = array();
 		$key                        = $this->alphabet->get_key_for_offset( $this->current_letter_offset );
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
-			$this->current_letter_items = $this->matched_item_indices[ $key ];
+			$this->current_letter_items = &$this->matched_item_indices[ $key ];
 		}
 		$this->current_letter_offset += 1;
 	}
@@ -916,7 +958,7 @@ class Query {
 		if ( $this->alphabet->get_unknown_letter() === $id ) {
 			$id = '_';
 		}
-		return "letter-$id-{$this->instance_num}";
+		return "letter-$id-{$this->instance_id}";
 	}
 
 	/**

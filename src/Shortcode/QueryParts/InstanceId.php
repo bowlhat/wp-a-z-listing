@@ -16,23 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 use \A_Z_Listing\Shortcode\Extension;
 
 /**
- * Alphabet Query Part extension
+ * Instance ID Query Part extension
  */
-class Alphabet extends Extension {
+class InstanceId extends Extension {
 	/**
 	 * The attribute for this Query Part.
 	 *
 	 * @since 4.0.0
 	 * @var string
 	 */
-	public $attribute_name = 'alphabet';
+	public $attribute_name = 'instance-id';
 
 	/**
-	 * The alphabet.
+	 * The instance_id.
 	 *
 	 * @var string
 	 */
-	public $alphabet = '';
+	public $instance_id = '';
 
 	/**
 	 * Update the query with this extension's additional configuration.
@@ -45,18 +45,18 @@ class Alphabet extends Extension {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query( $query, string $display, string $attribute, string $value, array $attributes ) {
-		$this->alphabet = $value;
-		add_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
+		$this->instance_id = $value;
+		add_filter( 'a_z_listing_instance_id', array( $this, 'return_instance_id' ) );
 		return $query;
 	}
 
 	/**
-	 * Return the Alphabet for this instance.
+	 * Return the ID for this instance.
 	 *
 	 * @return string
 	 */
-	public function return_alphabet(): string {
-		return $this->alphabet;
+	public function return_instance_id(): string {
+		return $this->instance_id;
 	}
 
 	/**
@@ -66,6 +66,6 @@ class Alphabet extends Extension {
 	 * @return void
 	 */
 	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
+		remove_filter( 'a-z-listing-alphabet', array( $this, 'return_instance_id' ) );
 	}
 }

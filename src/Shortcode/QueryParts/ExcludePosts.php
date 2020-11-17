@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \A_Z_Listing\Shortcode_Extension;
+use \A_Z_Listing\Shortcode\Extension;
 use \A_Z_Listing\Strings;
 
 /**
  * Exclude Posts Query Part extension
  */
-class ExcludePosts extends Shortcode_Extension {
+class ExcludePosts extends Extension {
 	/**
 	 * The attribute for this Query Part.
 	 *
@@ -47,20 +47,20 @@ class ExcludePosts extends Shortcode_Extension {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
-		$exclude_posts = Strings::maybe_explode_string( ',', $value );
+		$exclude_posts = Strings::maybe_mb_split( ',', $value );
+		$exclude_posts = array_map( 'trim', $exclude_posts );
 		$exclude_posts = array_map( 'intval', $exclude_posts );
-
-		array_filter(
+		$exclude_posts = array_filter(
 			$exclude_posts,
 			function( int $value ): bool {
 				return 0 < $value;
 			}
 		);
-
 		$exclude_posts = array_unique( $exclude_posts );
 
 		if ( ! empty( $exclude_posts ) ) {
 			$query = wp_parse_args( $query, array( 'post__not_in' => $exclude_posts ) );
 		}
+		return $query;
 	}
 }

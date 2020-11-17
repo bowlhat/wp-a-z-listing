@@ -13,12 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \A_Z_Listing\Shortcode_Extension;
+use \A_Z_Listing\Shortcode\Extension;
 
 /**
  * Parent Post Query Part extension
  */
-class ParentPost extends Shortcode_Extension {
+class ParentPost extends Extension {
 	/**
 	 * The attribute for this Query Part.
 	 *
@@ -46,7 +46,7 @@ class ParentPost extends Shortcode_Extension {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
-		if ( a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
+		if ( isset( $attributes['get-all-children'] ) && a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
 			$child_query = array( 'child_of' => $value );
 		} else {
 			$child_query = array( 'post_parent' => $value );

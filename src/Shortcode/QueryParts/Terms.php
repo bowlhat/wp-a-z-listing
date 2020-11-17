@@ -13,15 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \A_Z_Listing\Shortcode_Extension;
-use \A_Z_Listing\Singleton;
-use \A_Z_Listing\Extension;
+use \A_Z_Listing\Shortcode\Extension;
 use \A_Z_Listing\Strings;
 
 /**
  * Taxonomy Terms Query Part extension common implementation
  */
-abstract class TermsCommon extends Shortcode_Extension {
+abstract class TermsCommon extends Extension {
 	/**
 	 * The attribute for this Query Part.
 	 *
@@ -35,13 +33,79 @@ abstract class TermsCommon extends Shortcode_Extension {
 	 *
 	 * @since 4.0.0
 	 * @param string $value The shortcode attribute value.
+	 * @param array  $taxonomies The configured taxonomies.
 	 * @return array<string> The terms.
 	 */
-	public function get_terms( string $value ): array {
-		$terms = Strings::maybe_explode_string( ',', $value );
+	public function get_terms( string $value, array $taxonomies ): array {
+		$terms = Strings::maybe_mb_split( ',', $value );
 		$terms = array_map( 'trim', $terms );
 		$terms = array_filter( $terms );
+		$terms = array_unique( $terms );
+		$terms = array_map(
+			function ( string $term ) use ( $taxonomies ) : int {
+				if ( is_numeric( $term ) ) {
+					return intval( $term );
+				} else {
+					foreach ( $taxonomies as $taxonomy ) {
+						$negate = false;
+						$first  = substr( $term, 0, 1 );
+						if ( '!' === $first ) {
+							$term = substr( $term, 1 );
+						}
+						$term_obj = get_term_by( 'slug', $term, $taxonomy );
+						if ( false !== $term_obj ) {
+							if ( $negate ) {
+								return -$term_obj->term_id;
+							}
+							return $term_obj->term_id;
+						}
+					}
+				}
+				return 0;
+			},
+			$terms
+		);
 		return array_unique( $terms );
+	}
+
+	/**
+	 * Get the configured terms for exclusion.
+	 *
+	 * @since 4.0.0
+	 * @param array $terms The terms.
+	 * @return array<string> The terms for exclusion.
+	 */
+	public function get_exclude_terms( array $terms ): array {
+		$terms = array_filter(
+			$terms,
+			function( int $value ): bool {
+				return 0 > $value;
+			}
+		);
+		$terms = array_map(
+			function( $term ) {
+				return -$term;
+			},
+			$terms
+		);
+		return array_values( array_unique( $terms ) );
+	}
+
+	/**
+	 * Get the configured terms for inclusion.
+	 *
+	 * @since 4.0.0
+	 * @param array $terms The terms.
+	 * @return array<string> The terms for inclusion.
+	 */
+	public function get_include_terms( array $terms ): array {
+		$terms = array_filter(
+			$terms,
+			function( int $value ): bool {
+				return 0 < $value;
+			}
+		);
+		return array_values( array_unique( $terms ) );
 	}
 }
 
@@ -68,14 +132,31 @@ class PostsTerms extends TermsCommon {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
-		$terms = $this->get_terms( $value );
+		$taxonomies = isset( $attributes['taxonomy'] ) ? Strings::maybe_mb_split( ',', $attributes['taxonomy'] ) : array();
 
-		$tax_query_defaults[] = array(
-			'taxonomy' => $attributes['taxonomy'],
-			'field'    => 'slug',
-			'terms'    => $terms,
-			'operator' => 'IN',
-		);
+		$terms = $this->get_terms( $value, $taxonomies );
+
+		$exclude_terms = $this->get_exclude_terms( $terms );
+		$include_terms = $this->get_include_terms( $terms );
+		$include_terms = array_diff( $include_terms, $exclude_terms );
+
+		$tax_query_defaults = array( 'relation' => 'AND' );
+		if ( ! empty( $include_terms ) ) {
+			$tax_query_defaults[] = array(
+				'taxonomy' => $attributes['taxonomy'],
+				'field'    => 'term_id',
+				'terms'    => $include_terms,
+				'operator' => 'IN',
+			);
+		}
+		if ( ! empty( $exclude_terms ) ) {
+			$tax_query_defaults[] = array(
+				'taxonomy' => $attributes['taxonomy'],
+				'field'    => 'term_id',
+				'terms'    => $exclude_terms,
+				'operator' => 'NOT IN',
+			);
+		}
 
 		$tax_query = isset( $query['tax_query'] ) ? $query['tax_query'] : array();
 
@@ -107,70 +188,30 @@ class TermsTerms extends TermsCommon {
 	 * @return mixed The updated query.
 	 */
 	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
-		$taxonomies = isset( $attributes['taxonomy'] ) ? $attributes['taxonomy'] : array();
+		$taxonomies = isset( $attributes['taxonomy'] ) ? Strings::maybe_mb_split( ',', $attributes['taxonomy'] ) : array();
 
-		$terms = $this->get_terms( $value );
-		$terms = array_map( 'trim', $terms );
-		$terms = array_filter( $terms );
-		$terms = array_map(
-			function ( string $term ) use ( $taxonomies ) : int {
-				if ( is_numeric( $term ) ) {
-					return intval( $term );
-				} else {
-					foreach ( $taxonomies as $taxonomy ) {
-						$term_obj = get_term_by( 'slug', $taxonomy, $term );
-						if ( false !== $term_obj ) {
-							return $term_obj->term_id;
-						}
-					}
-				}
-				return -1;
-			},
-			$terms
-		);
-		$terms = array_map( 'intval', $terms );
-		$terms = array_filter(
-			$terms,
-			function( int $value ): bool {
-				return 0 < $value;
-			}
-		);
-		$terms = array_unique( $terms );
+		$terms = $this->get_terms( $value, $taxonomies );
 
-		$query = wp_parse_args(
-			$query,
-			array( $terms_process => $terms )
-		);
+		$exclude_terms = $this->get_exclude_terms( $terms );
+		$include_terms = $this->get_include_terms( $terms );
+		$include_terms = array_diff( $include_terms, $exclude_terms );
+
+		if ( ! empty( $include_terms ) ) {
+			$query = wp_parse_args(
+				$query,
+				array(
+					'include' => $include_terms,
+				)
+			);
+		} else {
+			$query = wp_parse_args(
+				$query,
+				array(
+					'exclude' => $exclude_terms,
+				)
+			);
+		}
+
 		return $query;
-	}
-}
-
-/**
- * Terms Query Parts wrapper extension.
- */
-class Terms extends Singleton implements Extension {
-	/**
-	 * Activate the Terms Query Parts extensions
-	 *
-	 * @since 4.0.0
-	 * @param string $file  The plugin file path.
-	 * @param array  $plugin The plugin details.
-	 * @return Extension
-	 */
-	final public function activate( string $file = '', array $plugin = array() ): Extension {
-		PostsTerms::instance()->activate( $file );
-		TermsTerms::instance()->activate( $file );
-		return $this;
-	}
-
-	/**
-	 * Initialize the Terms Query Part extensions
-	 *
-	 * @since 4.0.0
-	 * @return void
-	 */
-	final public function initialize() {
-		PostsTerms::instance()->initialize();
-		TermsTerms::instance()->initialize();
 	}
 }

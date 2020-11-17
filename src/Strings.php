@@ -61,13 +61,13 @@ class Strings {
 	}
 
 	/**
-	 * Perform a multibyte explode operation if mbstring is loaded, else use explode.
+	 * Perform a multibyte split operation if mbstring is loaded, else use explode.
 	 *
 	 * @param string $separator The character to mark each field.
 	 * @param [type] $value     The multibyte string to explode.
 	 * @return array<string> The fields extracted from $value by exploding.
 	 */
-	public static function maybe_explode_string( string $separator, $value = null ) {
+	public static function maybe_mb_split( string $separator, $value = null ): array {
 		$result = array();
 		if ( is_string( $value ) ) {
 			if ( extension_loaded( 'mbstring' ) || class_exists( '\\Symfony\\Polyfill\\Mbstring\\Mbstring' ) ) {

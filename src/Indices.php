@@ -48,7 +48,7 @@ class Indices extends Singleton implements Extension {
 			} else {
 				return array();
 			}
-		} else {
+		} elseif ( 'posts' === $type || $item instanceof \WP_Post ) {
 			if ( ! $item instanceof \WP_Post ) {
 				$item = get_post( $item );
 			}
@@ -76,10 +76,10 @@ class Indices extends Singleton implements Extension {
 		 * Modify the title for this item before indexing
 		 *
 		 * @since 2.1.0
-		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
-		 * @param string            $title The current title
-		 * @param \WP_Post|\WP_Term $item The item
-		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @since 4.0.0 Set parameter type for `$item` to `mixed`.
+		 * @param string $title The current title
+		 * @param mixed  $item The item
+		 * @param string $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
 		$title = apply_filters( 'a_z_listing_pre_index_item_title', $title, $item, $type );
 
@@ -95,10 +95,10 @@ class Indices extends Singleton implements Extension {
 		 * Modify the indice(s) to group this item under
 		 *
 		 * @since 2.1.0
-		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
-		 * @param array                 $indices The current indices
-		 * @param \WP_Post|\WP_Term $item The item
-		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @since 4.0.0 Set parameter type for `$item` to `mixed`.
+		 * @param array  $indices The current indices
+		 * @param mixed  $item The item
+		 * @param string $item_type The type of the listing.
 		 */
 		$index_letters = apply_filters( 'a-z-listing-item-index-letter', array( $index ), $item, $type );
 
@@ -106,10 +106,10 @@ class Indices extends Singleton implements Extension {
 		 * Modify the indice(s) to group this item under
 		 *
 		 * @since 2.1.0
-		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
-		 * @param array             $indices The current indices
-		 * @param \WP_Post|\WP_Term $item The item
-		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @since 4.0.0 Set parameter type for `$item` to `mixed`.
+		 * @param array  $indices The current indices
+		 * @param mixed  $item The item
+		 * @param string $item_type The type of the listing.
 		 */
 		$index_letters = \apply_filters( 'a_z_listing_item_index_letter', $index_letters, $item, $type );
 		$index_letters = array_unique( array_filter( $index_letters ) );
@@ -131,7 +131,7 @@ class Indices extends Singleton implements Extension {
 			 * @see a_z_listing_item_index_letter, a_z_listing_item_title
 			 */
 			$indices = apply_filters_deprecated( 'a_z_listing_term_indices', $filter_params, '1.0.0', 'a_z_listing_item_index_letter' );
-		} else {
+		} elseif ( $item instanceof \WP_Post ) {
 			/**
 			 * Modify the indice(s) to group this post under
 			 *
@@ -148,11 +148,12 @@ class Indices extends Singleton implements Extension {
 		 *
 		 * @since 1.7.0
 		 * @since 2.1.0 Deprecated
+		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
 		 * @deprecated Use a_z_listing_item_index_letter and/or a_z_listing_item_title
 		 * @see a_z_listing_item_index_letter, a_z_listing_item_title
-		 * @param array                 $indices The current indices
-		 * @param int|\WP_Post|\WP_Term $item The item
-		 * @param string                $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @param array  $indices The current indices
+		 * @param mixed  $item The item
+		 * @param string $item_type The type of the listing.
 		 */
 		$indices = apply_filters_deprecated( 'a_z_listing_item_indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
 
@@ -161,12 +162,12 @@ class Indices extends Singleton implements Extension {
 		 *
 		 * @since 1.7.1
 		 * @since 2.1.0 Deprecated
-		 * @since 4.0.0 Remove `int` from passed parameter types for `$item`.
+		 * @since 4.0.0 Set parameter type for `$item` to `mixed`.
 		 * @deprecated Use a_z_listing_item_index_letter and/or a_z_listing_item_title
 		 * @see a_z_listing_item_index_letter, a_z_listing_item_title
-		 * @param array             $indices The current indices
-		 * @param \WP_Post|\WP_Term $item The item
-		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
+		 * @param array  $indices The current indices
+		 * @param mixed  $item The item
+		 * @param string $item_type The type of the listing.
 		 */
 		$indices = apply_filters_deprecated( 'a-z-listing-item-indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
 

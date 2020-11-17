@@ -11,10 +11,39 @@
         "enum": ["posts", "terms"],
         "default": "posts"
     },
+    "group-numbers": {
+        "type": "boolean",
+        "default": false
+    },
+    "grouping": {
+        "type": "number",
+        "default": 1
+    },
+    "instance-id": {
+        "type": "string"
+    },
+    "numbers": {
+        "type": "string",
+        "enum": ["before", "after", "hide"],
+        "default": "after"
+    },
     "post-type": {
         "type": "string",
         "default": "page"
     },
+    "taxonomy": {
+        "type": "string",
+        "default": ""
+    },
+    "terms": {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "default": []
+    },
+
+
     "displayPostContent": {
         "type": "boolean",
         "default": false
@@ -50,29 +79,5 @@
     "featuredImageSizeHeight": {
         "type": "number",
         "default":150
-    },
-    "terms": {
-        "type": "array",
-        "items": {
-            "type": "string"
-        },
-        "default": []
-    },
-    "taxonomy": {
-        "type": "string",
-        "default": ""
-    },
-    "numbers": {
-        "type": "string",
-        "enum": ["before", "after", "hide"],
-        "default": "after"
-    },
-    "grouping": {
-        "type": "number",
-        "default": 1
-    },
-    "group-numbers": {
-        "type": "boolean",
-        "default": false
     }
 }

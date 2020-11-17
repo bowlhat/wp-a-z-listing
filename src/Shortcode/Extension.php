@@ -7,16 +7,18 @@
 
 declare(strict_types=1);
 
-namespace A_Z_Listing;
+namespace A_Z_Listing\Shortcode;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use \A_Z_Listing\Singleton;
+
 /**
  * Shortcode Extension
  */
-class Shortcode_Extension extends Singleton implements Extension {
+class Extension extends Singleton implements \A_Z_Listing\Extension {
 	/**
 	 * The attribute for this shortcode extension.
 	 *
