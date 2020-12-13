@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - master
+
 jobs:
   master:
     name: Push to master

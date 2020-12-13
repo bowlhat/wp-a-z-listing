@@ -12,60 +12,50 @@ jobs:
         node: ['10.16.3']
         php: ['7.4']
     runs-on: ubuntu-latest
-    container:
-      image: php:${{ matrix.php }}
-      volumes:
-      - $GITHUB_WORKSPACE:/var/www/html
     steps:
-    - name: Set up container
-      run: |
-        echo "Install base packages"
-        apt-get update
-        apt-get install -y build-essential \
-        libssl-dev \
-        gnupg \
-        libfreetype6-dev \
-        libicu-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libonig-dev \
-        libxml2-dev \
-        vim \
-        wget \
-        unzip \
-        git \
-        subversion \
-        default-mysql-client
+    - name: Use Node.js ${{ matrix.node }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
 
-        echo "Install composer"
-        curl -sS -L https://getcomposer.org/installer | php
-        mv composer.phar /usr/local/bin/composer
+    - uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
-        echo "Install PHP extensions"
-        docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+        ini-values: phar.readonly=0
+        tools: composer
 
-    - name: Install node
-      run: |
-        echo "Install NVM"
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
-        echo "Install node"
-        nvm install ${{ matrix.node }}
-        nvm use ${{ matrix.node }}
+    - name: Get composer cache directory
+      id: composercache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-    - uses: actions/checkout@v1
+    - name: Cache composer dependencies
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.composercache.outputs.dir }}
+        key: ${{ runner.os }}-composer-cache-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-cache-
+
+    - uses: actions/checkout@v2
 
     - name: Install php-scoper
       run: |
-        composer global require humbug/php-scoper@0.11.4 --prefer-dist --no-interaction --no-progress
-        mkdir -p tools
-        ln -sf $HOME/.composer/vendor/bin/php-scoper tools/php-scoper
+        composer global property-set minimum-stability dev
+        composer global require humbug/php-scoper --prefer-dist --no-interaction --no-progress
 
     - name: Install composer dependencies
       run: composer install --prefer-dist --no-interaction --no-progress
 
     - name: Run php-scoper
-      run: ./tools/php-scoper add-prefix
+      run: php-scoper add-prefix
 
     - name: Remove composer dev dependencies
       run: composer update --no-dev --optimize-autoloader --prefer-dist --no-interaction --no-progress
@@ -87,28 +77,31 @@ jobs:
         npm install --production --no-bin-links
 
     - name: Upload build result
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: build
-        path: build
+        path: build/**/*
 
     - name: Upload languages
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: languages
-        path: languages
+        path: languages/**/*
 
     - name: Upload styles
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: css
-        path: css
+        path: css/**/*
 
-  test_singlesite:
-    name: Test single site
+  test:
+    name: Test
     needs: build
     strategy:
       matrix:
+        multisite:
+        - '0'
+        - '1'
         mysql:
         - '5.7'
         php:
@@ -126,168 +119,39 @@ jobs:
         - latest
         - trunk
     runs-on: ubuntu-latest
-    container:
-      image: php:${{ matrix.php }}
-      volumes:
-      - $GITHUB_WORKSPACE:/var/www/html
     services:
       mysql:
-        image: mysql:${{ matrix.mysql }}
+        image: mysql
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-        - 3306
-        volumes:
-        - $HOME/mysql:/var/lib/mysql
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 3306:3306
+        options: >-
+          --health-cmd mysqladmin ping -h localhost
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - name: Set up container
-      run: |
-        echo "Install base packages"
-        apt-get update
-        apt-get install -y build-essential \
-          libssl-dev \
-          gnupg \
-          libfreetype6-dev \
-          libicu-dev \
-          libjpeg62-turbo-dev \
-          libmcrypt-dev \
-          libonig-dev \
-          libxml2-dev \
-          vim \
-          wget \
-          unzip \
-          git \
-          subversion \
-          default-mysql-client
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+        ini-values: phar.readonly=0
+        tools: phpunit
 
-        echo "Install PHP extensions"
-        docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
-
-    - name: Install composer
-      run: |
-        curl -sS -L https://getcomposer.org/installer | php
-        mv composer.phar /usr/local/bin/composer
-
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Download build files
-      uses: actions/download-artifact@v1
-      with:
-        name: build
-
-    - name: Download languages
-      uses: actions/download-artifact@v1
-      with:
-        name: languages
-
-    - name: Download styles
-      uses: actions/download-artifact@v1
-      with:
-        name: css
-
-    - name: Install phpunit
-      run: |
-        composer global require phpunit/phpunit ^6 --prefer-dist --no-interaction --no-progress
-        mkdir -p tools
-        ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
+      uses: actions/download-artifact@v2
 
     - name: Install WordPress Test Suite
       run: ./bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
 
     - name: Run phpunit
-      run: ./tools/phpunit $GITHUB_WORKSPACE
-
-  test_multisite:
-    name: Test multisite
-    needs: build
-    strategy:
-      matrix:
-        mysql:
-        - '5.7'
-        php:
-        - '7.0'
-        - '7.1'
-        - '7.2'
-        - '7.3'
-        - '7.4'
-        wordpress:
-        - '5.0'
-        - '5.1'
-        - '5.2'
-        - '5.3'
-        - '5.4'
-        - latest
-        - trunk
-    runs-on: ubuntu-latest
-    container:
-      image: php:${{ matrix.php }}
-      volumes:
-      - $GITHUB_WORKSPACE:/var/www/html
-    services:
-      mysql:
-        image: mysql:${{ matrix.mysql }}
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-        - 3306
-        volumes:
-        - $HOME/mysql:/var/lib/mysql
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    steps:
-    - name: Set up container
       run: |
-        echo "Install base packages"
-        apt-get update
-        apt-get install -y build-essential \
-          libssl-dev \
-          gnupg \
-          libfreetype6-dev \
-          libicu-dev \
-          libjpeg62-turbo-dev \
-          libmcrypt-dev \
-          libonig-dev \
-          libxml2-dev \
-          vim \
-          wget \
-          unzip \
-          git \
-          subversion \
-          default-mysql-client
-
-        echo "Install PHP extensions"
-        docker-php-ext-install -j$(nproc) iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
-
-    - name: Install composer
-      run: |
-        curl -sS -L https://getcomposer.org/installer | php
-        mv composer.phar /usr/local/bin/composer
-
-    - uses: actions/checkout@v1
-
-    - name: Download build files
-      uses: actions/download-artifact@v1
-      with:
-        name: build
-
-    - name: Download languages
-      uses: actions/download-artifact@v1
-      with:
-        name: languages
-
-    - name: Download styles
-      uses: actions/download-artifact@v1
-      with:
-        name: css
-
-    - name: Install phpunit
-      run: |
-        composer global require phpunit/phpunit ^5 --prefer-dist --no-interaction --no-progress
-        mkdir -p tools
-        ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-
-    - name: Install WordPress Test Suite
-      run: ./bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
-
-    - name: Run phpunit
-      run: ./tools/phpunit -c phpunit-multisite.xml $GITHUB_WORKSPACE
+        if [ ${{ matrix.multisite }} -eq 1 ]; then
+          phpunit -c phpunit-multisite.xml $GITHUB_WORKSPACE        
+        else
+          phpunit $GITHUB_WORKSPACE
+        fi
