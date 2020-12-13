@@ -48,7 +48,7 @@ jobs:
 
     - name: Install php-scoper
       run: |
-        composer global property-set minimum-stability dev
+        composer global config minimum-stability dev
         composer global require humbug/php-scoper --prefer-dist --no-interaction --no-progress
 
     - name: Install composer dependencies
