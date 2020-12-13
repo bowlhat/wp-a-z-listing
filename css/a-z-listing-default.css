@@ -55,6 +55,7 @@ div.letter-section {
     column-width: var(--a-z-listing-column-width, 15em); }
     div.letter-section > ul.az-columns > li {
       padding: 0;
+      margin: 0 0 0.6em;
       list-style: none;
       display: block; }
     div.letter-section > ul.az-columns.max-0-columns, div.letter-section > ul.az-columns.max-1-columns {
