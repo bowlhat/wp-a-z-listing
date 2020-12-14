@@ -123,6 +123,10 @@ To group the alphabet letters into a range:
   * Default value: `false`.
   * May only contain one value.
   * Must be set to `true`, `yes`, `on`, or `1` to group items beginning with a numeral in a single collection. All other values will keep the default behaviour.
+* `symbols-first`: Tells the plugin to put the unknown alphabet letter (symbols) group before the main alphabet.
+  * Default value: `false`.
+  * May only contain one value.
+  * Must be set to `true`, `yes`, `on`, or `1` to put the symbols group before the alphabet. All other values will keep the default behaviour.
 * `alphabet`: allows you to override the alphabet that the plugin uses.
   * Default value: `unset`.
   * When this attribute is not defined, the plugin will either use the untranslated default, or if [glotpress](https://translate.wordpress.org/projects/wp-plugins/a-z-listing) includes a translation for your site's language as set in `Admin -> Settings -> Site Language` it will use that translation.
