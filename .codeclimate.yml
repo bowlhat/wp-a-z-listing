@@ -7,8 +7,5 @@ plugins:
     enabled: true
   phpcodesniffer:
     enabled: true
-    config:
-      file_extensions: "php"
-      standard: "WordPress"
   scss-lint:
     enabled: true
