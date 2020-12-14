@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
+    if: github.repository_owner == 'bowlhat'
     strategy:
       matrix:
         node: ['10.16.3']
@@ -103,7 +103,7 @@ jobs:
   phpcs:
     name: phpcs
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
+    if: github.repository_owner == 'a-z-listing'
     steps:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -126,6 +126,7 @@ jobs:
   phpunit:
     name: phpunit
     needs: build
+    if: github.repository_owner == 'bowlhat'
     strategy:
       matrix:
         multisite: ['0', '1']
@@ -242,7 +243,7 @@ jobs:
   deploy_to_worg:
     name: Deploy to WordPress.org
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
+    if: github.repository_owner == 'bowlhat'
     needs:
     - build
     - phpcs
