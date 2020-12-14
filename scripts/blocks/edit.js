@@ -4,11 +4,11 @@
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
 
-import { get } from 'lodash';
+// import { get } from 'lodash';
 
 import { Component } from '@wordpress/element';
 import {
-	BaseControl,
+	// BaseControl,
 	FormTokenField,
 	PanelBody,
 	Placeholder,
@@ -16,7 +16,7 @@ import {
 	SelectControl,
 	Spinner,
 	ToggleControl,
-	ToolbarGroup,
+	// ToolbarGroup,
 } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 import apiFetch from '@wordpress/api-fetch';
@@ -24,12 +24,16 @@ import { addQueryArgs } from '@wordpress/url';
 import { __ } from '@wordpress/i18n';
 import {
 	InspectorControls,
-	BlockAlignmentToolbar,
-	BlockControls,
-	__experimentalImageSizeControl as ImageSizeControl,
+	// BlockAlignmentToolbar,
+	// BlockControls,
+	// __experimentalImageSizeControl as ImageSizeControl,
 } from '@wordpress/block-editor';
-import { withSelect } from '@wordpress/data';
-import { pin, list, grid } from '@wordpress/icons';
+// import { withSelect } from '@wordpress/data';
+import {
+	pin,
+	// list,
+	// grid
+} from '@wordpress/icons';
 import { addFilter, applyFilters } from '@wordpress/hooks';
 
 import {v4 as uuid} from 'uuid';
@@ -76,6 +80,14 @@ addFilter(
 	} ),
 	5
 );
+const displayTypes = applyFilters(
+	'a_z_listing_display_types',
+	[
+		{ value: 'posts', label: __( 'Posts', 'a-z-listing' ) },
+		{ value: 'terms', label: __( 'Taxonomy Terms', 'a-z-listing' ) },
+	] 
+);
+const alphabet = __( 'AÁÀÄÂaáàäâ,Bb,CÇcç,Dd,EÉÈËÊeéèëê,Ff,Gg,Hh,IÍÌÏÎiíìïî,Jj,Kk,Ll,Mm,Nn,OÓÒÖÔoóòöô,Pp,Qq,Rr,Ssß,Tt,UÚÙÜÛuúùüû,Vv,Ww,Xx,Yy,Zz', 'a-z-listing' );
 
 const APIQueries = {
 	// '/wp/v2/categories': {
@@ -157,7 +169,8 @@ class A_Z_Listing_Edit extends Component {
 			if ( 'terms' === attributes.display && ! attributes.taxonomy ) {
 				errors.push(
 					__(
-						`You must set a taxonomy when display mode is set to 'terms'.`
+						`You must set a taxonomy when display mode is set to 'terms'.`,
+						'a-z-listing'
 					)
 				);
 			}
@@ -192,7 +205,7 @@ class A_Z_Listing_Edit extends Component {
 				<AZInspectorControls.Slot>
 					{ ( fills ) => (
 						<>
-							<PanelBody
+							{/* <PanelBody
 								title={ __( 'Featured image settings' ) }
 							>
 								<ToggleControl
@@ -264,27 +277,16 @@ class A_Z_Listing_Edit extends Component {
 										</BaseControl>
 									</>
 								) }
-							</PanelBody>
+							</PanelBody> */}
 
-							<PanelBody title={ __( 'Item selection' ) }>
+							<PanelBody title={ __( 'Item selection', 'a-z-listing' ) }>
 								<ItemSelection.Slot>
 									{ ( subFills ) => (
 										<>
 											<SelectControl
-												label={ __( 'Display mode' ) }
+												label={ __( 'Display mode', 'a-z-listing' ) }
 												value={ display }
-												options={ [
-													{
-														value: 'posts',
-														label: __( 'Posts' ),
-													},
-													{
-														value: 'terms',
-														label: __(
-															'Taxonomy terms'
-														),
-													},
-												] }
+												options={ displayTypes }
 												onChange={ ( value ) =>
 													setAttributes(
 														applyFilters(
@@ -298,7 +300,7 @@ class A_Z_Listing_Edit extends Component {
 											{ 'posts' ===
 												attributes.display && (
 												<SelectControl
-													label={ __( 'Post Type' ) }
+													label={ __( 'Post Type', 'a-z-listing' ) }
 													value={
 														attributes[
 															'post-type'
@@ -325,25 +327,31 @@ class A_Z_Listing_Edit extends Component {
 												/>
 											) }
 
-											<SelectControl
-												label={ __( 'Taxonomy' ) }
-												value={ attributes.taxonomy }
-												options={ getFilteredTaxonomies() }
-												onChange={ ( value ) =>
-													setAttributes(
-														applyFilters(
-															'a_z_listing_selection_changed_for__taxonomy',
-															{ taxonomy: value }
+											{ (
+												'posts' === attributes.display ||
+												'terms' === attributes.display
+											  ) && (
+												<SelectControl
+													label={ __( 'Taxonomy', 'a-z-listing' ) }
+													value={ attributes.taxonomy }
+													options={ getFilteredTaxonomies() }
+													onChange={ ( value ) =>
+														setAttributes(
+															applyFilters(
+																'a_z_listing_selection_changed_for__taxonomy',
+																{ taxonomy: value }
+															)
 														)
-													)
-												}
-											/>
+													}
+												/>
+											) }
 
 											{ 'posts' === attributes.display &&
 												!! attributes.taxonomy && (
 													<FormTokenField
 														label={ __(
-															'Taxonomy terms'
+															'Taxonomy terms',
+															'a-z-listing'
 														) }
 														value={
 															attributes.terms
@@ -362,30 +370,40 @@ class A_Z_Listing_Edit extends Component {
 								</ItemSelection.Slot>
 							</PanelBody>
 
-							<PanelBody title={ __( 'Display options' ) }>
+							<PanelBody title={ __( 'Display options', 'a-z-listing' ) }>
 								<DisplayOptions.Slot>
 									{ ( subFills ) => (
 										<>
+											<TextControl
+												label={ __( 'Alphabet', 'a-z-listing' ) }
+												value={ attributes.alphabet }
+												onChange={ ( value ) =>
+													setAttributes( { alphabet: value } )
+												}
+											/>
 											<SelectControl
-												label={ __( 'Numbers' ) }
+												label={ __( 'Numbers', 'a-z-listing' ) }
 												value={ attributes.numbers }
 												options={ [
 													{
 														value: 'hide',
 														label: __(
-															'Hide numbers'
+															'Hide numbers',
+															'a-z-listing'
 														),
 													},
 													{
 														value: 'before',
 														label: __(
-															'Prepend before alphabet'
+															'Prepend before alphabet',
+															'a-z-listing'
 														),
 													},
 													{
 														value: 'after',
 														label: __(
-															'Append after alphabet'
+															'Append after alphabet',
+															'a-z-listing'
 														),
 													},
 												] }
@@ -400,9 +418,10 @@ class A_Z_Listing_Edit extends Component {
 											/>
 
 											<RangeControl
-												label={ __( 'Group letters' ) }
+												label={ __( 'Group letters', 'a-z-listing' ) }
 												help={ __(
-													'The number of letters to include in a single group'
+													'The number of letters to include in a single group',
+													'a-z-listing'
 												) }
 												value={
 													attributes.grouping || 1
@@ -425,10 +444,12 @@ class A_Z_Listing_Edit extends Component {
 												) && (
 													<ToggleControl
 														label={ __(
-															'Group numbers'
+															'Group numbers',
+															'a-z-listing'
 														) }
 														help={ __(
-															'Group 0-9 as a single letter'
+															'Group 0-9 as a single letter',
+															'a-z-listing'
 														) }
 														checked={
 															!! attributes[
@@ -447,6 +468,16 @@ class A_Z_Listing_Edit extends Component {
 														}
 													/>
 												) }
+											
+											<ToggleControl
+												label={ __( 'Display symbols entry first', 'a-z-listing' ) }
+												checked={ attributes.symbolsFirst }
+												onChange={ ( value ) =>
+													setAttributes( {
+														symbolsFirst: value,
+													} )
+												}
+											/>
 
 											{ subFills }
 										</>
@@ -455,7 +486,7 @@ class A_Z_Listing_Edit extends Component {
 
 								{ postLayout === 'grid' && (
 									<RangeControl
-										label={ __( 'Columns' ) }
+										label={ __( 'Columns', 'a-z-listing' ) }
 										value={ columns }
 										onChange={ ( value ) =>
 											setAttributes( { columns: value } )
@@ -474,20 +505,20 @@ class A_Z_Listing_Edit extends Component {
 			</InspectorControls>
 		);
 
-		const layoutControls = [
-			{
-				icon: list,
-				title: __( 'List view' ),
-				onClick: () => setAttributes( { postLayout: 'list' } ),
-				isActive: postLayout === 'list',
-			},
-			{
-				icon: grid,
-				title: __( 'Grid view' ),
-				onClick: () => setAttributes( { postLayout: 'grid' } ),
-				isActive: postLayout === 'grid',
-			},
-		];
+		// const layoutControls = [
+		// 	{
+		// 		icon: list,
+		// 		title: __( 'List view' ),
+		// 		onClick: () => setAttributes( { postLayout: 'list' } ),
+		// 		isActive: postLayout === 'list',
+		// 	},
+		// 	{
+		// 		icon: grid,
+		// 		title: __( 'Grid view' ),
+		// 		onClick: () => setAttributes( { postLayout: 'grid' } ),
+		// 		isActive: postLayout === 'grid',
+		// 	},
+		// ];
 
 		const errors = applyFilters(
 			'a-z-listing-validation-errors',
@@ -497,13 +528,13 @@ class A_Z_Listing_Edit extends Component {
 		return (
 			<>
 				{ inspectorControls }
-				<BlockControls>
+				{/* <BlockControls>
 					<ToolbarGroup controls={ layoutControls } />
-				</BlockControls>
+				</BlockControls> */}
 
 				{ errors.length > 0 ? (
-					<Placeholder icon={ pin } label={ __( 'A-Z Listing' ) }>
-						{ __( 'The A-Z Listing configuration is incomplete:' ) }
+					<Placeholder icon={ pin } label={ __( 'A-Z Listing', 'a-z-listing' ) }>
+						{ __( 'The A-Z Listing configuration is incomplete:', 'a-z-listing' ) }
 						<ul>
 							{ errors.map( ( error, idx ) => (
 								<li key={ idx }>{ error }</li>
@@ -518,18 +549,19 @@ class A_Z_Listing_Edit extends Component {
 						ErrorResponsePlaceholder={ () => (
 							<Placeholder
 								icon={ pin }
-								label={ __( 'A-Z Listing' ) }
+								label={ __( 'A-Z Listing', 'a-z-listing' ) }
 							>
-								{ __( 'Error Loading the listing…' ) }
+								{ __( 'Error Loading the listing...', 'a-z-listing' ) }
 							</Placeholder>
 						) }
-						EmptyRersponsePlaceholder={ () => (
+						EmptyResponsePlaceholder={ () => (
 							<Placeholder
 								icon={ pin }
-								label={ __( 'A-Z Listing' ) }
+								label={ __( 'A-Z Listing', 'a-z-listing' ) }
 							>
 								{ __(
-									'The listing has returned an empty page. This is likely an error.'
+									'The listing has returned an empty page. This is likely an error.',
+									'a-z-listing'
 								) }
 							</Placeholder>
 						) }
@@ -540,26 +572,27 @@ class A_Z_Listing_Edit extends Component {
 	}
 }
 
-export default withSelect( ( select, props ) => {
-	const { featuredImageSizeSlug } = props.attributes;
-	const { getSettings } = select( 'core/block-editor' );
-	const { imageSizes, imageDimensions } = getSettings();
+// export default withSelect( ( select, props ) => {
+// 	const { featuredImageSizeSlug } = props.attributes;
+// 	const { getSettings } = select( 'core/block-editor' );
+// 	const { imageSizes, imageDimensions } = getSettings();
 
-	const imageSizeOptions = imageSizes
-		.filter( ( { slug } ) => slug !== 'full' )
-		.map( ( { name, slug } ) => ( { value: slug, label: name } ) );
+// 	const imageSizeOptions = imageSizes
+// 		.filter( ( { slug } ) => slug !== 'full' )
+// 		.map( ( { name, slug } ) => ( { value: slug, label: name } ) );
 
-	return {
-		defaultImageWidth: get(
-			imageDimensions,
-			[ featuredImageSizeSlug, 'width' ],
-			0
-		),
-		defaultImageHeight: get(
-			imageDimensions,
-			[ featuredImageSizeSlug, 'height' ],
-			0
-		),
-		imageSizeOptions,
-	};
-} )( A_Z_Listing_Edit );
+// 	return {
+// 		defaultImageWidth: get(
+// 			imageDimensions,
+// 			[ featuredImageSizeSlug, 'width' ],
+// 			0
+// 		),
+// 		defaultImageHeight: get(
+// 			imageDimensions,
+// 			[ featuredImageSizeSlug, 'height' ],
+// 			0
+// 		),
+// 		imageSizeOptions,
+// 	};
+// } )( A_Z_Listing_Edit );
+export default A_Z_Listing_Edit;

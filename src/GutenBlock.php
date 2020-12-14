@@ -76,7 +76,7 @@ class GutenBlock extends Singleton implements Extension {
 			filemtime( "$dir/$style_css" )
 		);
 
-		$attributes = json_decode( file_get_contents( plugin_dir_path( __DIR__ ) . 'scripts/blocks/attributes.json' ), true );
+		$attributes = json_decode( file_get_contents( plugin_dir_path( __DIR__ ) . '/scripts/blocks/attributes.json' ), true );
 		$attributes = apply_filters( '_a-z-listing-supported-attributes', $attributes );
 
 		register_block_type(
