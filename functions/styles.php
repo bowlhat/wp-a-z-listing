@@ -42,7 +42,7 @@ function a_z_listing_customize_enqueue_styles() {
  * @return void
  */
 function a_z_listing_force_enqueue_styles() {
-	// no-op
+	// no-op.
 }
 
 /**
@@ -54,5 +54,5 @@ function a_z_listing_force_enqueue_styles() {
  * @return void
  */
 function a_z_listing_force_enable_styles() {
-	// no-op
+	// no-op.
 }

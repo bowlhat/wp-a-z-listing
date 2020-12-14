@@ -40,12 +40,12 @@ class ParentPost extends Extension {
 	 *
 	 * @param mixed  $query      The query.
 	 * @param string $display    The display/query type.
-	 * @param string $attribute  The name of the attribute.
+	 * @param string $key        The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $key, string $value, array $attributes ) {
 		if ( isset( $attributes['get-all-children'] ) && a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
 			$child_query = array( 'child_of' => $value );
 		} else {

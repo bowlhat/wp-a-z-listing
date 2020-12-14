@@ -41,12 +41,12 @@ class ExcludeTerms extends Extension {
 	 *
 	 * @param mixed  $query      The query.
 	 * @param string $display    The display/query type.
-	 * @param string $attribute  The name of the attribute.
+	 * @param string $key        The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $key, string $value, array $attributes ) {
 		$exclude_terms = Strings::maybe_mb_split( ',', $value );
 		$exclude_terms = array_map( 'trim', $exclude_terms );
 		$exclude_terms = array_map( 'intval', $exclude_terms );

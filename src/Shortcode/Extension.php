@@ -29,7 +29,7 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 
 	/**
 	 * The default value for the attribute.
-	 * 
+	 *
 	 * @since 4.0.0
 	 * @var string
 	 */
@@ -65,7 +65,7 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 		add_action( '_a_z_listing_shortcode_end', array( $this, 'cleanup' ), 10, 1 );
 
 		if ( ! empty( $this->attribute_name ) ) {
-			add_filter( "a_z_listing_get_shortcode_attributes", array( $this, 'add_attribute' ) );
+			add_filter( 'a_z_listing_get_shortcode_attributes', array( $this, 'add_attribute' ) );
 			add_filter( "a_z_listing_sanitize_shortcode_attribute__{$this->attribute_name}", array( $this, 'sanitize_attribute' ), 10, 2 );
 			add_filter( "a_z_listing_shortcode_query_for_attribute__{$this->attribute_name}", array( $this, 'shortcode_query' ), 10, 5 );
 			foreach ( $this->display_types as $display ) {
@@ -134,9 +134,10 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 
 	/**
 	 * Add the attribute.
+	 *
 	 * @since 4.0.0
-	 * @param array $attributes The attributes
-	 * @return array The attributes
+	 * @param array $attributes The attributes.
+	 * @return array The attributes.
 	 */
 	function add_attribute( $attributes ) {
 		$attributes[ $this->attribute_name ] = $this->default_value;
@@ -159,12 +160,12 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 *
 	 * @param mixed  $query      The query.
 	 * @param string $display    The display/query type.
-	 * @param string $attribute  The name of the attribute.
+	 * @param string $key        The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query( $query, string $display, string $attribute, string $value, array $attributes ) {
+	public function shortcode_query( $query, string $display, string $key, string $value, array $attributes ) {
 		return $query;
 	}
 
@@ -173,12 +174,12 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 *
 	 * @param mixed  $query      The query.
 	 * @param string $display    The display/query type.
-	 * @param string $attribute  The name of the attribute.
+	 * @param string $key        The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $key, string $value, array $attributes ) {
 		return $query;
 	}
 }

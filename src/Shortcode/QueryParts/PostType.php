@@ -30,7 +30,7 @@ class PostType extends Extension {
 
 	/**
 	 * The default value for the attribute.
-	 * 
+	 *
 	 * @since 4.0.0
 	 * @var string
 	 */
@@ -61,12 +61,12 @@ class PostType extends Extension {
 	 *
 	 * @param mixed  $query      The query.
 	 * @param string $display    The display/query type.
-	 * @param string $attribute  The name of the attribute.
+	 * @param string $key        The name of the attribute.
 	 * @param string $value      The shortcode attribute value.
 	 * @param array  $attributes The complete set of shortcode attributes.
 	 * @return mixed The updated query.
 	 */
-	public function shortcode_query_for_display_and_attribute( $query, string $display, string $attribute, string $value, array $attributes ) {
+	public function shortcode_query_for_display_and_attribute( $query, string $display, string $key, string $value, array $attributes ) {
 		$post_type = Strings::maybe_mb_split( ',', $value );
 		$post_type = array_map( 'trim', $post_type );
 		$post_type = array_filter( $post_type );
