@@ -478,6 +478,7 @@ This is a major version change, which means that it might break your site when y
 * Add PHP type hints
 * Add strict PHP types checking
 * Add extra template name to match the displayed post-type
+* Always load CSS styles to reduce unstyled listings cases
 * Use php-scoper to reduce conflicts with other plugins
 * Update NPM dependencies
 
