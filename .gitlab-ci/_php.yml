@@ -18,14 +18,11 @@
   image: php:7.3
   tags:
     - linux
-    - php
 .php74-linux:
   image: php:7.4
   tags:
     - linux
-    - php
 .php80-linux:
   image: php:8.0
   tags:
     - linux
-    - php
