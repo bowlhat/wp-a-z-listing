@@ -13,4 +13,11 @@
 			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist>
+			<directory suffix=".php">./functions</directory>
+			<directory suffix=".php">./src</directory>
+			<directory suffix=".php">./widgets</directory>
+		</whitelist>
+	</filter>
 </phpunit>
