@@ -11,185 +11,185 @@ phpcs:
     - .php74-linux
 
 # PHP 7.0
-wordpress50:php70-linux:
+wordpress50:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress50
     - .php70-linux
-wordpress51:php70-linux:
+wordpress51:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress51
     - .php70-linux
-wordpress52:php70-linux:
+wordpress52:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress52
     - .php70-linux
-wordpress53:php70-linux:
+wordpress53:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress53
     - .php70-linux
-wordpress54:php70-linux:
+wordpress54:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress54
     - .php70-linux
-WordPress-latest:php70-linux:
+WordPress-latest:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress-latest
     - .php70-linux
-WordPress-nightly:php70-linux:
+WordPress-nightly:singlesite:php70:linux:
   extends:
     - .phpunit
     - .wordpress-nightly
     - .php70-linux
 
 # PHP 7.1
-wordpress50:php71-linux:
+wordpress50:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress50
     - .php71-linux
-wordpress51:php71-linux:
+wordpress51:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress51
     - .php71-linux
-wordpress52:php71-linux:
+wordpress52:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress52
     - .php71-linux
-wordpress53:php71-linux:
+wordpress53:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress53
     - .php71-linux
-wordpress54:php71-linux:
+wordpress54:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress54
     - .php71-linux
-WordPress-latest:php71-linux:
+WordPress-latest:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress-latest
     - .php71-linux
-WordPress-nightly:php71-linux:
+WordPress-nightly:singlesite:php71:linux:
   extends:
     - .phpunit
     - .wordpress-nightly
     - .php71-linux
 
 # PHP 7.2
-wordpress50:php72-linux:
+wordpress50:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress50
     - .php72-linux
-wordpress51:php72-linux:
+wordpress51:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress51
     - .php72-linux
-wordpress52:php72-linux:
+wordpress52:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress52
     - .php72-linux
-wordpress53:php72-linux:
+wordpress53:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress53
     - .php72-linux
-wordpress54:php72-linux:
+wordpress54:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress54
     - .php72-linux
-WordPress-latest:php72-linux:
+WordPress-latest:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress-latest
     - .php72-linux
-WordPress-nightly:php72-linux:
+WordPress-nightly:singlesite:php72:linux:
   extends:
     - .phpunit
     - .wordpress-nightly
     - .php72-linux
 
 # PHP 7.3
-wordpress50:php73-linux:
+wordpress50:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress50
     - .php73-linux
-wordpress51:php73-linux:
+wordpress51:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress51
     - .php73-linux
-wordpress52:php73-linux:
+wordpress52:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress52
     - .php73-linux
-wordpress53:php73-linux:
+wordpress53:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress53
     - .php73-linux
-wordpress54:php73-linux:
+wordpress54:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress54
     - .php73-linux
-WordPress-latest:php73-linux:
+WordPress-latest:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress-latest
     - .php73-linux
-WordPress-nightly:php73-linux:
+WordPress-nightly:singlesite:php73:linux:
   extends:
     - .phpunit
     - .wordpress-nightly
     - .php73-linux
 
 # PHP 7.4
-wordpress50:php74-linux:
+wordpress50:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress50
     - .php74-linux
-wordpress51:php74-linux:
+wordpress51:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress51
     - .php74-linux
-wordpress52:php74-linux:
+wordpress52:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress52
     - .php74-linux
-wordpress53:php74-linux:
+wordpress53:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress53
     - .php74-linux
-wordpress54:php74-linux:
+wordpress54:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress54
     - .php74-linux
-WordPress-latest:php74-linux:
+WordPress-latest:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress-latest
     - .php74-linux
-WordPress-nightly:php74-linux:
+WordPress-nightly:singlesite:php74:linux:
   extends:
     - .phpunit
     - .wordpress-nightly
@@ -197,185 +197,185 @@ WordPress-nightly:php74-linux:
 
 # multisite
 # PHP 7.0
-wordpress50-multisite:php70-linux:
+wordpress50:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress50
     - .php70-linux
-wordpress51-multisite:php70-linux:
+wordpress51:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress51
     - .php70-linux
-wordpress52-multisite:php70-linux:
+wordpress52:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress52
     - .php70-linux
-wordpress53-multisite:php70-linux:
+wordpress53:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress53
     - .php70-linux
-wordpress54-multisite:php70-linux:
+wordpress54:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress54
     - .php70-linux
-WordPress-multisite-latest:php70-linux:
+WordPress-latest:multisite:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-latest
     - .php70-linux
-WordPress-multisite-nightly:php70-linux:
+WordPress-latest:nightly:php70:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-nightly
     - .php70-linux
 
 # PHP 7.1
-wordpress50-multisite:php71-linux:
+wordpress50:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress50
     - .php71-linux
-wordpress51-multisite:php71-linux:
+wordpress51:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress51
     - .php71-linux
-wordpress52-multisite:php71-linux:
+wordpress52:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress52
     - .php71-linux
-wordpress53-multisite:php71-linux:
+wordpress53:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress53
     - .php71-linux
-wordpress54-multisite:php71-linux:
+wordpress54:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress54
     - .php71-linux
-WordPress-multisite-latest:php71-linux:
+WordPress-latest:multisite:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-latest
     - .php71-linux
-WordPress-multisite-nightly:php71-linux:
+WordPress-latest:nightly:php71:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-nightly
     - .php71-linux
 
 # PHP 7.2
-wordpress50-multisite:php72-linux:
+wordpress50:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress50
     - .php72-linux
-wordpress51-multisite:php72-linux:
+wordpress51:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress51
     - .php72-linux
-wordpress52-multisite:php72-linux:
+wordpress52:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress52
     - .php72-linux
-wordpress53-multisite:php72-linux:
+wordpress53:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress53
     - .php72-linux
-wordpress54-multisite:php72-linux:
+wordpress54:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress54
     - .php72-linux
-WordPress-multisite-latest:php72-linux:
+WordPress-latest:multisite:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-latest
     - .php72-linux
-WordPress-multisite-nightly:php72-linux:
+WordPress-latest:nightly:php72:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-nightly
     - .php72-linux
 
 # PHP 7.3
-wordpress50-multisite:php73-linux:
+wordpress50:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress50
     - .php73-linux
-wordpress51-multisite:php73-linux:
+wordpress51:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress51
     - .php73-linux
-wordpress52-multisite:php73-linux:
+wordpress52:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress52
     - .php73-linux
-wordpress53-multisite:php73-linux:
+wordpress53:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress53
     - .php73-linux
-wordpress54-multisite:php73-linux:
+wordpress54:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress54
     - .php73-linux
-WordPress-multisite-latest:php73-linux:
+WordPress-latest:multisite:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-latest
     - .php73-linux
-WordPress-multisite-nightly:php73-linux:
+WordPress-latest:nightly:php73:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-nightly
     - .php73-linux
 
 # PHP 7.4
-wordpress50-multisite:php74-linux:
+wordpress50:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress50
     - .php74-linux
-wordpress51-multisite:php74-linux:
+wordpress51:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress51
     - .php74-linux
-wordpress52-multisite:php74-linux:
+wordpress52:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress52
     - .php74-linux
-wordpress53-multisite:php74-linux:
+wordpress53:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress53
     - .php74-linux
-wordpress54-multisite:php74-linux:
+wordpress54:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress54
     - .php74-linux
-WordPress-multisite-latest:php74-linux:
+WordPress-latest:multisite:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-latest
     - .php74-linux
-WordPress-multisite-nightly:php74-linux:
+WordPress-latest:nightly:php74:linux:
   extends:
     - .phpunit-multisite
     - .wordpress-nightly

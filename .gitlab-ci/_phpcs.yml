@@ -5,4 +5,4 @@
   needs: [build]
   extends: .base
   script:
-    - ./tools/phpcs
+    - ./vendor/bin/phpcs

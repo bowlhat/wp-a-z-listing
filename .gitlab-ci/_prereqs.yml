@@ -31,13 +31,3 @@
     echo "Install node"
     nvm install '14.15.1'
     nvm use '14.15.1'
-  - |
-    composer global require squizlabs/php_codesniffer:^3 --prefer-dist --no-interaction --no-progress
-    mkdir -p tools
-    ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
-    git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
-    ./tools/phpcs --config-set installed_paths /tmp/sniffs
-  - |
-    composer global require phpunit/phpunit:^6 --prefer-dist --no-interaction --no-progress
-    mkdir -p tools
-    ln -sf $HOME/.composer/vendor/bin/phpunit tools/phpunit
