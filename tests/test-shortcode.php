@@ -243,7 +243,7 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 		$this->assertHTMLEquals( $expected, $actual );
 	}
 
-	public function test_populated_symbols_first_listing() {
+	public function test_populated_symbols_last_override_listing() {
 		$title = '%Test Page';
 		$p     = self::factory()->post->create(
 			array(
@@ -252,10 +252,23 @@ class AZ_Shortcode_Tests extends WP_UnitTestCase {
 			)
 		);
 
-		add_filter( 'a_z_listing_unknown_letter_is_first', '__return_true' );
+		$expected = sprintf( file_get_contents( 'tests/data/populated-listing-symbols-last.txt' ), $title, $p );
+		$actual   = do_shortcode( '[a-z-listing symbols-first="no"]' );
+
+		$this->assertHTMLEquals( $expected, $actual );
+	}
+
+	public function test_populated_symbols_first_override_listing() {
+		$title = '%Test Page';
+		$p     = self::factory()->post->create(
+			array(
+				'post_title' => $title,
+				'post_type'  => 'page',
+			)
+		);
+
 		$expected = sprintf( file_get_contents( 'tests/data/populated-listing-symbols-first.txt' ), $title, $p );
-		$actual   = do_shortcode( '[a-z-listing]' );
-		remove_filter( 'a_z_listing_unknown_letter_is_first', '__return_true' );
+		$actual   = do_shortcode( '[a-z-listing symbols-first="yes"]' );
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
