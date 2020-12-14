@@ -45,26 +45,20 @@ class Shortcode extends Singleton implements Extension {
 		 */
 		do_action( '_a_z_listing_shortcode_start', $attributes );
 
-		$attributes = shortcode_atts(
+		$defaults = apply_filters(
+			'a_z_listing_get_attributes',
 			array(
-				'alphabet'         => '',
 				'display'          => 'posts',
-				'exclude-posts'    => '',
-				'exclude-terms'    => '',
 				'get-all-children' => 'false',
 				'group-numbers'    => '',
 				'grouping'         => '',
-				'hide-empty-terms' => 'false',
 				'numbers'          => 'hide',
-				'parent-post'      => '',
-				'parent-term'      => '',
-				'parent-term-id'   => '',
-				'post-type'        => 'page',
 				'return'           => 'listing',
 				'target'           => '',
-				'taxonomy'         => '',
-				'terms'            => '',
-			),
+			)
+		);
+		$attributes = shortcode_atts(
+			$defaults,
 			$attributes,
 			'a-z-listing'
 		);

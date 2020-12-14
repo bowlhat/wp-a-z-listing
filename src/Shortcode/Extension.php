@@ -18,7 +18,7 @@ use \A_Z_Listing\Singleton;
 /**
  * Shortcode Extension
  */
-class Extension extends Singleton implements \A_Z_Listing\Extension {
+abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 	/**
 	 * The attribute for this shortcode extension.
 	 *
@@ -26,6 +26,14 @@ class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 * @var string
 	 */
 	public $attribute_name = '';
+
+	/**
+	 * The default value for the attribute.
+	 * 
+	 * @since 4.0.0
+	 * @var string
+	 */
+	public $default_value = '';
 
 	/**
 	 * The types of listing this shortcode extension may be used with.
@@ -57,6 +65,7 @@ class Extension extends Singleton implements \A_Z_Listing\Extension {
 		add_action( '_a_z_listing_shortcode_end', array( $this, 'cleanup' ), 10, 1 );
 
 		if ( ! empty( $this->attribute_name ) ) {
+			add_filter( "a_z_listing_get_attributes", array( $this, 'add_attribute' ) );
 			add_filter( "a_z_listing_sanitize_shortcode_attribute__{$this->attribute_name}", array( $this, 'sanitize_attribute' ), 10, 2 );
 			add_filter( "a_z_listing_shortcode_query_for_attribute__{$this->attribute_name}", array( $this, 'shortcode_query' ), 10, 5 );
 			foreach ( $this->display_types as $display ) {
@@ -76,15 +85,9 @@ class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 * @param int      $arguments The number of arguments the function expects.
 	 */
 	final protected function add_hook( string $type, string $name, callable $function, int $order = 10, int $arguments = 1 ) {
-		if ( ! defined( 'PHPUNIT_TEST_SUITE' ) && ( ! in_array( $type, array( 'action', 'filter' ), true ) || ! $this->activator || ! $this->activator->get_api_key_status( false ) ) ) {
-			return;
-		}
-
 		$hook = array( $name, $function, $order, $arguments );
-		if ( defined( 'PHPUNIT_TEST_SUITE' ) || ( $this->activator && $this->activator->get_api_key_status( false ) ) ) {
-			call_user_func_array( "add_$type", $hook );
-			$this->hooks[ $type ][] = $hook;
-		}
+		call_user_func_array( "add_$type", $hook );
+		$this->hooks[ $type ][] = $hook;
 	}
 
 	/**
@@ -128,6 +131,17 @@ class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 * @return void
 	 */
 	public function handler() {}
+
+	/**
+	 * Add the attribute.
+	 * @since 4.0.0
+	 * @param array $attributes The attributes
+	 * @return array The attributes
+	 */
+	function add_attribute( $attributes ) {
+		$attributes[ $this->attribute_name ] = $this->default_value;
+		return $attributes;
+	}
 
 	/**
 	 * Sanitize the shortcode attribute.

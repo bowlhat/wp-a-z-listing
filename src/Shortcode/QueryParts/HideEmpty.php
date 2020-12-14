@@ -28,6 +28,14 @@ class HideEmptyOld extends Extension {
 	public $attribute_name = 'hide-empty';
 
 	/**
+	 * The default value for the attribute.
+	 * 
+	 * @since 4.0.0
+	 * @var string
+	 */
+	public $default_value = 'false';
+
+	/**
 	 * The types of listing this shortcode extension may be used with.
 	 *
 	 * @since 4.0.0

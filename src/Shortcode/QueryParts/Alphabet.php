@@ -46,7 +46,7 @@ class Alphabet extends Extension {
 	 */
 	public function shortcode_query( $query, string $display, string $attribute, string $value, array $attributes ) {
 		$this->alphabet = $value;
-		add_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
+		$this->add_hook( 'filter', 'a-z-listing-alphabet', array( $this, 'return_alphabet' ), 10, 1 );
 		return $query;
 	}
 
@@ -57,15 +57,5 @@ class Alphabet extends Extension {
 	 */
 	public function return_alphabet(): string {
 		return $this->alphabet;
-	}
-
-	/**
-	 * Remove the filters we added in `shortcode_query()`.
-	 *
-	 * @see shortcode_query
-	 * @return void
-	 */
-	public function teardown() {
-		remove_filter( 'a-z-listing-alphabet', array( $this, 'return_alphabet' ) );
 	}
 }

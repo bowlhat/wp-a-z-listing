@@ -29,6 +29,14 @@ class PostType extends Extension {
 	public $attribute_name = 'post-type';
 
 	/**
+	 * The default value for the attribute.
+	 * 
+	 * @since 4.0.0
+	 * @var string
+	 */
+	public $default_value = 'page';
+
+	/**
 	 * The types of listing this shortcode extension may be used with.
 	 *
 	 * @since 4.0.0
