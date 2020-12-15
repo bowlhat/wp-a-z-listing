@@ -52,12 +52,13 @@ class GutenBlock extends Singleton implements Extension {
 			);
 		}
 		$index_js     = 'build/index.js';
-		$script_asset = require( $script_asset_path );
+		$script_asset = require $script_asset_path;
 		wp_register_script(
 			'a-z-listing-block-editor',
 			plugins_url( $index_js, __DIR__ ),
 			$script_asset['dependencies'],
-			$script_asset['version']
+			A_Z_LISTING_VERSION,
+			true
 		);
 
 		$editor_css = 'css/editor.css';
@@ -65,7 +66,7 @@ class GutenBlock extends Singleton implements Extension {
 			'a-z-listing-block-editor',
 			plugins_url( $editor_css, __DIR__ ),
 			array(),
-			filemtime( "$dir/$editor_css" )
+			A_Z_LISTING_VERSION
 		);
 
 		$style_css = 'css/a-z-listing-default.css';
@@ -73,7 +74,7 @@ class GutenBlock extends Singleton implements Extension {
 			'a-z-listing-block',
 			plugins_url( $style_css, __DIR__ ),
 			array(),
-			filemtime( "$dir/$style_css" )
+			A_Z_LISTING_VERSION
 		);
 
 		$attributes = json_decode( file_get_contents( plugin_dir_path( __DIR__ ) . '/scripts/blocks/attributes.json' ), true );

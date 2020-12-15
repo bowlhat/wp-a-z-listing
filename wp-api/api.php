@@ -12,7 +12,7 @@
  * @param WP_REST_Request $request The REST API Request.
  * @param array           $args Extra parameters set in the entrypoint functions.
  */
-function a_z_real_api_handler( WP_REST_Request $request, array $args ) {
+function a_z_listing_real_api_handler( WP_REST_Request $request, array $args ) {
 	$output = a_z_shortcode_handler( $args );
 
 	if ( $request->get_param( 'include-styles' ) ) {
@@ -39,15 +39,15 @@ function a_z_real_api_handler( WP_REST_Request $request, array $args ) {
  * @since 2.0.0
  * @param WP_REST_Request $request The REST API Request.
  */
-function a_z_posts_api_handler( WP_REST_Request $request ) {
-	$args = a_z_api_handler_defaults( $request );
+function a_z_listing_posts_api_handler( WP_REST_Request $request ) {
+	$args = a_z_listing_api_handler_defaults( $request );
 
 	$args['display']   = 'posts';
 	$args['post_type'] = $request->get_param( 'post_type' );
 	$args['taxonomy']  = $request->get_param( 'taxonomy' );
 	$args['terms']     = $request->get_param( 'terms' );
 
-	return a_z_real_api_handler( $request, $args );
+	return a_z_listing_real_api_handler( $request, $args );
 }
 
 /**
@@ -56,13 +56,13 @@ function a_z_posts_api_handler( WP_REST_Request $request ) {
  * @since 2.0.0
  * @param WP_REST_Request $request The REST API Request.
  */
-function a_z_terms_api_handler( WP_REST_Request $request ) {
-	$args = a_z_api_handler_defaults( $request );
+function a_z_listing_terms_api_handler( WP_REST_Request $request ) {
+	$args = a_z_listing_api_handler_defaults( $request );
 
 	$args['display']  = 'terms';
 	$args['taxonomy'] = $request->get_param( 'taxonomy' );
 
-	return a_z_real_api_handler( $request, $args );
+	return a_z_listing_real_api_handler( $request, $args );
 }
 
 /**
@@ -71,7 +71,7 @@ function a_z_terms_api_handler( WP_REST_Request $request ) {
  * @since 2.0.0
  * @param WP_REST_Request $request The REST API Request.
  */
-function a_z_api_handler_defaults( WP_REST_Request $request ) {
+function a_z_listing_api_handler_defaults( WP_REST_Request $request ) {
 	$args = array();
 
 	$args['alphabet']      = $request->get_param( 'alphabet' );
@@ -87,13 +87,13 @@ function a_z_api_handler_defaults( WP_REST_Request $request ) {
 	return $args;
 }
 
-add_action( 'rest_api_init', 'register_a_z_listing_rest_api' );
+add_action( 'rest_api_init', 'a_z_listing_register_rest_api' );
 /**
  * Register the REST API extensions for the plugin
  *
  * @since 2.0.0
  */
-function register_a_z_listing_rest_api() {
+function a_z_listing_register_rest_api() {
 	$default_args = array(
 		'alphabet'       => array(
 			'description'       => __( 'Override default alphabet', 'a-z-listing' ),
@@ -130,7 +130,7 @@ function register_a_z_listing_rest_api() {
 		'/posts/(?P<post_type>[a-z0-9-]+)',
 		array(
 			'methods'  => 'GET',
-			'callback' => 'a_z_posts_api_handler',
+			'callback' => 'a_z_listing_posts_api_handler',
 			'args'     => array(
 				'post_type' => array(
 					'description'       => __( 'Post type', 'a-z-listing' ),
@@ -153,7 +153,7 @@ function register_a_z_listing_rest_api() {
 		'/terms/(?P<taxonomy>[a-z0-9-]+)',
 		array(
 			'methods'  => 'GET',
-			'callback' => 'a_z_terms_api_handler',
+			'callback' => 'a_z_listing_terms_api_handler',
 			'args'     => array(
 				$default_args,
 			),

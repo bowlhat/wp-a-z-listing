@@ -18,8 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'AZLISTINGLOG' ) ) {
-	define( 'AZLISTINGLOG', false );
+define( 'A_Z_LISTING_VERSION', get_plugin_data( __FILE__ )['Version'] );
+
+if ( ! defined( 'A_Z_LISTING_LOG' ) ) {
+	define( 'A_Z_LISTING_LOG', false );
 }
 
 if ( file_exists( __DIR__ . '/build/vendor/autoload.php' ) ) {

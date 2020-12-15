@@ -9,9 +9,14 @@ include:
 stages:
   - build
   - test
-  # - release
+  - release
 
-# .release:
-#   stage: release
-#   only:
-#     - tags
+release:
+  stage: release
+  needs:
+    - job: build
+      artifacts: true
+  only:
+    - tags
+  script:
+    - ''

@@ -61,8 +61,8 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		add_action( '_a_z_listing_shortcode_start', array( $this, 'handler' ), 10, 1 );
-		add_action( '_a_z_listing_shortcode_end', array( $this, 'cleanup' ), 10, 1 );
+		add_action( 'a_z_listing_shortcode_start', array( $this, 'handler' ), 10, 1 );
+		add_action( 'a_z_listing_shortcode_end', array( $this, 'cleanup' ), 10, 1 );
 
 		if ( ! empty( $this->attribute_name ) ) {
 			add_filter( 'a_z_listing_get_shortcode_attributes', array( $this, 'add_attribute' ) );
@@ -139,7 +139,7 @@ abstract class Extension extends Singleton implements \A_Z_Listing\Extension {
 	 * @param array $attributes The attributes.
 	 * @return array The attributes.
 	 */
-	function add_attribute( $attributes ) {
+	public function add_attribute( $attributes ) {
 		$attributes[ $this->attribute_name ] = $this->default_value;
 		return $attributes;
 	}

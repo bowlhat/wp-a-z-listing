@@ -38,6 +38,9 @@ jQuery( function( $ ) {
 			const listing_exclude_terms_wrapper = el.find(
 				'.a-z-listing-exclude-terms-wrapper'
 			);
+			const listing_wpnonce = el.find(
+				'#_posts_by_title_wpnonce'
+			);
 
 			const switch_taxonomy_or_posts = function() {
 				if ( 'terms' === display_type.val() ) {
@@ -82,6 +85,7 @@ jQuery( function( $ ) {
 						dataType: 'json',
 						data: {
 							action: 'get_a_z_listing_autocomplete_post_titles',
+							_posts_by_title_wpnonce: listing_wpnonce.value,
 							post_type: '',
 							post_title,
 						},

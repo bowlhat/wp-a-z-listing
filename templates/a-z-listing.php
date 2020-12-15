@@ -18,7 +18,7 @@
  * 10 here will create two columns with 6 items in the first column and 5 items
  * in the second column.
  */
-$_a_z_listing_minpercol = 10;
+$a_z_listing_minpercol = 10;
 ?>
 <div id="<?php $a_z_query->the_instance_id(); ?>" class="az-listing">
 	<div class="az-letters-wrap">
@@ -35,9 +35,9 @@ $_a_z_listing_minpercol = 10;
 				?>
 				<?php if ( $a_z_query->have_items() ) : ?>
 					<?php
-					$item_count  = $a_z_query->get_the_letter_items_count();
-					$num_columns = ceil(
-						$item_count / $_a_z_listing_minpercol
+					$a_z_listing_item_count  = $a_z_query->get_the_letter_items_count();
+					$a_z_listing_num_columns = ceil(
+						$a_z_listing_item_count / $a_z_listing_minpercol
 					);
 					?>
 					<div class="letter-section" id="<?php $a_z_query->the_letter_id(); ?>">
@@ -47,8 +47,8 @@ $_a_z_listing_minpercol = 10;
 							</span>
 						</h2>
 
-						<?php $column_class = "max-$num_columns-columns"; ?>
-						<ul class="az-columns <?php echo $column_class; ?>">
+						<?php $a_z_listing_column_class = "max-$a_z_listing_num_columns-columns"; ?>
+						<ul class="az-columns <?php echo esc_attr( $a_z_listing_column_class ); ?>">
 							<?php
 							while ( $a_z_query->have_items() ) :
 								$a_z_query->the_item();
@@ -63,7 +63,7 @@ $_a_z_listing_minpercol = 10;
 
 						<div class="back-to-top">
 							<a href="#<?php $a_z_query->the_instance_id(); ?>">
-								<?php _e( 'Back to top', 'a-z-listing' ); ?>
+								<?php esc_html_e( 'Back to top', 'a-z-listing' ); ?>
 							</a>
 						</div>
 					</div>

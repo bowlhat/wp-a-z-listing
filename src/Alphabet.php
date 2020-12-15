@@ -81,7 +81,7 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $alphabet The $alphabet.
 		 */
-		$alphabet = apply_filters( 'a-z-listing-alphabet', $alphabet );
+		$alphabet = apply_filters( 'a-z-listing-alphabet', $alphabet ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Specifies the character used for all non-alphabetic titles, such as
@@ -100,11 +100,11 @@ class Alphabet {
 		 * @since 1.7.1
 		 * @param string $non_alpha_char The character for non-alphabetic post titles.
 		 */
-		$others = apply_filters( 'a-z-listing-non-alpha-char', $others );
+		$others = apply_filters( 'a-z-listing-non-alpha-char', $others ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		$alphabet_groups = explode( ',', $alphabet );
-		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 1 ) {
-			do_action( 'log', 'A-Z Listing: Alphabet Groups', $alphabet_groups );
+		if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG > 1 ) {
+			do_action( 'a_z_listing_log', 'A-Z Listing: Alphabet Groups', $alphabet_groups );
 		}
 		$letters = array_reduce(
 			$alphabet_groups,
@@ -139,8 +139,8 @@ class Alphabet {
 			array()
 		);
 
-		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
-			do_action( 'log', 'A-Z Listing: Alphabet', $letters );
+		if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG > 2 ) {
+			do_action( 'a_z_listing_log', 'A-Z Listing: Alphabet', $letters );
 		}
 
 		$this->unknown_letter          = $others;
@@ -175,7 +175,7 @@ class Alphabet {
 			if ( 0 === $offset ) {
 				return $this->unknown_letter;
 			}
-			$offset = $offset - 1;
+			--$offset;
 		}
 
 		if ( count( $this->alphabet_keys ) <= $offset ) {

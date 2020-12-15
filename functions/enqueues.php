@@ -22,20 +22,22 @@ function a_z_listing_do_enqueue() {
 	wp_register_style(
 		'a-z-listing',
 		plugins_url( 'css/a-z-listing-default.css', dirname( __FILE__ ) ),
-		array( 'dashicons' )
+		array( 'dashicons' ),
+		A_Z_LISTING_VERSION
 	);
 
 	wp_register_style(
 		'a-z-listing-admin',
 		plugins_url( 'css/a-z-listing-customize.css', dirname( __FILE__ ) ),
-		array()
+		array(),
+		A_Z_LISTING_VERSION
 	);
 
 	wp_register_script(
 		'a-z-listing-tabs',
 		plugins_url( 'scripts/a-z-listing-tabs.js', dirname( __FILE__ ) ),
 		array( 'jquery', 'jquery-ui-tabs' ),
-		false,
+		A_Z_LISTING_VERSION,
 		true
 	);
 
@@ -43,7 +45,7 @@ function a_z_listing_do_enqueue() {
 		'a-z-listing-widget-admin',
 		plugins_url( 'scripts/a-z-listing-widget-admin.js', dirname( __FILE__ ) ),
 		array( 'jquery', 'jquery-ui-autocomplete' ),
-		false,
+		A_Z_LISTING_VERSION,
 		true
 	);
 	wp_localize_script(
@@ -56,7 +58,7 @@ function a_z_listing_do_enqueue() {
 		'a-z-listing-scroll-fix',
 		plugins_url( 'scripts/a-z-listing-scroll-fix.js', dirname( __FILE__ ) ),
 		array(),
-		false,
+		A_Z_LISTING_VERSION,
 		true
 	);
 	wp_localize_script(
@@ -79,10 +81,10 @@ function a_z_listing_do_enqueue() {
 	 * @param bool True to add default styling, False to disable.
 	 * @since 1.7.1
 	 */
-	$add_styles = apply_filters( 'a-z-listing-add-styling', $add_styles );
+	$add_styles = apply_filters( 'a-z-listing-add-styling', $add_styles ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-	if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-		do_action( 'log', 'A-Z Listing: Add Styles', $add_styles );
+	if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG ) {
+		do_action( 'a_z_listing_log', 'A-Z Listing: Add Styles', $add_styles );
 	}
 	if ( true === $add_styles && ! has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' ) ) {
 		add_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_styles' );
@@ -104,10 +106,10 @@ function a_z_listing_do_enqueue() {
 	 * @param bool True to add jQuery-UI Tabs, False to disable.
 	 * @since 2.0.0
 	 */
-	$tabify = apply_filters( 'a-z-listing-tabify', $tabify );
+	$tabify = apply_filters( 'a-z-listing-tabify', $tabify ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-	if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-		do_action( 'log', 'A-Z Listing: Tabify', $tabify );
+	if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG ) {
+		do_action( 'a_z_listing_log', 'A-Z Listing: Tabify', $tabify );
 	}
 	if ( true === $tabify && ! has_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' ) ) {
 		add_action( 'wp_enqueue_scripts', 'a_z_listing_enqueue_tabs' );

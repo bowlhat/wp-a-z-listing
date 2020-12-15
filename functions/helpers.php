@@ -11,6 +11,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
+add_action( 'a_z_listing_log', 'a_z_listing_log' );
+
+/**
+ * A-Z Listing Logging wrapper function.
+ *
+ * @since 4.0.0
+ * @return void
+ */
+function a_z_listing_log() {
+	do_action_ref_array( 'log', func_get_args() ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+}
+
 /**
  * Retrieve whether the query has any letters left
  *
@@ -128,7 +141,7 @@ function num_a_z_items(): int {
  * @param array|string|WP_Query|\A_Z_Listing\Query $query a valid WordPress query or an A_Z_Listing\Query instance.
  */
 function the_a_z_letter_count( $query = null ) {
-	echo a_z_listing_cache( $query )->num_letters();
+	echo esc_html( a_z_listing_cache( $query )->num_letters() );
 }
 
 /**

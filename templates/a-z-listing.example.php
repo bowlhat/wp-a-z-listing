@@ -46,7 +46,7 @@
 
 						<div class="back-to-top">
 							<a href="#<?php $a_z_query->the_instance_id(); ?>">
-								<?php _e( 'Back to top', 'a-z-listing' ); ?>
+								<?php esc_html_e( 'Back to top', 'a-z-listing' ); ?>
 							</a>
 						</div>
 					</div>

@@ -123,6 +123,8 @@ class A_Z_Listing_Widget extends WP_Widget {
 		$listing_hide_empty_terms      = $instance['hide_empty_terms'] ?? '';
 		$listing_hide_empty_terms_id   = $this->get_field_id( 'hide_empty_terms' );
 		$listing_hide_empty_terms_name = $this->get_field_name( 'hide_empty_terms' );
+
+		wp_nonce_field( 'posts-by-title', '_posts_by_title_wpnonce', false, true );
 		?>
 
 		<div class="a-z-listing-widget">
@@ -313,17 +315,17 @@ class A_Z_Listing_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']             = strip_tags( $new_instance['title'] );
-		$instance['type']              = strip_tags( $new_instance['type'] );
+		$instance['title']             = wp_strip_all_tags( $new_instance['title'] );
+		$instance['type']              = wp_strip_all_tags( $new_instance['type'] );
 		$instance['post']              = (int) $new_instance['post']; // target.
-		$instance['target_post_title'] = strip_tags( $new_instance['target_post_title'] );
-		$instance['post_type']         = strip_tags( $new_instance['post_type'] );
-		$instance['taxonomy']          = strip_tags( $new_instance['taxonomy'] );
+		$instance['target_post_title'] = wp_strip_all_tags( $new_instance['target_post_title'] );
+		$instance['post_type']         = wp_strip_all_tags( $new_instance['post_type'] );
+		$instance['taxonomy']          = wp_strip_all_tags( $new_instance['taxonomy'] );
 		$instance['parent_post']       = (int) $new_instance['parent_post'];
 		$instance['all_children']      = 'on' === $new_instance['all_children'] ? 'true' : 'false';
-		$instance['parent_term']       = strip_tags( $new_instance['parent_term'] );
-		$instance['terms']             = strip_tags( $new_instance['terms'] );
-		$instance['exclude_terms']     = strip_tags( $new_instance['exclude_terms'] );
+		$instance['parent_term']       = wp_strip_all_tags( $new_instance['parent_term'] );
+		$instance['terms']             = wp_strip_all_tags( $new_instance['terms'] );
+		$instance['exclude_terms']     = wp_strip_all_tags( $new_instance['exclude_terms'] );
 		$instance['hide_empty_terms']  = 'on' === $new_instance['hide_empty_terms'] ? 'true' : 'false';
 
 		if ( empty( $new_instance['target_post_title'] ) ) {
@@ -373,7 +375,7 @@ function the_section_az_widget( array $args, array $instance ) {
  * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
  * @return void
  */
-function the_section_a_z_widget( array $args, array $instance ) {
+function the_section_a_z_widget( array $args, array $instance ) { //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	echo get_the_section_a_z_widget( $args, $instance ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
@@ -401,8 +403,8 @@ function get_the_section_az_widget( array $args, array $instance ): string {
  * @param  array<string,mixed> $instance Configuration of this Widget. Unique to this invocation.
  * @return  string The complete A-Z Widget HTML ready for echoing to the page.
  */
-function get_the_section_a_z_widget( array $args, array $instance ): string {
-	do_action( 'log', 'A-Z Listing: Running widget' );
+function get_the_section_a_z_widget( array $args, array $instance ): string { //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+	do_action( 'a_z_listing_log', 'A-Z Listing: Running widget' );
 
 	$instance = wp_parse_args(
 		$instance,
@@ -484,10 +486,15 @@ function get_the_section_a_z_widget( array $args, array $instance ): string {
 function a_z_listing_get_posts_by_title( string $post_title, string $post_type = '' ): array {
 	global $wpdb;
 
+	$cache_key  = "a_z_listing_posts_by_title:$post_type:$post_title";
 	$post_title = '%' . $wpdb->esc_like( $post_title ) . '%';
 
+	$results = wp_cache_get( $cache_key );
+	if ( $results ) {
+		return $results;
+	}
 	if ( ! empty( $post_type ) ) {
-		return $wpdb->get_results(
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
                 WHERE `post_title` LIKE %s AND `post_type` = %s AND `post_status` = 'publish'",
@@ -496,14 +503,17 @@ function a_z_listing_get_posts_by_title( string $post_title, string $post_type =
 			)
 		);
 	} else {
-		return $wpdb->get_results(
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
-                WHERE `post_title` LIKE %s AND `post_status` = 'publish'",
+				WHERE `post_title` LIKE %s AND `post_status` = 'publish'",
 				$post_title
 			)
 		);
 	}
+
+	wp_cache_set( $cache_key, $results, '', 3600 );
+	return $results;
 }
 
 /**
@@ -513,8 +523,24 @@ function a_z_listing_get_posts_by_title( string $post_title, string $post_type =
  * @return void
  */
 function a_z_listing_autocomplete_post_titles() {
-	$post_title = stripslashes( $_POST['post_title']['term'] );
-	$post_type  = stripslashes( $_POST['post_type'] );
+	check_ajax_referer( 'posts-by-title' );
+
+	$nonce = '';
+	if ( isset( $_REQUEST['_posts_by_title_wpnonce'] ) ) {
+		$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_posts_by_title_wpnonce'] ) );
+	}
+	if ( ! wp_verify_nonce( $nonce, 'posts-by-title' ) ) {
+		die( esc_html( __( 'Security check failed', 'a-z-listing' ) ) );
+	}
+
+	$post_title = '';
+	$post_type  = '';
+	if ( isset( $_POST['post_title']['term'] ) ) {
+		$post_title = sanitize_text_field( wp_unslash( $_POST['post_title']['term'] ) );
+	}
+	if ( isset( $_POST['post_type'] ) ) {
+		$post_type = sanitize_text_field( wp_unslash( $_POST['post_type'] ) );
+	}
 
 	$results = a_z_listing_get_posts_by_title( $post_title, $post_type );
 
@@ -526,7 +552,7 @@ function a_z_listing_autocomplete_post_titles() {
 		);
 	}
 
-	echo json_encode( $titles );
+	echo wp_json_encode( $titles );
 
 	exit();
 }

@@ -39,11 +39,11 @@ class Shortcode extends Singleton implements Extension {
 	 * @return string The A-Z Listing HTML.
 	 * @suppress PhanPluginPossiblyStaticPublicMethod
 	 */
-	function handle( $attributes = array() ): string {
+	public function handle( $attributes = array() ): string {
 		/**
 		 * Run extensions.
 		 */
-		do_action( '_a_z_listing_shortcode_start', $attributes );
+		do_action( 'a_z_listing_shortcode_start', $attributes );
 
 		$defaults   = apply_filters(
 			'a_z_listing_get_shortcode_attributes',
@@ -108,7 +108,7 @@ class Shortcode extends Singleton implements Extension {
 		$grouping_obj->teardown();
 		$numbers_obj->teardown();
 
-		do_action( '_a_z_listing_shortcode_end', $attributes );
+		do_action( 'a_z_listing_shortcode_end', $attributes );
 
 		return $ret;
 	}

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DEFAULT_A_Z_TEMPLATE', plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
+define( 'A_Z_LISTING_DEFAULT_TEMPLATE', plugin_dir_path( __DIR__ ) . 'templates/a-z-listing.php' );
 
 /**
  * The main A-Z Query class
@@ -170,7 +170,7 @@ class Query {
 		 * @param array|Object|\WP_Query  $query  The query object
 		 * @param string  $type  The type of the query. Either 'posts' or 'terms'.
 		 */
-		$query = apply_filters( 'a-z-listing-query', $query, $this->type );
+		$query = apply_filters( 'a-z-listing-query', $query, $this->type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		if ( is_array( $query ) && isset( $query['taxonomy'] ) ) {
 			$this->taxonomy = $query['taxonomy'];
@@ -205,8 +205,8 @@ class Query {
 			$items = apply_filters( "a_z_listing_get_items_for_display__{$this->type}", array(), $query );
 		}
 
-		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-			\do_action( 'log', "A-Z Listing: {$this->type}", '!ID', $items );
+		if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG ) {
+			\do_action( 'a_z_listing_log', "A-Z Listing: {$this->type}", '!ID', $items );
 		}
 
 		/**
@@ -217,7 +217,7 @@ class Query {
 		 * @param string $type  The query type - e.g. terms, posts, etc.
 		 * @param array  $query The query as an array.
 		 */
-		$items = apply_filters( 'a-z-listing-filter-items', $items, $this->type, (array) $query );
+		$items = apply_filters( 'a-z-listing-filter-items', $items, $this->type, (array) $query ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		$this->matched_item_indices = $this->get_all_indices( $items );
 
@@ -302,7 +302,7 @@ class Query {
 		 * @since 1.7.1
 		 * @param array $sections The sections for the site.
 		 */
-		$sections = apply_filters( 'a-z-listing-sections', $sections );
+		$sections = apply_filters( 'a-z-listing-sections', $sections ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		if ( ! $page instanceof \WP_Post ) {
 			$page = get_post( $page );
@@ -325,8 +325,8 @@ class Query {
 			$section_object = null;
 		}
 
-		if ( defined( 'AZLISTINGLOG' ) ) {
-			\do_action( 'log', 'A-Z Listing: Section selection', $section_name, $sections );
+		if ( defined( 'A_Z_LISTING_LOG' ) ) {
+			\do_action( 'a_z_listing_log', 'A-Z Listing: Section selection', $section_name, $sections );
 		}
 
 		if ( null !== $section_name && ! in_array( $section_name, $sections, true ) ) {
@@ -334,8 +334,8 @@ class Query {
 			$section_object = null;
 		}
 
-		if ( defined( 'AZLISTINGLOG' ) ) {
-			\do_action( 'log', 'A-Z Listing: Proceeding with section', $section_name );
+		if ( defined( 'A_Z_LISTING_LOG' ) ) {
+			\do_action( 'a_z_listing_log', 'A-Z Listing: Proceeding with section', $section_name );
 		}
 		return $section_object;
 	}
@@ -373,7 +373,7 @@ class Query {
 	 */
 	protected function get_all_indices_for_item( $item ): array {
 		$indexed_items = array();
-		$item_indices  = \apply_filters( '_a-z-listing-extract-item-indices', array(), $item, $this->type, $this->alphabet );
+		$item_indices  = \apply_filters( 'a_z_listing_extract_item_indices', array(), $item, $this->type, $this->alphabet );
 
 		if ( ! empty( $item_indices ) ) {
 			foreach ( $item_indices as $key => $entries ) {
@@ -386,8 +386,8 @@ class Query {
 			}
 		}
 
-		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
-			do_action( 'log', 'A-Z Listing: Complete item indices', $indexed_items );
+		if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG > 2 ) {
+			do_action( 'a_z_listing_log', 'A-Z Listing: Complete item indices', $indexed_items );
 		}
 		return $indexed_items;
 	}
@@ -486,8 +486,8 @@ class Query {
 					);
 
 					if ( is_int( $sort ) ) {
-						if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG ) {
-							do_action( 'log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
+						if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG ) {
+							do_action( 'a_z_listing_log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
 						}
 						return $sort;
 					}
@@ -646,7 +646,7 @@ class Query {
 
 		$template = locate_template( $templates );
 		if ( empty( $template ) ) {
-			$template = DEFAULT_A_Z_TEMPLATE;
+			$template = A_Z_LISTING_DEFAULT_TEMPLATE;
 		}
 
 		_do_template( $this, $template );
@@ -798,13 +798,13 @@ class Query {
 						return \get_term( intval( $item[1] ) );
 					}
 					if ( 'post' === $item[0] ) {
-						$post = \get_post( intval( $item[1] ) );
+						$post = \get_post( intval( $item[1] ) ); //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 						\setup_postdata( $post );
 						return $post;
 					}
 				}
 			} elseif ( $current_item instanceof \WP_Post ) {
-				$post = $current_item;
+				$post = $current_item; //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 				setup_postdata( $post );
 				return $post;
 			} elseif ( $current_item instanceof \WP_Term ) {
@@ -825,7 +825,7 @@ class Query {
 	 * @param bool   $single Whether to return a single value.
 	 * @return mixed|\WP_Error Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
-	function get_item_meta( string $key = '', bool $single = false ) {
+	public function get_item_meta( string $key = '', bool $single = false ) {
 		if ( is_string( $this->current_item['item'] ) ) {
 			$item = explode( ':', $this->current_item['item'], 2 );
 
@@ -849,7 +849,7 @@ class Query {
 	 * @since 2.2.0
 	 * @return void
 	 */
-	function the_item_post_count() {
+	public function the_item_post_count() {
 		echo \esc_html( strval( $this->get_the_item_post_count() ) );
 	}
 
@@ -859,7 +859,7 @@ class Query {
 	 * @since 2.2.0
 	 * @return int The number of posts
 	 */
-	function get_the_item_post_count(): int {
+	public function get_the_item_post_count(): int {
 		if ( is_string( $this->current_item['item'] ) ) {
 			$item = explode( ':', $this->current_item['item'], 2 );
 			$term = null;
@@ -1050,14 +1050,14 @@ class Query {
 		 * @since 1.8.0
 		 * @param string $letter The title of the letter.
 		 */
-		$letter = apply_filters( 'the_a_z_letter_title', $letter );
+		$letter = apply_filters( 'the_a_z_letter_title', $letter ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		/**
 		 * Modify the letter title or heading
 		 *
 		 * @since 1.8.0
 		 * @param string $letter The title of the letter.
 		 */
-		$letter = apply_filters( 'the-a-z-letter-title', $letter );
+		$letter = apply_filters( 'the-a-z-letter-title', $letter ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		return $letter;
 	}
@@ -1089,15 +1089,15 @@ class Query {
 
 		if ( is_array( $item ) ) {
 			if ( 'post' === $item[0] ) {
-				return apply_filters( 'the_title', $title, $item[1] );
+				return apply_filters( 'the_title', $title, $item[1] ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			} elseif ( 'term' === $item[0] ) {
-				return apply_filters( 'term_name', $title, $item[1] );
+				return apply_filters( 'term_name', $title, $item[1] ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			}
 		} else {
 			if ( $item instanceof \WP_Post ) {
-				return apply_filters( 'the_title', $title, $item->ID );
+				return apply_filters( 'the_title', $title, $item->ID ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			} elseif ( $item instanceof \WP_Term ) {
-				return apply_filters( 'term_name', $title, $item->term_id );
+				return apply_filters( 'term_name', $title, $item->term_id ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			}
 		}
 
@@ -1136,6 +1136,6 @@ function _do_template( Query $a_z_query ) {
 	if ( func_get_arg( 1 ) ) {
 		require func_get_arg( 1 );
 	} else {
-		require DEFAULT_A_Z_TEMPLATE;
+		require A_Z_LISTING_DEFAULT_TEMPLATE;
 	}
 }

@@ -23,7 +23,7 @@ abstract class Singleton implements Extension {
 	 * @since 4.0.0
 	 * @var array<string,Extension>
 	 */
-	private static $_instances = array();
+	private static $instances = array();
 
 	/**
 	 * Singleton
@@ -34,10 +34,10 @@ abstract class Singleton implements Extension {
 	 */
 	final public static function instance(): Extension {
 		$class = get_called_class();
-		if ( ! isset( self::$_instances[ $class ] ) ) {
-			self::$_instances[ $class ] = new $class();
+		if ( ! isset( self::$instances[ $class ] ) ) {
+			self::$instances[ $class ] = new $class();
 		}
-		return self::$_instances[ $class ];
+		return self::$instances[ $class ];
 	}
 
 	// phpcs:ignore Squiz.Commenting.FunctionComment.MissingParamTag

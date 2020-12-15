@@ -23,7 +23,7 @@ class Indices extends Singleton implements Extension {
 	 * @return void
 	 */
 	final public function initialize() {
-		add_filter( '_a-z-listing-extract-item-indices', array( $this, 'get_item_indices' ), 1, 4 );
+		add_filter( 'a_z_listing_extract_item_indices', array( $this, 'get_item_indices' ), 1, 4 );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Indices extends Singleton implements Extension {
 		 * @param \WP_Post|\WP_Term $item The item
 		 * @param string            $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
-		$title = apply_filters( 'a-z-listing-pre-index-item-title', $title, $item, $type );
+		$title = apply_filters( 'a-z-listing-pre-index-item-title', $title, $item, $type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Modify the title for this item before indexing
@@ -100,7 +100,7 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed  $item The item
 		 * @param string $item_type The type of the listing.
 		 */
-		$index_letters = apply_filters( 'a-z-listing-item-index-letter', array( $index ), $item, $type );
+		$index_letters = apply_filters( 'a-z-listing-item-index-letter', array( $index ), $item, $type ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		/**
 		 * Modify the indice(s) to group this item under
@@ -169,10 +169,10 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed  $item The item
 		 * @param string $item_type The type of the listing.
 		 */
-		$indices = apply_filters_deprecated( 'a-z-listing-item-indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );
+		$indices = apply_filters_deprecated( 'a-z-listing-item-indices', $filter_params, '2.1.0', 'a_z_listing_item_index_letter' );  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-		if ( defined( 'AZLISTINGLOG' ) && AZLISTINGLOG > 2 ) {
-			\do_action( 'log', 'A-Z Listing: Item indices', $indices );
+		if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG > 2 ) {
+			\do_action( 'a_z_listing_log', 'A-Z Listing: Item indices', $indices );
 		}
 
 		return $indices;
