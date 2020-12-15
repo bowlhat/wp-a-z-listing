@@ -22,6 +22,14 @@
   variables:
     WP_VERSION: '54'
     <<: *mysql-config
+.wordpress55:
+  variables:
+    WP_VERSION: '55'
+    <<: *mysql-config
+.wordpress56:
+  variables:
+    WP_VERSION: '56'
+    <<: *mysql-config
 .wordpress-latest:
   variables:
     WP_VERSION: 'latest'

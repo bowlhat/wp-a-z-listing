@@ -25,7 +25,11 @@ download() {
     fi
 }
 
-if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+$ ]]; then
+if [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+\-(beta|RC)[0-9]+$ ]]; then
+	WP_BRANCH=${WP_VERSION%\-*}
+	WP_TESTS_TAG="branches/$WP_BRANCH"
+
+elif [[ $WP_VERSION =~ ^[0-9]+\.[0-9]+$ ]]; then
 	WP_TESTS_TAG="branches/$WP_VERSION"
 elif [[ $WP_VERSION =~ [0-9]+\.[0-9]+\.[0-9]+ ]]; then
 	if [[ $WP_VERSION =~ [0-9]+\.[0-9]+\.[0] ]]; then
@@ -47,6 +51,7 @@ else
 	fi
 	WP_TESTS_TAG="tags/$LATEST_VERSION"
 fi
+set -ex
 
 install_wp() {
 
@@ -57,10 +62,9 @@ install_wp() {
 	mkdir -p $WP_CORE_DIR
 
 	if [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
-		mkdir -p $TMPDIR/wordpress-nightly
-		download https://wordpress.org/nightly-builds/wordpress-latest.zip  $TMPDIR/wordpress-nightly/wordpress-nightly.zip
-		unzip -q $TMPDIR/wordpress-nightly/wordpress-nightly.zip -d $TMPDIR/wordpress-nightly/
-		mv $TMPDIR/wordpress-nightly/wordpress/* $WP_CORE_DIR
+		mkdir -p $TMPDIR/wordpress-trunk
+		svn export --quiet https://core.svn.wordpress.org/trunk $TMPDIR/wordpress-trunk/wordpress
+		mv $TMPDIR/wordpress-trunk/wordpress/* $WP_CORE_DIR
 	else
 		if [ $WP_VERSION == 'latest' ]; then
 			local ARCHIVE_NAME='latest'
@@ -83,7 +87,7 @@ install_wp() {
 		else
 			local ARCHIVE_NAME="wordpress-$WP_VERSION"
 		fi
-		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz $TMPDIR/wordpress.tar.gz
+		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz  $TMPDIR/wordpress.tar.gz
 		tar --strip-components=1 -zxmf $TMPDIR/wordpress.tar.gz -C $WP_CORE_DIR
 	fi
 
@@ -93,7 +97,7 @@ install_wp() {
 install_test_suite() {
 	# portable in-place argument for both GNU sed and Mac OSX sed
 	if [[ $(uname -s) == 'Darwin' ]]; then
-		local ioption='-i .bak'
+		local ioption='-i.bak'
 	else
 		local ioption='-i'
 	fi
@@ -102,8 +106,8 @@ install_test_suite() {
 	if [ ! -d $WP_TESTS_DIR ]; then
 		# set up testing suite
 		mkdir -p $WP_TESTS_DIR
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
+		svn export --quiet --ignore-externals https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+		svn export --quiet --ignore-externals https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
 	fi
 
 	if [ ! -f wp-tests-config.php ]; then
@@ -111,12 +115,30 @@ install_test_suite() {
 		# remove all forward slashes in the end
 		WP_CORE_DIR=$(echo $WP_CORE_DIR | sed "s:/\+$::")
 		sed $ioption "s:dirname( __FILE__ ) . '/src/':'$WP_CORE_DIR/':" "$WP_TESTS_DIR"/wp-tests-config.php
+		sed $ioption "s:__DIR__ . '/src/':'$WP_CORE_DIR/':" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s/youremptytestdbnamehere/$DB_NAME/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s/yourusernamehere/$DB_USER/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s/yourpasswordhere/$DB_PASS/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s|localhost|${DB_HOST}|" "$WP_TESTS_DIR"/wp-tests-config.php
 	fi
 
+}
+
+recreate_db() {
+	shopt -s nocasematch
+	if [[ $1 =~ ^(y|yes)$ ]]
+	then
+		mysqladmin drop $DB_NAME -f --user="$DB_USER" --password="$DB_PASS"$EXTRA
+		create_db
+		echo "Recreated the database ($DB_NAME)."
+	else
+		echo "Leaving the existing database ($DB_NAME) in place."
+	fi
+	shopt -u nocasematch
+}
+
+create_db() {
+	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
 }
 
 install_db() {
@@ -131,22 +153,25 @@ install_db() {
 	local DB_SOCK_OR_PORT=${PARTS[1]};
 	local EXTRA=""
 
-	if [ -n "$DB_HOSTNAME" ] ; then
-		if [[ $DB_SOCK_OR_PORT =~ ^[0-9]{1,}$ ]]; then
+	if ! [ -z $DB_HOSTNAME ] ; then
+		if [ $(echo $DB_SOCK_OR_PORT | grep -e '^[0-9]\{1,\}$') ]; then
 			EXTRA=" --host=$DB_HOSTNAME --port=$DB_SOCK_OR_PORT --protocol=tcp"
-		elif [ -n "$DB_HOSTNAME" ] ; then
-			EXTRA=" --host=$DB_HOSTNAME"
-			if [ "$DB_HOSTNAME" != "localhost" ]; then
-				EXTRA+=" --protocol=tcp"
-			fi
+		elif ! [ -z $DB_SOCK_OR_PORT ] ; then
+			EXTRA=" --socket=$DB_SOCK_OR_PORT"
+		elif ! [ -z $DB_HOSTNAME ] ; then
+			EXTRA=" --host=$DB_HOSTNAME --protocol=tcp"
 		fi
-	elif [ -n "$DB_SOCK_OR_PORT" ] ; then
-		EXTRA=" --socket=$DB_SOCK_OR_PORT"
 	fi
 
 	# create database
-	set -e
-	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+	if [ $(mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA --execute='show databases;' | grep ^$DB_NAME$) ]
+	then
+		echo "Reinstalling will delete the existing test database ($DB_NAME)"
+		read -p 'Are you sure you want to proceed? [y/N]: ' DELETE_EXISTING_DB
+		recreate_db $DELETE_EXISTING_DB
+	else
+		create_db
+	fi
 }
 
 install_wp
