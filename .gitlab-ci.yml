@@ -6,6 +6,12 @@ include:
   - local: .gitlab-ci/build.yml
   - local: .gitlab-ci/test-matrix.yml
 
+code_quality:
+  services:
+    - name: docker:stable-dind
+      command: [--storage-driver, aufs]
+
+
 stages:
   - build
   - test
