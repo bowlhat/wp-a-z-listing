@@ -3,17 +3,14 @@
   image: php:7.0
   tags:
     - linux
-    - php
 .php71-linux:
   image: php:7.1
   tags:
     - linux
-    - php
 .php72-linux:
   image: php:7.2
   tags:
     - linux
-    - php
 .php73-linux:
   image: php:7.3
   tags:
