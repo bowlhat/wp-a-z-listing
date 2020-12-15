@@ -5,4 +5,5 @@
   needs: [build]
   extends: .base
   script:
+    - composer install --prefer-dist --no-interaction --no-progress
     - ./vendor/bin/phpcs

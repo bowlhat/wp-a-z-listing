@@ -1,6 +1,8 @@
 .phpunit:
   stage: test
-  needs: [build]
+  needs:
+    - job: build
+      artifacts: true
   extends: .base
   services:
     - mysql:5.6
@@ -18,3 +20,6 @@
     - bash bin/install-wp-tests.sh "${MYSQL_DATABASE:-wordpress}" root "$MYSQL_ROOT_PASSWORD" mysql $WP_VERSION true
     - composer install --prefer-dist --no-interaction --no-progress
     - ./vendor/bin/phpunit -c phpunit-multisite.xml --log-junit phpunit-results.xml --coverage-text --colors=never
+  artifacts:
+    reports:
+      junit: phpunit-results.xml
