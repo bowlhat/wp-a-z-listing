@@ -6,5 +6,5 @@
  */
 
 $a_z_listing_path = dirname( __DIR__ );
-$a_z_listing_data = get_plugin_data( trailingslashit( $a_z_listing_path ) . 'a-z-listing.php' );
+$a_z_listing_data = get_plugin_data( trailingslashit( $a_z_listing_path ) . 'a-z-listing.php', false, false );
 $wp_version       = $a_z_listing_data['Version'];

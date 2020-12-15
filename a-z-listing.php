@@ -18,7 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'A_Z_LISTING_VERSION', get_plugin_data( __FILE__ )['Version'] );
+if ( ! function_exists( '\get_plugin_data' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
+define( 'A_Z_LISTING_VERSION', \get_plugin_data( __FILE__, false, false )['Version'] );
 
 if ( ! defined( 'A_Z_LISTING_LOG' ) ) {
 	define( 'A_Z_LISTING_LOG', false );
