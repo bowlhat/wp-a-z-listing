@@ -8,6 +8,11 @@
             "email": "daniel@bowlhat.net"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "7.0"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
