@@ -1,22 +1,15 @@
 include:
   - template: Code-Quality.gitlab-ci.yml
-  - template: SAST.gitlab-ci.yml
-  - template: Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/License-Scanning.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
   - local: .gitlab-ci/_prereqs.yml
   - local: .gitlab-ci/build.yml
   - local: .gitlab-ci/test-matrix.yml
+  - local: .gitlab-ci/WordPress.org.yml
 
 stages:
   - build
   - test
   - release
-
-release:
-  stage: release
-  needs:
-    - job: build
-      artifacts: true
-  only:
-    - tags
-  script:
-    - ''
