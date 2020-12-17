@@ -479,9 +479,9 @@ function get_the_section_a_z_widget( array $args, array $instance ): string { //
  * Replace the WP_Query search parameters to search just the title.
  *
  * @since 4.0.0
- * @param string   $search   The search database query snippet
- * @param WP_Query $wp_query The WP_Query
- * @return string The updated search database query snippet
+ * @param string   $search   The search database query snippet.
+ * @param WP_Query $wp_query The WP_Query.
+ * @return string The updated search database query snippet.
  */
 function a_z_listing_search_titles_only( $search, $wp_query ) {
 	if ( empty( $search ) || empty( $wp_query->query_vars['search_terms'] ) ) {
@@ -491,7 +491,7 @@ function a_z_listing_search_titles_only( $search, $wp_query ) {
 	global $wpdb;
 	$search = array();
 	$params = $wp_query->query_vars;
-	
+
 	$n = empty( $params['exact'] ) ? '%' : '';
 	foreach ( $params['search_terms'] as $term ) {
 		$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $wpdb->esc_like( $term ) . $n );
