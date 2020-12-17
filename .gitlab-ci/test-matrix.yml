@@ -199,21 +199,6 @@ WordPress-nightly:singlesite:php73:linux:
     - .php73-linux
 
 # PHP 7.4
-wordpress50:singlesite:php74:linux:
-  extends:
-    - .phpunit
-    - .wordpress50
-    - .php74-linux
-wordpress51:singlesite:php74:linux:
-  extends:
-    - .phpunit
-    - .wordpress51
-    - .php74-linux
-wordpress52:singlesite:php74:linux:
-  extends:
-    - .phpunit
-    - .wordpress52
-    - .php74-linux
 wordpress53:singlesite:php74:linux:
   extends:
     - .phpunit
@@ -435,21 +420,6 @@ WordPress-latest:nightly:php73:linux:
     - .php73-linux
 
 # PHP 7.4
-wordpress50:multisite:php74:linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress50
-    - .php74-linux
-wordpress51:multisite:php74:linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress51
-    - .php74-linux
-wordpress52:multisite:php74:linux:
-  extends:
-    - .phpunit-multisite
-    - .wordpress52
-    - .php74-linux
 wordpress53:multisite:php74:linux:
   extends:
     - .phpunit-multisite
