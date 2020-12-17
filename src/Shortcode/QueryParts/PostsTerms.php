@@ -68,7 +68,7 @@ class PostsTerms extends TermsCommon {
 
 		$tax_query = isset( $query['tax_query'] ) ? $query['tax_query'] : array();
 
-		$query['tax_query'] = wp_parse_args( $tax_query, $tax_query_defaults );
+		$query['tax_query'] = wp_parse_args( $tax_query, $tax_query_defaults ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		return $query;
 	}
 }
