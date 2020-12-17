@@ -13,10 +13,11 @@ class AZ_Listing_Terms_Extension_Tests extends WP_UnitTestCase {
             'tax_query' => array(
                 'relation' => 'AND',
                 array(
-                    'taxonomy' => $attributes['taxonomy'],
-                    'field'    => 'term_id',
-                    'terms'    => array( '2', '4', '6' ),
-                    'operator' => 'IN',
+                    'taxonomy'         => $attributes['taxonomy'],
+                    'field'            => 'term_id',
+                    'terms'            => array( '2', '4', '6' ),
+                    'operator'         => 'IN',
+                    'include_children' => false
                 ),
             ),
         );
@@ -35,10 +36,11 @@ class AZ_Listing_Terms_Extension_Tests extends WP_UnitTestCase {
             'tax_query' => array(
                 'relation' => 'AND',
                 array(
-                    'taxonomy' => $attributes['taxonomy'],
-                    'field'    => 'term_id',
-                    'terms'    => array( '2', '4', '6' ),
-                    'operator' => 'NOT IN',
+                    'taxonomy'         => $attributes['taxonomy'],
+                    'field'            => 'term_id',
+                    'terms'            => array( '2', '4', '6' ),
+                    'operator'         => 'NOT IN',
+                    'include_children' => false
                 ),
             ),
         );
@@ -57,16 +59,18 @@ class AZ_Listing_Terms_Extension_Tests extends WP_UnitTestCase {
             'tax_query' => array(
                 'relation' => 'AND',
                 array(
-                    'taxonomy' => $attributes['taxonomy'],
-                    'field'    => 'term_id',
-                    'terms'    => array( '4' ),
-                    'operator' => 'IN',
+                    'taxonomy'         => $attributes['taxonomy'],
+                    'field'            => 'term_id',
+                    'terms'            => array( '4' ),
+                    'operator'         => 'IN',
+                    'include_children' => false
                 ),
                 array(
-                    'taxonomy' => $attributes['taxonomy'],
-                    'field'    => 'term_id',
-                    'terms'    => array( '2', '6' ),
-                    'operator' => 'NOT IN',
+                    'taxonomy'         => $attributes['taxonomy'],
+                    'field'            => 'term_id',
+                    'terms'            => array( '2', '6' ),
+                    'operator'         => 'NOT IN',
+                    'include_children' => false
                 ),
             ),
         );
