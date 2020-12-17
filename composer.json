@@ -16,7 +16,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
-        "classmap": ["src"]
+        "psr-4": { "A_Z_Listing\\": "src" }
     },
     "require": {
         "symfony/polyfill-mbstring": "=1.19"
