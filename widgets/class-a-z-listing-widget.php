@@ -476,9 +476,39 @@ function get_the_section_a_z_widget( array $args, array $instance ): string { //
 }
 
 /**
+ * Replace the WP_Query search parameters to search just the title.
+ *
+ * @since 4.0.0
+ * @param string   $search   The search database query snippet
+ * @param WP_Query $wp_query The WP_Query
+ * @return string The updated search database query snippet
+ */
+function a_z_listing_search_titles_only( $search, $wp_query ) {
+	if ( empty( $search ) || empty( $wp_query->query_vars['search_terms'] ) ) {
+		return $search;
+	}
+
+	global $wpdb;
+	$search = array();
+	$params = $wp_query->query_vars;
+	
+	$n = empty( $params['exact'] ) ? '%' : '';
+	foreach ( $params['search_terms'] as $term ) {
+		$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $wpdb->esc_like( $term ) . $n );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		$search[] = "$wpdb->posts.post_password = ''";
+	}
+
+	return ' AND ' . implode( ' AND ', $search );
+}
+
+/**
  * Retrive posts by title.
  *
  * @since 2.1.0
+ * @since 4.0.0 Use WP_Query
  * @param string $post_title the title to search for.
  * @param string $post_type the post type to search within.
  * @return array<int,object> the post IDs that are found.
@@ -486,33 +516,25 @@ function get_the_section_a_z_widget( array $args, array $instance ): string { //
 function a_z_listing_get_posts_by_title( string $post_title, string $post_type = '' ): array {
 	global $wpdb;
 
-	$cache_key  = "a_z_listing_posts_by_title:$post_type:$post_title";
-	$post_title = '%' . $wpdb->esc_like( $post_title ) . '%';
-
 	$results = wp_cache_get( $cache_key );
 	if ( $results ) {
 		return $results;
 	}
+
+	$params = array(
+		's'                      => $post_title,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+	);
 	if ( ! empty( $post_type ) ) {
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
-                WHERE `post_title` LIKE %s AND `post_type` = %s AND `post_status` = 'publish'",
-				$post_title,
-				$post_type
-			)
-		);
-	} else {
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT `ID`, `post_title` FROM `$wpdb->posts`
-				WHERE `post_title` LIKE %s AND `post_status` = 'publish'",
-				$post_title
-			)
-		);
+		$params['post_type'] = $post_type;
 	}
 
-	wp_cache_set( $cache_key, $results, '', 3600 );
+	add_filter( 'posts_search', 'a_z_listing_search_titles_only', 10, 2 );
+	$query   = new WP_Query( $params );
+	$results = $query->posts;
+	remove_filter( 'posts_search', 'a_z_listing_search_titles_only' );
+
 	return $results;
 }
 

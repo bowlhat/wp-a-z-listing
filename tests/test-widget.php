@@ -129,4 +129,28 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 
 		$this->assertHTMLEquals( $expected, $actual );
 	}
+
+	public function test_a_z_listing_get_posts_by_title() {
+		$p  = self::factory()->post->create(
+			array(
+				'post_title' => 'Test Page',
+				'post_type'  => 'page',
+			)
+		);
+		$p2 = self::factory()->post->create(
+			array(
+				'post_title' => 'Another Page',
+				'post_type'  => 'page',
+			)
+		);
+
+		$posts = a_z_listing_get_posts_by_title( 'Page', 'page' );
+		$this->assertEquals( count( $posts, 2 ) );
+		$this->assertEquals( $posts[0]->ID, $p );
+		$this->assertEquals( $posts[1]->ID, $p );
+
+		$posts = a_z_listing_get_posts_by_title( 'Test', 'page' );
+		$this->assertEquals( count( $posts, 1 ) );
+		$this->assertEquals( $posts[0]->ID, $p );
+	}
 }
