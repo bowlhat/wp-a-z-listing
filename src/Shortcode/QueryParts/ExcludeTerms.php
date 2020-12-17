@@ -74,9 +74,9 @@ class ExcludeTerms extends Extension {
 		);
 
 		if ( isset( $query['tax_query'] ) ) {
-			$query['tax_query'] = wp_parse_args( $query['tax_query'], $tax_query );
+			$query['tax_query'] = wp_parse_args( $query['tax_query'], $tax_query ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		} else {
-			$query['tax_query'] = $tax_query;
+			$query['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		}
 		return $query;
 	}
