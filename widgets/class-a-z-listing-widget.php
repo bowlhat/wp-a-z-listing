@@ -516,11 +516,6 @@ function a_z_listing_search_titles_only( $search, $wp_query ) {
 function a_z_listing_get_posts_by_title( string $post_title, string $post_type = '' ): array {
 	global $wpdb;
 
-	$results = wp_cache_get( $cache_key );
-	if ( $results ) {
-		return $results;
-	}
-
 	$params = array(
 		's'                      => $post_title,
 		'update_post_meta_cache' => false,
