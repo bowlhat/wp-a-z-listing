@@ -4,6 +4,9 @@ on:
   push:
     branches:
     - master
+    paths:
+    - readme.txt
+    - .wordpress-org/**
 
 jobs:
   master:
@@ -14,7 +17,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: WordPress.org plugin asset/readme update
-      uses: 10up/action-wordpress-plugin-asset-update@1.4.1
+      uses: bowlhat/action-wordpress-plugin-asset-update@1.4.1-bowlhat
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

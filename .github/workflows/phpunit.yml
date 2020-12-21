@@ -7,16 +7,12 @@ on:
 jobs:
   build:
     name: Build
-    strategy:
-      matrix:
-        node: ['10.16.3']
-        php: ['7.4']
     runs-on: ubuntu-latest
     steps:
-    - name: Use Node.js ${{ matrix.node }}
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
+        node-version: '14.15.3'
 
     - uses: actions/cache@v2
       with:
@@ -28,8 +24,8 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php }}
-        extensions: iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+        php-version: '7.4'
+        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
         ini-values: phar.readonly=0
         tools: composer
 
@@ -62,18 +58,15 @@ jobs:
 
     - name: Run npm install
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install
 
     - name: Run npm build
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm run build
 
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install --production --no-bin-links
 
     - name: Upload build result
@@ -209,3 +202,44 @@ jobs:
         else
           phpunit $GITHUB_WORKSPACE
         fi
+
+  coverage:
+    name: coverage
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
+        ini-values: phar.readonly=0
+        tools: phpunit:6.5.5
+
+    - uses: actions/checkout@v2
+
+    - name: Download build files
+      uses: actions/download-artifact@v2
+
+    - name: Install WordPress Test Suite
+      run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports[3306] }} latest
+
+    - uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: 6d7dda243546c14b3eb3897386f7f8a7807cbe0984a8d51ac9c1cf37a07a4e55
+      with:
+        coverageCommand: phpunit --verbose -c phpunit.xml.dist --coverage-clover clover.xml
+        coverageLocations: ${{github.workspace}}/clover.xml:clover

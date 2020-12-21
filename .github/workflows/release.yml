@@ -3,20 +3,16 @@ on:
   push:
     tags:
       - "*"
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'bowlhat'
-    strategy:
-      matrix:
-        node: ['10.16.3']
-        php: ['7.4']
     steps:
-    - name: Use Node.js ${{ matrix.node }}
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
+        node-version: '14.15.3'
 
     - uses: actions/cache@v2
       with:
@@ -28,7 +24,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php }}
+        php-version: '7.4'
         extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
         ini-values: phar.readonly=0
         tools: composer
@@ -62,18 +58,15 @@ jobs:
 
     - name: Run npm install
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install
 
     - name: Run npm build
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm run build
 
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install --production --no-bin-links
 
     - name: Upload build result
@@ -100,33 +93,10 @@ jobs:
         name: css
         path: css/**/*
 
-  phpcs:
-    name: phpcs
-    runs-on: ubuntu-latest
-    if: github.repository_owner == 'a-z-listing'
-    steps:
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'
-        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
-        ini-values: phar.readonly=0
-        tools: phpcs
-
-    - name: Configure PHPCS sniffs
-      run: |
-        git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
-        phpcs --config-set installed_paths /tmp/sniffs
-
-    - uses: actions/checkout@v2
-
-    - name: Run PHPCS Coding Standards
-      run: phpcs $GITHUB_WORKSPACE
-
   phpunit:
     name: phpunit
     needs: build
-    if: github.repository_owner == 'bowlhat'
+    if: github.repository_owner == 'a-z-listing'
     strategy:
       matrix:
         multisite: ['0', '1']
