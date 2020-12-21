@@ -37,29 +37,44 @@ class Indices extends Singleton implements Extension {
 	 * @return array<string,mixed> The post's index letters (usually matching the first character of the post title)
 	 */
 	public static function get_item_indices( array $indices, $item, string $type, Alphabet $alphabet ): array {
-		if ( 'terms' === $type || $item instanceof \WP_Term ) {
-			if ( ! $item instanceof \WP_Term ) {
-				$item = get_term( $item );
-			}
-			if ( $item instanceof \WP_Term ) {
-				$title     = $item->name;
-				$item_id   = $item->term_id;
-				$permalink = get_term_link( $item );
-			} else {
-				return array();
-			}
-		} elseif ( 'posts' === $type || $item instanceof \WP_Post ) {
-			if ( ! $item instanceof \WP_Post ) {
-				$item = get_post( $item );
-			}
-			if ( $item instanceof \WP_Post ) {
-				$title     = get_the_title( $item );
-				$item_id   = $item->ID;
-				$permalink = get_the_permalink( $item );
-			} else {
-				return array();
-			}
-		}
+		/**
+		 * Get the item object.
+		 * 
+		 * @since 4.0.0
+		 * @param mixed The item object or ID.
+		 * @return string The item object.
+		 */
+		$item = apply_filters( "a_z_listing_get_item_for_display__${type}", null, $item );
+
+		/**
+		 * Get the item permalink.
+		 * 
+		 * @since 4.0.0
+		 * @param string The permalink.
+		 * @param mixed  The item object or ID.
+		 * @return string The permalink.
+		 */
+		$permalink = apply_filters( "a_z_listing_get_item_permalink_for_display__${type}", '', $item );
+
+		/**
+		 * Get the item title.
+		 * 
+		 * @since 4.0.0
+		 * @param string The title.
+		 * @param mixed  The item object or ID.
+		 * @return string The title.
+		 */
+		$title = apply_filters( "a_z_listing_get_item_title_for_display__${type}", '', $item );
+
+		/**
+		 * Get the item title.
+		 * 
+		 * @since 4.0.0
+		 * @param string The title.
+		 * @param mixed  The item object or ID.
+		 * @return string The title.
+		 */
+		$item_id = apply_filters( "a_z_listing_get_item_id_for_display__${type}", -1, $item );
 
 		/**
 		 * Modify the title for this item before indexing
@@ -82,12 +97,6 @@ class Indices extends Singleton implements Extension {
 		 * @param string $item_type The type of the item. Either 'posts' or 'terms'.
 		 */
 		$title = apply_filters( 'a_z_listing_pre_index_item_title', $title, $item, $type );
-
-		if ( $item instanceof \WP_Term ) {
-			$item->term_name = $title;
-		} elseif ( $item instanceof \WP_Post ) {
-			$item->post_title = $title;
-		}
 
 		$index = Strings::maybe_mb_substr( $title, 0, 1 );
 

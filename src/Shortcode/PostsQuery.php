@@ -63,4 +63,75 @@ class PostsQuery extends Query {
 		global $wpdb;
 		return "{$wpdb->posts}.ID, {$wpdb->posts}.post_title, {$wpdb->posts}.post_type, {$wpdb->posts}.post_name, {$wpdb->posts}.post_parent, {$wpdb->posts}.post_date";
 	}
+
+	/**
+	 * Get the item.
+	 * 
+	 * @param mixed The item object or ID.
+	 * @return \WP_Post The item object.
+	 */
+	public function get_item( $item ) {
+		if ( $item instanceof \WP_Post ) {
+			return $item;
+		}
+
+		return get_term( $item );
+	}
+
+	/**
+	 * Get the item ID.
+	 * 
+	 * @param int      $item_id The item ID.
+	 * @param \WP_Post $item    The item object.
+	 * @return int The item ID.
+	 */
+	public function get_item_id( int $item_id, $item ) {
+		if ( ! $item instanceof \WP_Post ) {
+			$item = get_post( $item );
+		}
+
+		if ( $item instanceof \WP_Post ) {
+			$item_id = $item->ID;
+		}
+
+		return $item_id;
+	}
+
+	/**
+	 * Get the item title.
+	 * 
+	 * @param string   $title The item title.
+	 * @param \WP_Post $item  The item object.
+	 * @return string The item title.
+	 */
+	public function get_item_title( string $title, $item ) {
+		if ( ! $item instanceof \WP_Post ) {
+			$item = get_post( $item );
+		}
+
+		if ( $item instanceof \WP_Post ) {
+			$title = get_the_title( $item );
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Get the item permalink.
+	 *
+	 * @param string   $permalink The item permalink.
+	 * @param \WP_Post $item      The item object.
+	 * @return string The item permalink
+	 */
+	public function get_item_permalink( string $permalink, $item ) {
+		if ( ! $item instanceof \WP_Post ) {
+			$item = get_post( $item );
+		}
+
+		if ( $item instanceof \WP_Post ) {
+			$permalink = get_the_permalink( $item );
+		}
+
+		return $permalink;
+	}
 }

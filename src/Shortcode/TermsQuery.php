@@ -58,4 +58,75 @@ class TermsQuery extends Query {
 
 		return get_terms( $query ); // @phan-suppress-current-line PhanAccessMethodInternal
 	}
+
+	/**
+	 * Get the item.
+	 * 
+	 * @param mixed $item The item object or ID.
+	 * @return \WP_Term The item object.
+	 */
+	public function get_item( $item ) {
+		if ( $item instanceof \WP_Term ) {
+			return $item;
+		}
+
+		return get_term( $item );
+	}
+
+	/**
+	 * Get the item ID.
+	 * 
+	 * @param int      $item_id The item ID.
+	 * @param \WP_Term $item    The item object.
+	 * @return int The item ID.
+	 */
+	public function get_item_id( int $item_id, $item ) {
+		if ( ! $item instanceof \WP_Term ) {
+			$item = get_term( $item );
+		}
+
+		if ( $item instanceof \WP_Term ) {
+			$item_id = $item->term_id;
+		}
+
+		return $item_id;
+	}
+
+	/**
+	 * Get the item title.
+	 * 
+	 * @param string   $title The item title.
+	 * @param \WP_Term $item  The item object.
+	 * @return string The item title.
+	 */
+	public function get_item_title( string $title, $item ) {
+		if ( ! $item instanceof \WP_Term ) {
+			$item = get_term( $item );
+		}
+
+		if ( $item instanceof \WP_Term ) {
+			$title = $item->name;
+		}
+
+		return $title;
+	}
+
+	/**
+	 * Get the item permalink.
+	 *
+	 * @param string   $permalink The item permalink.
+	 * @param \WP_Term $item      The item object.
+	 * @return string The item permalink
+	 */
+	public function get_item_permalink( string $permalink, $item ) {
+		if ( ! $item instanceof \WP_Term ) {
+			$item = get_term( $item );
+		}
+
+		if ( $item instanceof \WP_Term ) {
+			$permalink = get_term_link( $item );
+		}
+
+		return $permalink;
+	}
 }

@@ -751,7 +751,7 @@ class Query {
 		if ( isset( $this->matched_item_indices[ $key ] ) ) {
 			$this->current_letter_items = &$this->matched_item_indices[ $key ];
 		}
-		$this->current_letter_offset += 1;
+		++$this->current_letter_offset;
 	}
 
 	/**
@@ -776,7 +776,7 @@ class Query {
 	 */
 	public function the_item() {
 		$this->current_item         = $this->current_letter_items[ $this->current_item_offset ];
-		$this->current_item_offset += 1;
+		++$this->current_item_offset;
 	}
 
 	/**

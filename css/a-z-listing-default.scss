@@ -15,19 +15,23 @@ $defaultColumnGap: 0.6em;
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: center;
-		font-size: 1.2rem;
+		font-size: 1.2em;
 		> li {
 			list-style: none;
 			width: 2.6em;
-			height: 2.4rem;
+			height: 2.4em;
 			box-sizing: border-box;
-			margin: 0 0.1rem 0.6em;
+			margin: 0 0.1em 0.6em;
 			border: 2px solid #e5e5e5;
 			background: #f5f5f5;
 			color: #adadad;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			&:before,
+			&:after {
+				content: initial;
+			}
 			a {
 				color: #1f7d9a;
 				text-decoration: none;
