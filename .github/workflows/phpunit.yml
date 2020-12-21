@@ -239,7 +239,7 @@ jobs:
 
     - uses: paambaati/codeclimate-action@v2.7.5
       env:
-        CC_TEST_REPORTER_ID: 6d7dda243546c14b3eb3897386f7f8a7807cbe0984a8d51ac9c1cf37a07a4e55
+        CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
       with:
         coverageCommand: phpunit --verbose -c phpunit.xml.dist --coverage-clover clover.xml
         coverageLocations: ${{github.workspace}}/clover.xml:clover
