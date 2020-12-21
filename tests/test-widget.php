@@ -146,8 +146,8 @@ class AZ_Widget_Tests extends WP_UnitTestCase {
 
 		$posts = a_z_listing_get_posts_by_title( 'Page', 'page' );
 		$this->assertEquals( count( $posts ), 2 );
-		$this->assertEquals( $posts[0]->ID, $p );
-		$this->assertEquals( $posts[1]->ID, $p2 );
+		$this->assertContains( $posts[0]->ID, array( $p, $p2 ) );
+		$this->assertContains( $posts[1]->ID, array( $p, $p2 ) );
 
 		$posts = a_z_listing_get_posts_by_title( 'Test', 'page' );
 		$this->assertEquals( count( $posts ), 1 );
