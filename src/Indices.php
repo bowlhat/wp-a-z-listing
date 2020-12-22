@@ -44,7 +44,7 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed The item object or ID.
 		 * @return string The item object.
 		 */
-		$item = apply_filters( "a_z_listing_get_item_for_display__${type}", null, $item );
+		$item = apply_filters( "a_z_listing_get_item_for_display__{$type}", null, $item );
 
 		/**
 		 * Get the item permalink.
@@ -54,7 +54,7 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed  The item object or ID.
 		 * @return string The permalink.
 		 */
-		$permalink = apply_filters( "a_z_listing_get_item_permalink_for_display__${type}", '', $item );
+		$permalink = apply_filters( "a_z_listing_get_item_permalink_for_display__{$type}", '', $item );
 
 		/**
 		 * Get the item title.
@@ -64,7 +64,7 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed  The item object or ID.
 		 * @return string The title.
 		 */
-		$title = apply_filters( "a_z_listing_get_item_title_for_display__${type}", '', $item );
+		$title = apply_filters( "a_z_listing_get_item_title_for_display__{$type}", '', $item );
 
 		/**
 		 * Get the item title.
@@ -74,7 +74,7 @@ class Indices extends Singleton implements Extension {
 		 * @param mixed  The item object or ID.
 		 * @return string The title.
 		 */
-		$item_id = apply_filters( "a_z_listing_get_item_id_for_display__${type}", -1, $item );
+		$item_id = apply_filters( "a_z_listing_get_item_id_for_display__{$type}", -1, $item );
 
 		/**
 		 * Modify the title for this item before indexing
@@ -126,7 +126,7 @@ class Indices extends Singleton implements Extension {
 		foreach ( $index_letters as $letter ) {
 			$indices[ $alphabet->get_letter_for_key( $letter ) ][] = array(
 				'title' => $title,
-				'item'  => ( $item instanceof \WP_Term ) ? "term:{$item_id}" : "post:{$item_id}",
+				'item'  => "$type:$item_id",
 				'link'  => $permalink,
 			);
 		}

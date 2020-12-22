@@ -37,7 +37,7 @@ abstract class Query extends Singleton implements Extension {
 		add_filter( 'a_z_listing_shortcode_query_types', array( $this, 'add_query_type' ) );
 		add_filter( "a_z_listing_shortcode_query_for_display__{$this->display}", array( $this, 'apply_query_to_shortcode' ), 5, 2 );
 		add_filter( "a_z_listing_get_items_for_display__{$this->display}", array( $this, 'get_items' ), 5, 2 );
-		add_filter( "a_z_listing_get_item_for_display__{$this->display}", array( $this, 'get_item' ), 5, 1 );
+		add_filter( "a_z_listing_get_item_for_display__{$this->display}", array( $this, 'get_item' ), 5, 2 );
 		add_filter( "a_z_listing_get_item_id_for_display__{$this->display}", array( $this, 'get_item_id' ), 5, 2 );
 		add_filter( "a_z_listing_get_item_title_for_display__{$this->display}", array( $this, 'get_item_title' ), 5, 2 );
 		add_filter( "a_z_listing_get_item_permalink_for_display__{$this->display}", array( $this, 'get_item_permalink' ), 5, 2 );

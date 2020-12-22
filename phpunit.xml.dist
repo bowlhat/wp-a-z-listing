@@ -9,7 +9,7 @@
 		beStrictAboutTestsThatDoNotTestAnything="true"
 		>
 	<testsuites>
-		<testsuite>
+		<testsuite name="testsuite">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>

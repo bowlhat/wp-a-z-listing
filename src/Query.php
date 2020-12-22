@@ -111,24 +111,42 @@ class Query {
 	 * @since 0.1
 	 * @since 1.9.2 Instantiate the WP_Query object here instead of in `A_Z_Listing::construct_query()`
 	 * @since 2.0.0 add $type and $use_cache parameters
-	 * @param null|\WP_Query|array|string $query     A \WP_Query-compatible query definition or a taxonomy name.
-	 * @param string                      $type      Specify the listing type; either 'posts' or 'terms'.
-	 * @param bool                        $use_cache Cache the Listing via WordPress transients.
+	 * @param null|\WP_Query|array|string $query      A \WP_Query-compatible query definition or a taxonomy name.
+	 * @param string                      $type       Specify the listing type; either 'posts' or 'terms'.
+	 * @param bool                        $use_cache  Cache the Listing via WordPress transients.
+	 * @param array                       $attributes The shortcode attributes or null.
 	 */
-	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true ) {
+	public function __construct( $query = null, string $type = 'posts', bool $use_cache = true, $attributes = array() ) {
 		global $post;
-
-		if ( defined( 'PHPUNIT_TEST_SUITE' ) && PHPUNIT_TEST_SUITE ) {
-			$this->instance_id = 'testId';
-		} else {
-			$this->instance_id = apply_filters( 'a_z_listing_instance_id', self::$num_instances++ );
-		}
-
-		$this->alphabet = new Alphabet();
 
 		if ( is_string( $query ) && ! empty( $query ) ) {
 			$this->type = 'terms';
+			if ( empty( $attributes ) ) {
+				$attributes = array( 'taxonomy' => $query );
+				$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', array(), $attributes );
+			}
+		} elseif ( 'terms' === $type && ! empty( $query ) ) {
+			$this->type = 'terms';
+			if ( ! isset( $query['taxonomy'] ) ) {
+				$taxonomy = 'category';
+			} elseif ( is_array( $query['taxonomy'] ) ) {
+				$taxonomy = implode( ',', $query['taxonomy'] );
+			} else {
+				$taxonomy = $query['taxonomy'];
+			}
+			if ( empty( $attributes ) ) {
+				$attributes = array( 'taxonomy' => $taxonomy );
+			}
+			$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', $query, $attributes );
 		} else {
+			if ( empty( $type ) ) {
+				if ( isset( $attributes['display'] ) ) {
+					$type = $attributes['display'];
+				} else {
+					$type = 'posts';
+				}
+			}
+
 			/**
 			 * Filter the available display/query types.
 			 *
@@ -137,20 +155,24 @@ class Query {
 			 */
 			$types      = apply_filters( 'a_z_listing_shortcode_query_types', array() );
 			$this->type = in_array( $type, $types, true ) ? $type : 'posts';
+
+			if ( empty( $attributes ) ) {
+				$attributes = array();
+			}
+			if ( empty( $query ) ) {
+				$query = array();
+			}
+			$query = apply_filters( "a_z_listing_shortcode_query_for_display__{$this->type}", $query, $attributes );
 		}
 
-		if ( is_string( $query ) ) {
-			$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', array(), array( 'taxonomy' => $query ) );
-		} elseif ( 'terms' === $type ) {
-			if ( ! isset( $query['taxonomy'] ) ) {
-				$taxonomy = 'category';
-			} elseif ( is_array( $query['taxonomy'] ) ) {
-				$taxonomy = implode( ',', $query['taxonomy'] );
-			} else {
-				$taxonomy = $query['taxonomy'];
-			}
-			$query = apply_filters( 'a_z_listing_shortcode_query_for_display__terms', $query, array( 'taxonomy' => $taxonomy ) );
+		// Must be after filter 'a_z_listing_shortcode_query_for_display__$display'
+		// to correctly wire-up the query-part filters.
+		if ( ! defined( 'PHPUNIT_TEST_SUITE' ) || ! PHPUNIT_TEST_SUITE ) {
+			$this->instance_id = apply_filters( 'a_z_listing_instance_id', ++self::$num_instances );
+		} else {
+			$this->instance_id = 'testId';
 		}
+		$this->alphabet = new Alphabet();
 
 		/**
 		 * Modify or replace the query
@@ -428,13 +450,11 @@ class Query {
 					}
 				}
 
-			if ( array_key_exists( $this->unknown_letters, $indexed_items ) && ! empty( $indexed_items[ $this->unknown_letters ] ) ) {
-				if ( ! in_array( $this->unknown_letters, $this->alphabet_chars, true ) ) {
-					if ( apply_filters( 'a_z_listing_unknown_letters_first', false ) ) {
-						array_unshift( $this->alphabet_chars, $this->unknown_letters );
-					} else {
-						array_push( $this->alphabet_chars, $this->unknown_letters );
-					}
+				++$offset;
+				if ( 0 === $offset % $posts_per_page ) {
+					$q           = $this->query->query;
+					$q['offset'] = $offset * $posts_per_page;
+					$this->query = new WP_Query( $q );
 				}
 				$this->alphabet[ $this->unknown_letters ] = $this->unknown_letters;
 			}
@@ -563,7 +583,7 @@ class Query {
 			 * @return void
 			 */
 			function( string $character, $key, int $count ) use ( $that, $target, $alphabet, $indices, $i, &$ret ) {
-				$i++;
+				++$i;
 				$id = $character;
 				if ( $alphabet->get_unknown_letter() === $id ) {
 					$id = '_';

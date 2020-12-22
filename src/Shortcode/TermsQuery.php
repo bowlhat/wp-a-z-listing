@@ -62,10 +62,15 @@ class TermsQuery extends Query {
 	/**
 	 * Get the item.
 	 * 
-	 * @param mixed $item The item object or ID.
+	 * @param mixed $previous The previous item object.
+	 * @param mixed $item     The item object or ID.
 	 * @return \WP_Term The item object.
 	 */
-	public function get_item( $item ) {
+	public function get_item( $previous, $item ) {
+		if ( $previous instanceof \WP_Term ) {
+			return $previous;
+		}
+
 		if ( $item instanceof \WP_Term ) {
 			return $item;
 		}

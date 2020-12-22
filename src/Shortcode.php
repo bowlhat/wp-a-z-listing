@@ -87,8 +87,7 @@ class Shortcode extends Singleton implements Extension {
 		$grouping_obj = new Grouping( $grouping );
 		$numbers_obj  = new Numbers( $attributes['numbers'], $group_numbers );
 
-		$query     = apply_filters( 'a_z_listing_shortcode_query_for_display__' . $attributes['display'], array(), $attributes );
-		$a_z_query = new Query( $query, $attributes['display'] );
+		$a_z_query = new Query( null, '', true, $attributes );
 
 		$target = '';
 		if ( ! empty( $attributes['target'] ) ) {

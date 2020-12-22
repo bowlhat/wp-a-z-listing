@@ -67,15 +67,20 @@ class PostsQuery extends Query {
 	/**
 	 * Get the item.
 	 * 
-	 * @param mixed The item object or ID.
+	 * @param mixed $previous The previous item object or ID.
+	 * @param mixed $item     The item object or ID.
 	 * @return \WP_Post The item object.
 	 */
-	public function get_item( $item ) {
+	public function get_item( $previous, $item ) {
+		if ( $previous instanceof \WP_Post ) {
+			return $previous;
+		}
+
 		if ( $item instanceof \WP_Post ) {
 			return $item;
 		}
 
-		return get_term( $item );
+		return get_term( $item_id );
 	}
 
 	/**
