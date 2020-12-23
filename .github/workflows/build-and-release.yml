@@ -1,4 +1,4 @@
-name: Run PHPUnit on pull requests
+name: 🚀 Build, test, and release
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: ⚙️ Build
     runs-on: ubuntu-latest
     steps:
     - name: Setup Node.js
@@ -92,7 +92,7 @@ jobs:
         path: css/**/*
 
   test:
-    name: Test
+    name: 🧪 Test
     needs: build
     strategy:
       matrix:
@@ -187,9 +187,9 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php }}
-        extensions: iconv intl xml soap opcache pdo pdo_mysql mysqli mbstring gd
+        extensions: iconv, intl, xml, soap, opcache, pdo, pdo_mysql, mysqli, mbstring, gd
         ini-values: phar.readonly=0
-        tools: phpunit
+        tools: phpunit:v7
 
     - uses: actions/checkout@v2
 
@@ -197,7 +197,7 @@ jobs:
       uses: actions/download-artifact@v2
 
     - name: Install WordPress Test Suite
-      run: ./bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress }}
+      run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wordpress }}
 
     - name: Run phpunit
       run: |
@@ -208,7 +208,7 @@ jobs:
         fi
 
   coverage:
-    name: coverage
+    name: 🙈 Coverage
     needs:
     - build
     if: github.ref == 'refs/heads/master'
@@ -250,7 +250,7 @@ jobs:
         coverageLocations: ${{github.workspace}}/clover.xml:clover
 
   deploy_to_worg:
-    name: Deploy to WordPress.org
+    name: 🚀 RELEASE to WordPress.org
     runs-on: ubuntu-latest
     if: github.repository_owner == 'a-z-listing' && startsWith(github.ref, 'refs/tags/')
     needs:

@@ -10,13 +10,13 @@ on:
 
 jobs:
   master:
-    name: Push to master
+    name: 👉 Push to master
     runs-on: ubuntu-latest
     if: github.repository_owner == 'bowlhat'
     steps:
     - uses: actions/checkout@v2
 
-    - name: WordPress.org plugin asset/readme update
+    - name: 🚀 WordPress.org plugin asset/readme update
       uses: bowlhat/action-wordpress-plugin-asset-update@1.4.1-bowlhat
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
