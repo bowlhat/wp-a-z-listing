@@ -504,15 +504,6 @@ class Query {
 							return $default_sort;
 						}
 					);
-
-					if ( is_int( $sort ) ) {
-						if ( defined( 'A_Z_LISTING_LOG' ) && A_Z_LISTING_LOG ) {
-							do_action( 'a_z_listing_log', 'A-Z Listing: value returned from `a_z_listing_item_sorting_comparator` filter sorting was not an integer', $sort, $atitle, $btitle );
-						}
-						return $sort;
-					}
-
-					return $default_sort;
 				}
 			},
 			array_key_exists( $this->alphabet->get_unknown_letter(), $indexed_items )
