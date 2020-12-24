@@ -238,7 +238,7 @@ jobs:
         php-version: '7.4'
         extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
         ini-values: phar.readonly=0
-        tools: phpunit:6.5.5
+        tools: phpunit:6.5.14
 
     - uses: actions/checkout@v2
 
