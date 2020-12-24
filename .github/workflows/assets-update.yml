@@ -12,7 +12,7 @@ jobs:
   master:
     name: 👉 Push to master
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'bowlhat'
+    if: github.repository_owner == 'a-z-listing'
     steps:
     - uses: actions/checkout@v2
 
