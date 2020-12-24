@@ -18,37 +18,37 @@
  * 10 here will create two columns with 6 items in the first column and 5 items
  * in the second column.
  */
-$_a_z_listing_minpercol = 10;
+$a_z_listing_minpercol = 10;
 ?>
-<div id="az-tabs">
-	<div id="letters">
+<div id="<?php $a_z_query->the_instance_id(); ?>" class="az-listing">
+	<div class="az-letters-wrap">
 		<div class="az-letters">
 			<?php $a_z_query->the_letters(); ?>
 		</div>
 	</div>
 	<?php if ( $a_z_query->have_letters() ) : ?>
-	<div id="az-slider">
-		<div id="inner-slider">
+	<div class="items-outer">
+		<div class="items-inner">
 			<?php
 			while ( $a_z_query->have_letters() ) :
 				$a_z_query->the_letter();
 				?>
 				<?php if ( $a_z_query->have_items() ) : ?>
 					<?php
-					$item_count  = $a_z_query->get_the_letter_count();
-					$num_columns = ceil(
-						$item_count / $_a_z_listing_minpercol
+					$a_z_listing_item_count  = $a_z_query->get_the_letter_items_count();
+					$a_z_listing_num_columns = ceil(
+						$a_z_listing_item_count / $a_z_listing_minpercol
 					);
 					?>
-					<div class="letter-section"
-						id="<?php $a_z_query->the_letter_id(); ?>">
+					<div class="letter-section" id="<?php $a_z_query->the_letter_id(); ?>">
 						<h2 class="letter-title">
 							<span>
 								<?php $a_z_query->the_letter_title(); ?>
 							</span>
 						</h2>
-						<?php $column_class = "max-$num_columns-columns"; ?>
-						<ul class="columns <?php echo $column_class; ?>">
+
+						<?php $a_z_listing_column_class = "max-$a_z_listing_num_columns-columns"; ?>
+						<ul class="az-columns <?php echo esc_attr( $a_z_listing_column_class ); ?>">
 							<?php
 							while ( $a_z_query->have_items() ) :
 								$a_z_query->the_item();
@@ -60,9 +60,10 @@ $_a_z_listing_minpercol = 10;
 								</li>
 							<?php endwhile; ?>
 						</ul>
+
 						<div class="back-to-top">
-							<a href="#letters">
-								<?php _e( 'Back to top', 'a-z-listing' ); ?>
+							<a href="#<?php $a_z_query->the_instance_id(); ?>">
+								<?php esc_html_e( 'Back to top', 'a-z-listing' ); ?>
 							</a>
 						</div>
 					</div>
@@ -72,15 +73,7 @@ $_a_z_listing_minpercol = 10;
 			?>
 		</div>
 	</div>
+	<?php else : ?>
+		<p><?php esc_html_e( 'There are no posts included in this index.', 'a-z-listing' ); ?></p>
+	<?php endif; ?>
 </div>
-<?php else : ?>
-	<p>
-		<?php
-		esc_html_e(
-			'There are no posts included in this index.',
-			'a-z-listing'
-		);
-		?>
-	</p>
-	<?php
-endif;

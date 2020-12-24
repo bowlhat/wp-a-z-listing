@@ -1,0 +1,11 @@
+plugins:
+  editorconfig:
+    enabled: true
+  fixme:
+    enabled: true
+  git-legal:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+  scss-lint:
+    enabled: true

@@ -5,6 +5,6 @@
  * @package a-z-listing
  */
 
-$path       = dirname( __DIR__ );
-$azdata     = get_plugin_data( trailingslashit( $path ) . 'a-z-listing.php' );
-$wp_version = $azdata['Version'];
+$a_z_listing_path = dirname( __DIR__ );
+$a_z_listing_data = get_plugin_data( trailingslashit( $a_z_listing_path ) . 'a-z-listing.php', false, false );
+$wp_version       = $a_z_listing_data['Version'];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 trait HtmlAssertions {
 	protected function assertHTMLEquals( $expected, $actual ) {
 		$expected_dom = new DomDocument();

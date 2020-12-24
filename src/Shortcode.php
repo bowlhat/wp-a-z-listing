@@ -5,6 +5,8 @@
  * @package a-z-listing
  */
 
+declare(strict_types=1);
+
 namespace A_Z_Listing;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,9 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Shortcode handler.
  */
-class Shortcode extends Singleton {
+class Shortcode extends Singleton implements Extension {
 	/**
 	 * Bind the shortcode to the handler.
+	 *
+	 * @return void
 	 */
 	final public function initialize() {
 		add_shortcode( 'a-z-listing', array( $this, 'handle' ) );
@@ -30,47 +34,39 @@ class Shortcode extends Singleton {
 	 * @since 1.8.0 Fix numbers attribute when selecting to display terms. Add grouping to numbers via attribute. Add alphabet override via new attribute.
 	 * @since 2.0.0 Add parent-term and hide-empty parameters.
 	 * @since 3.0.0 Move into a class and namespace.
-	 * @param  array $attributes Provided by WordPress core. Contains the shortcode attributes.
+	 * @since 4.0.0 Abstract away most of the specifics into separate classes.
+	 * @param  string|array<string,mixed> $attributes Provided by WordPress core. Contains the shortcode attributes.
 	 * @return string The A-Z Listing HTML.
+	 * @suppress PhanPluginPossiblyStaticPublicMethod
 	 */
-	function handle( $attributes ) {
+	public function handle( $attributes = array() ): string {
 		/**
 		 * Run extensions.
 		 */
-		do_action( '_a_z_listing_shortcode_start', $attributes );
+		do_action( 'a_z_listing_shortcode_start', $attributes );
 
-		$attributes = shortcode_atts(
+		$defaults   = apply_filters(
+			'a_z_listing_get_shortcode_attributes',
 			array(
-				'alphabet'         => '',
 				'display'          => 'posts',
-				'exclude-posts'    => '',
-				'exclude-terms'    => '',
 				'get-all-children' => 'false',
 				'group-numbers'    => '',
 				'grouping'         => '',
-				'hide-empty-terms' => 'false',
 				'numbers'          => 'hide',
-				'parent-post'      => '',
-				'parent-term'      => '',
-				'post-type'        => 'page',
 				'return'           => 'listing',
 				'target'           => '',
-				'taxonomy'         => '',
-				'terms'            => '',
-			),
+			)
+		);
+		$attributes = shortcode_atts(
+			$defaults,
 			$attributes,
 			'a-z-listing'
 		);
 
-		if ( ! empty( $attributes['alphabet'] ) ) {
-			$override = $attributes['alphabet'];
-			add_filter(
-				'a-z-listing-alphabet',
-				function( $alphabet ) use ( $override ) {
-					return $override;
-				}
-			);
+		foreach ( $attributes as $attribute => &$value ) {
+			$value = apply_filters( "a_z_listing_sanitize_shortcode_attribute__$attribute", $value, $attributes );
 		}
+		$attributes = apply_filters( 'a_z_listing_sanitize_shortcode_attributes', $attributes );
 
 		$grouping      = $attributes['grouping'];
 		$group_numbers = false;
@@ -91,140 +87,7 @@ class Shortcode extends Singleton {
 		$grouping_obj = new Grouping( $grouping );
 		$numbers_obj  = new Numbers( $attributes['numbers'], $group_numbers );
 
-		if ( 'terms' === $attributes['display'] && ! empty( $attributes['taxonomy'] ) ) {
-			$taxonomy = ! empty( $attributes['taxonomy'] ) ? $attributes['taxonomy'] : 'category';
-			if ( isset( $attributes['hide-empty'] ) && ! empty( $attributes['hide-empty'] ) ) {
-				$hide_empty = a_z_listing_is_truthy( $attributes['hide-empty'] );
-			} else {
-				$hide_empty = a_z_listing_is_truthy( $attributes['hide-empty-terms'] );
-			}
-
-			$taxonomies = explode( ',', $taxonomy );
-			$taxonomies = array_unique( array_filter( array_map( 'trim', $taxonomies ) ) );
-
-			$query = array(
-				'taxonomy'   => $taxonomies,
-				'hide_empty' => $hide_empty,
-			);
-
-			$terms_string  = '';
-			$terms_process = 'include';
-
-			if ( ! empty( $attributes['terms'] ) ) {
-				$terms_string = $attributes['terms'];
-			} elseif ( ! empty( $attributes['exclude-terms'] ) ) {
-				$terms_string  = $attributes['exclude-terms'];
-				$terms_process = 'exclude';
-			}
-
-			if ( ! empty( $terms_string ) ) {
-				$terms = explode( ',', $terms_string );
-				$terms = array_unique(
-					array_filter(
-						array_map(
-							'intval',
-							array_map( 'trim', $terms )
-						),
-						function( $value ) {
-							return 0 < $value;
-						}
-					)
-				);
-
-				$query = wp_parse_args(
-					$query,
-					array(
-						$terms_process => $terms,
-					)
-				);
-			}
-
-			if ( ! empty( $attributes['parent-term'] ) ) {
-				$parent_id = intval( $attributes['parent-term'] );
-				if ( ! empty( $attributes['get-all-children'] ) && a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
-					$parent_selector = 'child_of';
-				} else {
-					$parent_selector = 'parent';
-				}
-
-				if ( 0 < $parent_id ) {
-					$query = wp_parse_args(
-						$query,
-						array(
-							$parent_selector => $parent_id,
-						)
-					);
-				}
-			}
-
-			$a_z_query = new Query( $query, 'terms' );
-		} else {
-			$post_type = explode( ',', $attributes['post-type'] );
-			$post_type = array_unique( array_filter( array_map( 'trim', $post_type ) ) );
-
-			$query = array(
-				'post_type' => $post_type,
-			);
-
-			if ( ! empty( $attributes['exclude-posts'] ) ) {
-				$exclude_posts = explode( ',', $attributes['exclude-posts'] );
-				$exclude_posts = array_unique(
-					array_filter(
-						array_map(
-							'intval',
-							array_map( 'trim', $exclude_posts )
-						),
-						function( $value ) {
-							return 0 < $value;
-						}
-					)
-				);
-
-				if ( ! empty( $exclude_posts ) ) {
-					$query = wp_parse_args( $query, array( 'post__not_in' => $exclude_posts ) );
-				}
-			}
-
-			if ( ! empty( $attributes['parent-post'] ) ) {
-				if ( a_z_listing_is_truthy( $attributes['get-all-children'] ) ) {
-					$child_query = array( 'child_of' => $attributes['parent-post'] );
-				} else {
-					$child_query = array( 'post_parent' => $attributes['parent-post'] );
-				}
-				$query = wp_parse_args( $query, $child_query );
-			}
-
-			$taxonomy  = $attributes['taxonomy'] ? $attributes['taxonomy'] : 'category';
-			$tax_query = array();
-			if ( ! empty( $attributes['terms'] ) ) {
-				$terms = explode( ',', $attributes['terms'] );
-				$terms = array_unique( array_filter( array_map( 'trim', $terms ) ) );
-
-				$tax_query[] = array(
-					'taxonomy' => $taxonomy,
-					'field'    => 'slug',
-					'terms'    => $terms,
-					'operator' => 'IN',
-				);
-			}
-			if ( ! empty( $attributes['exclude-terms'] ) ) {
-				$ex_terms = explode( ',', $attributes['exclude-terms'] );
-				$ex_terms = array_unique( array_filter( array_map( 'trim', $ex_terms ) ) );
-
-				$tax_query[] = array(
-					'taxonomy' => $taxonomy,
-					'field'    => 'slug',
-					'terms'    => $ex_terms,
-					'operator' => 'NOT IN',
-				);
-			}
-
-			if ( ! empty( $tax_query ) ) {
-				$query['tax_query'] = $tax_query;
-			}
-
-			$a_z_query = new Query( $query, 'posts' );
-		}
+		$a_z_query = new Query( null, '', true, $attributes );
 
 		$target = '';
 		if ( ! empty( $attributes['target'] ) ) {
@@ -244,7 +107,7 @@ class Shortcode extends Singleton {
 		$grouping_obj->teardown();
 		$numbers_obj->teardown();
 
-		do_action( '_a_z_listing_shortcode_end', $attributes );
+		do_action( 'a_z_listing_shortcode_end', $attributes );
 
 		return $ret;
 	}

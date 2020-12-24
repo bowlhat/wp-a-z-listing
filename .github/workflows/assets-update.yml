@@ -1,19 +1,23 @@
-name: "🚀 RELEASE: asset/readme on WordPress.org"
+name: "👌 IMPROVE: Assets or readme"
 
 on:
   push:
     branches:
     - master
+    paths:
+    - readme.txt
+    - .wordpress-org/**
+
 jobs:
   master:
-    name: Push to master
+    name: 👉 Push to master
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'bowlhat'
+    if: github.repository_owner == 'a-z-listing'
     steps:
     - uses: actions/checkout@v2
 
-    - name: WordPress.org plugin asset/readme update
-      uses: 10up/action-wordpress-plugin-asset-update@1.4.1
+    - name: 🚀 WordPress.org plugin asset/readme update
+      uses: bowlhat/action-wordpress-plugin-asset-update@1.4.1-bowlhat
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

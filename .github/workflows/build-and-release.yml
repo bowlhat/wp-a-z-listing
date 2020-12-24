@@ -1,22 +1,22 @@
-name: "🚀 RELEASE: To WordPress.org"
+name: 🚀 Build, test, and release
+
 on:
+  pull_request:
   push:
+    branches:
+      - master
     tags:
-      - "*"
+      - '*'
+
 jobs:
   build:
-    name: Build
+    name: ⚙️ Build
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
-    strategy:
-      matrix:
-        node: ['10.16.3']
-        php: ['7.4']
     steps:
-    - name: Use Node.js ${{ matrix.node }}
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
+        node-version: '14.15.3'
 
     - uses: actions/cache@v2
       with:
@@ -28,7 +28,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php }}
+        php-version: '7.4'
         extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
         ini-values: phar.readonly=0
         tools: composer
@@ -62,18 +62,15 @@ jobs:
 
     - name: Run npm install
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install
 
     - name: Run npm build
       run: |
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm run build
 
     - name: Trim to production node_modules
       run: |
         rm -rf node_modules
-        if [ -s "$HOME/.nvm/nvm.sh" ]; then \. "$HOME/.nvm/nvm.sh"; fi
         npm install --production --no-bin-links
 
     - name: Upload build result
@@ -82,7 +79,7 @@ jobs:
         name: build
         path: build/**/*
 
-    - name: Upload composer vendor dir
+    - name: Upload vendor result
       uses: actions/upload-artifact@v2
       with:
         name: vendor
@@ -100,31 +97,8 @@ jobs:
         name: css
         path: css/**/*
 
-  phpcs:
-    name: phpcs
-    runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
-    steps:
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'
-        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
-        ini-values: phar.readonly=0
-        tools: phpcs
-
-    - name: Configure PHPCS sniffs
-      run: |
-        git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git /tmp/sniffs
-        phpcs --config-set installed_paths /tmp/sniffs
-
-    - uses: actions/checkout@v2
-
-    - name: Run PHPCS Coding Standards
-      run: phpcs $GITHUB_WORKSPACE
-
-  phpunit:
-    name: phpunit
+  test:
+    name: 🧪 Test
     needs: build
     strategy:
       matrix:
@@ -219,9 +193,9 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php }}
-        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
+        extensions: iconv, intl, xml, soap, opcache, pdo, pdo_mysql, mysqli, mbstring, gd
         ini-values: phar.readonly=0
-        tools: phpunit:6.5.5
+        tools: phpunit:6.5.14
 
     - uses: actions/checkout@v2
 
@@ -234,19 +208,60 @@ jobs:
     - name: Run phpunit
       run: |
         if [ ${{ matrix.multisite }} -eq 1 ]; then
-          phpunit --verbose -c phpunit-multisite.xml
+          phpunit -c phpunit-multisite.xml $GITHUB_WORKSPACE        
         else
-          phpunit --verbose -c phpunit.xml.dist
+          phpunit $GITHUB_WORKSPACE
         fi
 
-  deploy_to_worg:
-    name: Deploy to WordPress.org
-    runs-on: ubuntu-latest
-    if: github.repository_owner == 'Upvision'
+  coverage:
+    name: 🙈 Coverage
     needs:
     - build
-    - phpcs
-    - phpunit
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        extensions: iconv, intl, soap, mbstring, mysql, mysqli, gd
+        ini-values: phar.readonly=0
+        tools: phpunit:6.5.14
+
+    - uses: actions/checkout@v2
+
+    - name: Download build files
+      uses: actions/download-artifact@v2
+
+    - name: Install WordPress Test Suite
+      run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1:${{ job.services.mysql.ports[3306] }} latest
+
+    - uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CODE_CLIMATE_REPORTER_ID}}
+      with:
+        coverageCommand: phpunit --verbose -c phpunit.xml.dist --coverage-clover clover.xml
+        coverageLocations: ${{github.workspace}}/clover.xml:clover
+
+  deploy_to_worg:
+    name: 🚀 RELEASE to WordPress.org
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'a-z-listing' && startsWith(github.ref, 'refs/tags/')
+    needs:
+    - build
+    - test
     steps:
     - uses: actions/checkout@v2
 

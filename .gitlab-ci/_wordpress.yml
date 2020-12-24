@@ -2,22 +2,6 @@
   MYSQL_DATABASE: wordpress_test
   MYSQL_ROOT_PASSWORD: password
 
-.wordpress46:
-  variables:
-    WP_VERSION: '4.6'
-    <<: *mysql-config
-.wordpress47:
-  variables:
-    WP_VERSION: '4.7'
-    <<: *mysql-config
-.wordpress48:
-  variables:
-    WP_VERSION: '4.8'
-    <<: *mysql-config
-.wordpress49:
-  variables:
-    WP_VERSION: '4.9'
-    <<: *mysql-config
 .wordpress50:
   variables:
     WP_VERSION: '5.0'
@@ -36,7 +20,15 @@
     <<: *mysql-config
 .wordpress54:
   variables:
-    WP_VERSION: '54'
+    WP_VERSION: '5.4'
+    <<: *mysql-config
+.wordpress55:
+  variables:
+    WP_VERSION: '5.5'
+    <<: *mysql-config
+.wordpress56:
+  variables:
+    WP_VERSION: '5.6'
     <<: *mysql-config
 .wordpress-latest:
   variables:

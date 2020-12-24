@@ -17,7 +17,7 @@ module.exports = function( grunt ) {
 				options: {
 					updateDomains: true
 				},
-				src: [ '*.php', '**/*.php', '!\.git/**/*', '!bin/**/*', '!node_modules/**/*', '!tests/**/*' ]
+				src: [ '*.php', '**/*.php', '!\.git/**/*', '!bin/**/*', '!node_modules/**/*', '!tests/**/*', '!build/**/*' ]
 			}
 		},
 
@@ -29,18 +29,18 @@ module.exports = function( grunt ) {
 				options: {
 					screenshot_url: 'assets/{screenshot}.png',
 					pre_convert: function( readme ) {
-						readme = readme.replace( new RegExp("^`$[\n\r]+([^`]*)[\n\r]+^`$","gm"), function( codeblock, codeblockContents ) {
+						readme = readme.replace( new RegExp('^`$[\n\r]+([^`]*)[\n\r]+^`$','gm'), function( codeblock, codeblockContents ) {
 							const blockStartEnd = '```';
-							let lines = codeblockContents.split("\n");
-							if ( String( lines[0] ).startsWith("<?php") ) {
-								return `${blockStartEnd}php\n${lines.join("\n")}\n${blockStartEnd}`;
+							let lines = codeblockContents.split('\n');
+							if ( String( lines[0] ).startsWith('<?php') ) {
+								return `${blockStartEnd}php\n${lines.join('\n')}\n${blockStartEnd}`;
 							}
-						})
+						});
 						return readme;
 					},
 					post_convert: function( readme ) {
 						readme = readme.replace( /^## Description ##$/, function( title ) {
-							return `${title}\n\n[![Build Status](https://travis-ci.org/bowlhat/wp-a-z-listing.svg?branch=master)](https://travis-ci.org/bowlhat/wp-a-z-listing)\n\n`
+							return `${title}\n\n[![Build Status](https://travis-ci.org/bowlhat/wp-a-z-listing.svg?branch=master)](https://travis-ci.org/bowlhat/wp-a-z-listing)\n\n`;
 						});
 						readme = readme.replace( /^\*\*([^*\s][^*]*)\*\*$/gm, function( a, b ) {
 							return `#### ${b} ####`;
@@ -71,20 +71,20 @@ module.exports = function( grunt ) {
 			}
 		},
 
-		babel: {
-			options: {
-				sourceMap: true,
-				plugins: [['transform-react-jsx', {"pragma": "wp.element.createElement"}]],
-				presets: ['env', 'react']
-			},
-			jsx: {
-				files: [{
-					expand: true,
-					src: ['**/*.jsx'],
-					ext: '.js'
-				}]
-			}
-		},
+		// babel: {
+		// 	options: {
+		// 		sourceMap: true,
+		// 		plugins: [['transform-react-jsx', {"pragma": "wp.element.createElement"}]],
+		// 		presets: ['env', 'react']
+		// 	},
+		// 	jsx: {
+		// 		files: [{
+		// 			expand: true,
+		// 			src: ['**/*.jsx'],
+		// 			ext: '.js'
+		// 		}]
+		// 	}
+		// },
 
 		sass: {
 			options: {
@@ -102,9 +102,12 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown' );
-	grunt.loadNpmTasks( 'grunt-babel' );
+	// grunt.loadNpmTasks( 'grunt-babel' );
 	grunt.loadNpmTasks( 'grunt-sass' );
-	grunt.registerTask( 'default', [ 'i18n','readme', 'babel', 'sass' ] );
+	grunt.registerTask( 'default', ['build'] );
+	grunt.registerTask( 'build', [ 'i18n','readme',
+		// 'babel',
+		'sass' ] );
 	grunt.registerTask( 'i18n', ['addtextdomain', 'makepot'] );
 	grunt.registerTask( 'readme', ['wp_readme_to_markdown'] );
 

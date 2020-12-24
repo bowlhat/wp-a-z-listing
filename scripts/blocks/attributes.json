@@ -1,0 +1,117 @@
+{
+    "className": {
+        "type": "string"
+    },
+    "columns": {
+        "type": "number",
+        "default": 3
+    },
+    "display": {
+        "type": "string",
+        "enum": ["posts", "terms"],
+        "default": "posts"
+    },
+    "alphabet": {
+        "type": "string",
+        "default": ""
+    },
+    "group-numbers": {
+        "type": "boolean",
+        "default": false
+    },
+    "grouping": {
+        "type": "number",
+        "default": 1
+    },
+    "instance-id": {
+        "type": "string"
+    },
+    "numbers": {
+        "type": "string",
+        "enum": ["before", "after", "hide"],
+        "default": "after"
+    },
+    "symbols-first": {
+        "type": "boolean",
+        "default": false
+    },
+    "post-type": {
+        "type": "string",
+        "default": "page"
+    },
+    "exclude-posts": {
+        "type": "array",
+        "items": {
+            "type": "number"
+        },
+        "default": []
+    },
+    "parent-post": {
+        "type": "number",
+        "default": 0
+    },
+    "taxonomy": {
+        "type": "string",
+        "default": ""
+    },
+    "terms": {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "default": []
+    },
+    "exclude-terms": {
+        "type": "array",
+        "items": {
+            "type": "string"
+        },
+        "default": []
+    },
+    "parent-term": {
+        "type": "number",
+        "default": 0
+    },
+    "hide-empty": {
+        "type": "boolean",
+        "default": false
+    },
+
+
+    "displayPostContent": {
+        "type": "boolean",
+        "default": false
+    },
+    "displayPostContentRadio": {
+        "type": "string",
+        "default": "excerpt"
+    },
+    "excerptLength": {
+        "type": "number",
+        "default": 55
+    },
+    "displayPostDate": {
+        "type": "boolean",
+        "default": false
+    },
+    "displayFeaturedImage": {
+        "type": "boolean",
+        "default": false
+    },
+    "featuredImageAlign": {
+        "type": "string",
+        "enum": ["left", "center", "right"]
+    },
+    "featuredImageSizeSlug": {
+        "type": "string",
+        "default":"thumbnail"
+    },
+    "featuredImageSizeWidth": {
+        "type": "number",
+        "default":150
+    },
+    "featuredImageSizeHeight": {
+        "type": "number",
+        "default":150
+    }
+}

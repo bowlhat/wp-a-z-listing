@@ -1,12 +1,6 @@
 {
     "name": "bowlhat/wp-a-z-listing",
     "description": "The A-Z Listing plugin for WordPress",
-    "require-dev": {
-        "squizlabs/php_codesniffer": "^3.4",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
-        "wp-coding-standards/wpcs": "^2.1",
-        "phpcompatibility/phpcompatibility-wp": "*"
-    },
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -14,8 +8,30 @@
             "email": "daniel@bowlhat.net"
         }
     ],
-    "require": {},
+    "config": {
+        "platform": {
+            "php": "7.0"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
-        "psr-4": {"A_Z_Listing\\": "src/"}
+        "psr-4": { "A_Z_Listing\\": "src" }
+    },
+    "require": {
+        "symfony/polyfill-mbstring": "=1.19"
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.3",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "squizlabs/php_codesniffer": "^3.5",
+        "phpunit/phpunit": "^6"
+    },
+    "replace": {
+        "symfony/polyfill-php54": "*",
+        "symfony/polyfill-php55": "*",
+        "symfony/polyfill-php56": "*",
+        "symfony/polyfill-php70": "*"
     }
 }

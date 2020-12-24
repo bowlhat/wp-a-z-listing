@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Load a-z-listing-specific test extension
 require_once 'html-assertions.php';
 
@@ -22,7 +24,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_listing() {
 		$title = 'Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -37,7 +39,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_listing_grouped() {
 		$title = 'Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -52,7 +54,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_lowercase_titles() {
 		$title = 'test page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -67,7 +69,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_taxonomy_listing() {
 		$title = 'test category';
-		$t     = $this->factory->term->create(
+		$t     = self::factory()->term->create(
 			array(
 				'name'     => $title,
 				'taxonomy' => 'category',
@@ -82,7 +84,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_taxonomy_listing_grouped() {
 		$title = 'test category';
-		$t     = $this->factory->term->create(
+		$t     = self::factory()->term->create(
 			array(
 				'name'     => $title,
 				'taxonomy' => 'category',
@@ -97,7 +99,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_filtered_listing() {
 		$cat = 'test category';
-		$t   = $this->factory->term->create(
+		$t   = self::factory()->term->create(
 			array(
 				'name'     => $cat,
 				'taxonomy' => 'category',
@@ -105,7 +107,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 		);
 
 		$title = 'Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',
@@ -124,7 +126,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 
 	public function test_populated_filtered_listing_grouped() {
 		$cat = 'test category';
-		$t   = $this->factory->term->create(
+		$t   = self::factory()->term->create(
 			array(
 				'name'     => $cat,
 				'taxonomy' => 'category',
@@ -132,7 +134,7 @@ class AZ_Shortcode_Numbers_Before_Tests extends WP_UnitTestCase {
 		);
 
 		$title = 'Test Page';
-		$p     = $this->factory->post->create(
+		$p     = self::factory()->post->create(
 			array(
 				'post_title' => $title,
 				'post_type'  => 'page',

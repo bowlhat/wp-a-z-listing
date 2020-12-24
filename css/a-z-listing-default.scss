@@ -1,9 +1,12 @@
 @import "mixins.scss";
 
+$defaultColumnWidth: 15em;
+$defaultColumnGap: 0.6em;
+
 .az-letters,
 .a-z-listing-widget .az-letters,
 .a-z-listing-widget.widget .az-letters {
-	white-space: unset;
+	white-space: initial;
 	> ul.az-links {
 		padding: 0;
 		margin: 0;
@@ -12,18 +15,23 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: center;
+		font-size: 1.2em;
 		> li {
 			list-style: none;
-			width: 2em;
-			height: 2em;
+			width: 2.6em;
+			height: 2.4em;
 			box-sizing: border-box;
-			margin: 0 0 0.6em;
+			margin: 0 0.1em 0.6em;
 			border: 2px solid #e5e5e5;
 			background: #f5f5f5;
 			color: #adadad;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			&:before,
+			&:after {
+				content: initial;
+			}
 			a {
 				color: #1f7d9a;
 				text-decoration: none;
@@ -34,43 +42,57 @@
 	}
 }
 
-.letter-section {
+div.letter-section {
 	margin-bottom: 2em;
-	white-space: unset;
+	white-space: initial;
 	h2.letter-title {
 		border-bottom: 1px solid black;
 		margin-bottom: 0.2em;
 		padding-bottom: 0.2em;
 		width: 100%;
 	}
-	ul,
-	ul > li {
-		list-style: none;
+	> ul.az-columns {
 		margin: 0;
-		padding: 0;
-	}
-	ul.columns {
 		width: 100%;
+		float: initial;
 		box-sizing: border-box;
-		column-gap: 0.6em;
-		column-width: 15em;
 		line-height: 1.6em;
+		column-gap: $defaultColumnGap;
+		column-width: $defaultColumnWidth;
+		column-gap: var(--a-z-listing-column-gap, #{$defaultColumnGap});
+		column-width: var(--a-z-listing-column-width, #{$defaultColumnWidth});
+
 		> li {
+			padding: 0;
+			margin: 0 0 0.6em;
+			list-style: none;
 			display: block;
 		}
+
 		&.max-0-columns,
 		&.max-1-columns {
 			column-count: 1;
-			max-width: 15.6em;
+			// Legacy
+			max-width: $defaultColumnWidth + $defaultColumnGap;
+			// Browsers that support calc() and var()
+			max-width: calc(var(--a-z-listing-column-width, #{$defaultColumnWidth}) + var(--a-z-listing-defualt-column-gap, #{$defaultColumnGap}));
 		}
 		@for $column from 2 to 16 {
 			&.max-#{$column}-columns {
 				column-count: $column;
-				max-width: ($column * 15em) + (($column - 1) * 0.6em);
+				// Legacy
+				max-width:
+					($column * $defaultColumnWidth)
+					+ (($column - 1) * $defaultColumnGap);
+				// Browsers that support calc() and var()
+				max-width: calc(
+					(#{$column} * var(--a-z-listing-column-width, #{$defaultColumnWidth}))
+					+ ((#{$column} - 1) * var(--a-z-listing-column-gap, #{$defaultColumnGap})));
 			}
 		}
 	}
 	div.back-to-top {
+		display: var(--a-z-listing-back-to-top-display, block);
 		width: 100%;
 		text-align: right;
 		a {

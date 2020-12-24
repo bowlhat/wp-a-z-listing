@@ -1,40 +1,13 @@
 {
 	"containers": [
 		{
-			"prettyName": "PHPUNIT - PHP 5.6",
-			"image": "diddledockunit/phpunit:php-5.6",
+			"prettyName": "PHPUNIT - PHP 7.3",
+			"image": "diddledan/dockunit-phpunit:php-7.3",
 			"beforeScripts": [
-				"bash -c '/usr/bin/mysqld_safe &'",
-				"bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.2"
+				"/usr/bin/mysqld_safe --no-watch",
+				"/bin/bash bin/install-wp-tests.sh wordpress_test root '' localhost:/run/mysqld/mysqld.sock latest"
 			],
-			"testCommand": "phpunit"
-		},
-		{
-			"prettyName": "PHPUNIT - PHP 7.0",
-			"image": "diddledockunit/phpunit:php-7.0",
-			"beforeScripts": [
-				"bash -c '/usr/bin/mysqld_safe &'",
-				"bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.2"
-			],
-			"testCommand": "phpunit"
-		},
-		{
-			"prettyName": "PHPUNIT - PHP 7.1",
-			"image": "diddledockunit/phpunit:php-7.1",
-			"beforeScripts": [
-				"bash -c '/usr/bin/mysqld_safe &'",
-				"bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.2"
-			],
-			"testCommand": "phpunit"
-		},
-		{
-			"prettyName": "PHPUNIT - PHP 7.2",
-			"image": "diddledockunit/phpunit:php-7.2",
-			"beforeScripts": [
-				"bash -c '/usr/bin/mysqld_safe &'",
-				"bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 5.2"
-			],
-			"testCommand": "phpunit"
+			"testCommand": ["phpunit"]
 		}
 	]
 }

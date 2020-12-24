@@ -1,6 +1,9 @@
 .phpcs:
+  extends:
+    - .php74-linux
   stage: test
   needs: [build]
   extends: .base
   script:
-    - ./tools/phpcs
+    - composer install --prefer-dist --no-interaction --no-progress
+    - ./vendor/bin/phpcs
