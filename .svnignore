@@ -46,10 +46,7 @@ phive.xml
 tools/
 README.md
 scoper.inc.php
-src/
 tests/
 Thumbs.db
-vendor-bin/
-vendor/
 wp-cli.local.yml
 yarn.lock
