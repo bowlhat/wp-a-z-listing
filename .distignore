@@ -9,7 +9,6 @@
 .editorconfig
 .git/
 .gitattributes
-.github/
 .gitignore
 .gitattributes
 .gitlab-ci.yml
@@ -20,7 +19,6 @@
 .idea
 .jshintrc
 .phan/
-.svnignore
 .travis.yml
 .vs/
 .vscode/
@@ -53,11 +51,8 @@ phpunit.xml.dist
 tools/
 README.md
 scoper.inc.php
-src/
 tests/
 Thumbs.db
-vendor-bin/
-vendor/
 wp-cli.local.yml
 yarn.lock
 *.msbuildproj
