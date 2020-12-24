@@ -195,7 +195,7 @@ jobs:
         php-version: ${{ matrix.php }}
         extensions: iconv, intl, xml, soap, opcache, pdo, pdo_mysql, mysqli, mbstring, gd
         ini-values: phar.readonly=0
-        tools: phpunit:v7
+        tools: phpunit:6.5.14
 
     - uses: actions/checkout@v2
 
