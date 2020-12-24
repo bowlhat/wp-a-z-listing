@@ -79,6 +79,12 @@ jobs:
         name: build
         path: build/**/*
 
+    - name: Upload vendor result
+      uses: actions/upload-artifact@v2
+      with:
+        name: vendor
+        path: vendor/**/*
+
     - name: Upload languages
       uses: actions/upload-artifact@v2
       with:
